@@ -6,6 +6,7 @@ import { RouterLink, RouterView } from 'vuer'
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
   <RouterView />
+  <h1>hello carlos</h1>
 </template>
 
 <style scoped>
