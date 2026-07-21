@@ -1,14 +1,8 @@
 <script setup>
+import AppHeader from './layout/AppHeader.vue';
 
-import Navbar from './components/Navbar.vue'
-import Footer from './components/Footer.vue'
 
-</script><template>
-
-<Navbar/>
-
-<router-view/>
-
-<Footer/>
-
+</script>
+<template>
+  <AppHeader />
 </template>
