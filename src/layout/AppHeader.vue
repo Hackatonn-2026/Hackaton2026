@@ -1,8 +1,8 @@
 <template>
   <header class="header">
     <div class="logo">
-      <span class="logo-icon">G</span>
-      <span class="logo-text">Guey</span>
+      <img src="@/assets/aidentro.jpg" alt="Aí dentro" class="logo-icon" />
+      <span class="logo-text">CiroLancers</span>
     </div>
 
     <div class="search-wrap">
@@ -79,15 +79,11 @@ const resultados = computed(() => {
 }
 
 .logo-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 34px;
   height: 34px;
-  background: #2563eb;
-  color: #fff;
-  font-weight: bold;
   border-radius: 9px;
+  object-fit: cover;
+  flex-shrink: 0;
 }
 
 .logo-text {
@@ -180,5 +176,4 @@ const resultados = computed(() => {
 .cadastrar-btn:active {
   transform: scale(0.96);
 }
-
 </style>
