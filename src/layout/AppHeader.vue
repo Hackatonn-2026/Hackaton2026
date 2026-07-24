@@ -1,9 +1,9 @@
 <template>
   <header class="header">
-    <div class="logo">
+    <RouterLink to="/" class="logo">
       <img src="@/assets/aidentro.jpg" alt="Aí dentro" class="logo-icon" />
       <span class="logo-text">CiroLancers</span>
-    </div>
+    </RouterLink>
 
     <div class="search-wrap">
       <input
@@ -28,7 +28,7 @@
     </div>
 
     <nav class="nav-links">
-      <a href="#categorias" class="nav-link">Categorias</a>
+      <RouterLink to="/categorias" class="nav-link">Categorias</RouterLink>
       <a href="#como-funciona" class="nav-link">Como funciona</a>
       <a href="#login" class="nav-link login-link">Login</a>
       <button class="cadastrar-btn">Cadastrar</button>
@@ -151,6 +151,13 @@ const resultados = computed(() => {
   text-decoration: none;
   font-size: 14px;
   transition: color 0.2s ease;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
 }
 
 .nav-link:hover {

@@ -1,5 +1,8 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
-
-<h1>Categorias</h1>
-
+  <Categorias />
 </template>
+
+<script setup>
+import Categorias from '@/components/Categorias.vue'
+</script>
