@@ -12,9 +12,10 @@
         <div class="search">
           <input
             type="text"
+            v-model="query"
             placeholder="Buscar profissionais ou serviços..."
           />
-          <button>Pesquisar</button>
+          <Button type="button">Pesquisar</Button>
         </div>
 
         <div class="stats">
@@ -47,7 +48,11 @@
 </template>
 
 <script setup>
+  import { ref } from 'vue'
   import Categorias from '@/components/Categorias.vue';
+  import Button from '@/components/Button.vue';
+
+  const query = ref('')
 </script>
 
 <style scoped>

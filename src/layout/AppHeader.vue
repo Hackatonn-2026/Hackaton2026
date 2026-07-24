@@ -31,13 +31,14 @@
       <RouterLink to="/categorias" class="nav-link">Categorias</RouterLink>
       <a href="#como-funciona" class="nav-link">Como funciona</a>
       <a href="#login" class="nav-link login-link">Login</a>
-      <button class="cadastrar-btn">Cadastrar</button>
+      <Button class="cadastrar-btn">Cadastrar</Button>
     </nav>
   </header>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
+import Button from '@/components/Button.vue'
 
 const profissionais = [
   'Eletricista residencial',
