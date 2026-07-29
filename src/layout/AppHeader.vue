@@ -31,7 +31,7 @@
       <RouterLink to="/categorias" class="nav-link">Categorias</RouterLink>
       <a href="#como-funciona" class="nav-link">Como funciona</a>
       <a href="#login" class="nav-link login-link">Login</a>
-      <Button class="cadastrar-btn">Cadastrar</Button>
+      <BaseButton class="cadastrar-btn">Cadastrar</BaseButton>
     </nav>
   </header>
 </template>
