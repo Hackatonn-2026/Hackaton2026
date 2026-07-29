@@ -15,7 +15,7 @@
             v-model="query"
             placeholder="Buscar profissionais ou serviços..."
           />
-          <Button type="button">Pesquisar</Button>
+          <BaseButton type="button">Pesquisar</BaseButton>
         </div>
 
         <div class="stats">
