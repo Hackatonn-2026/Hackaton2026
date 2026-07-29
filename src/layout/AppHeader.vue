@@ -38,7 +38,6 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import Button from '@/components/Button.vue'
 
 const profissionais = [
   'Eletricista residencial',
