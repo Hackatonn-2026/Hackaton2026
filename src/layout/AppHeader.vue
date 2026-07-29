@@ -27,18 +27,13 @@
       </ul>
     </div>
 
-    <nav class="nav-links">
-      <RouterLink to="/categorias" class="nav-link">Categorias</RouterLink>
-      <a href="#como-funciona" class="nav-link">Como funciona</a>
-      <a href="#login" class="nav-link login-link">Login</a>
-      <BaseButton class="cadastrar-btn">Cadastrar</BaseButton>
-    </nav>
+    <NavbarView />
   </header>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
-import Button from '@/components/Button.vue'
+import NavbarView from '@/components/NavbarView.vue'
 
 const profissionais = [
   'Eletricista residencial',
