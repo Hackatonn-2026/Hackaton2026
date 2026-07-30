@@ -111,3 +111,4 @@ const resultados = computed(() => {
   color: #9ca3af;
 }
 </style>
+
