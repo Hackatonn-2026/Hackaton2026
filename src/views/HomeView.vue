@@ -50,7 +50,6 @@
 <script setup>
   import { ref } from 'vue'
   import Categorias from '@/components/Categorias.vue';
-  import Button from '@/components/Button.vue';
 
   const query = ref('')
 </script>
