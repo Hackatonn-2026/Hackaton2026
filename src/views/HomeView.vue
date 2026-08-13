@@ -153,7 +153,20 @@ function handleVerPerfil(prof) {
   color: #6b7280;
 }
 .featured {
-  padding: 0 8% 60px;
+  padding: 60px 8% 80px;
+  text-align: center;
+  background: #f9fafb;
+}
+
+.featured h2 {
+  font-size: 28px;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+.featured p {
+  color: #6b7280;
+  margin-bottom: 40px;
 }
 
 .grid {
@@ -162,7 +175,6 @@ function handleVerPerfil(prof) {
   gap: 24px;
   justify-content: center;
 }
-
 @media(max-width:768px){
 
 .hero h1{
