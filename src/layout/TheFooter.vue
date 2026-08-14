@@ -25,12 +25,12 @@
       <div class="footer-column">
         <h3>Suporte</h3>
         <ul>
-          <li><a href="#">Central de Ajuda</a></li>
-          <li><a href="#">FAQ</a></li>
-          <li><a href="#">Termos de uso</a></li>
-          <li><a href="#">Política de Privacidade</a></li>
-        </ul>
-      </div>
+          <li><router-link :to="{ path: '/suporte', hash: '#central-de-ajuda' }">Central de Ajuda</router-link></li>
+          <li><router-link :to="{ path: '/suporte', hash: '#faq' }">FAQ</router-link></li>
+          <li><router-link :to="{ path: '/suporte', hash: '#termos-de-uso' }">Termos de uso</router-link></li>
+        <li><router-link :to="{ path: '/suporte', hash: '#politica-de-privacidade' }">Política de Privacidade</router-link></li>
+  </ul>
+</div>
 
       <div class="footer-column">
         <h3>Redes Sociais</h3>
