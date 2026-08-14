@@ -28,6 +28,7 @@ const routes = [
   { path: '/dashboard-freelancer', component: DashboardFreelancer },
   { path: '/sobre', component: Sobre },
   { path: '/suporte', component: Suporte }
+  
 ]
 
 export default createRouter({
