@@ -8,6 +8,20 @@
    <SearchBar />
 
    <NavbarView />
+      <ul v-if="query.length > 0" class="search-suggestions">
+        <li v-if="resultados.length === 0" class="suggestion-empty">
+          Nenhum resultado encontrado
+        </li>
+        <li
+          v-for="item in resultados"
+          :key="item"
+          class="suggestion-item"
+          @click="buscar(item)"
+        >
+          {{ item }}
+        </li>
+      </ul>
+    </div>
 
   </header>
 </template>

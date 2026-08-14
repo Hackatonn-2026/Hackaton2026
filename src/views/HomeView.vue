@@ -15,7 +15,7 @@
             v-model="query"
             placeholder="Buscar profissionais ou serviços..."
           />
-          <BaseButton type="button">Pesquisar</BaseButton>
+          <BaseButton type="button" @click="buscar">Pesquisar</BaseButton>
         </div>
 
         <div class="stats">
@@ -77,6 +77,21 @@ const professionals = [
 
 function handleVerPerfil(prof) {
   router.push(`/perfil/${prof.id}`)
+import { useNotificacoes } from '@/composables/useNotificacoes'
+
+const query = ref('')
+const router = useRouter()
+const { adicionar } = useNotificacoes()
+
+function buscar() {
+  const termo = query.value.trim()
+
+  if (!termo) {
+    adicionar('Digite o serviço ou profissional que deseja encontrar.', 'aviso')
+    return
+  }
+
+  router.push({ path: '/buscar', query: { q: termo } })
 }
 </script>
 
