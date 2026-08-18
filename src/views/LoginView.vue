@@ -1,25 +1,36 @@
 <template>
   <div class="page">
-    <section class="hero">
-      <h1 class="hero-title">Entrar na sua conta</h1>
-      <AccountTypeToggle v-model="accountType" />
-    </section>
+    <div class="auth-wrap">
+      <AuthHeader title="Entrar na sua conta" subtitle="Bem-vindo de volta!" />
 
-    <section class="form-section">
       <form class="login-card" @submit.prevent="handleLogin">
-        <label class="field-label" for="email">Email</label>
-        <input
+        <IconInput
           id="email"
           v-model="email"
+          label="E-mail"
           type="email"
           placeholder="seu@email.com"
-          class="field-input"
           autocomplete="email"
-          required
-        />
+        >
+          <template #icon>
+            <svg viewBox="0 0 24 24" width="18" height="18">
+              <path
+                fill="currentColor"
+                d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Zm0 2v.01L12 12l8-5.99V6H4Zm16 12V8.24l-7.4 5.55a1 1 0 0 1-1.2 0L4 8.24V18h16Z"
+              />
+            </svg>
+          </template>
+        </IconInput>
 
-        <label class="field-label" for="password">Senha</label>
-        <PasswordField id="password" v-model="password" />
+        <PasswordField id="password" v-model="password" label="Senha" />
+
+        <div class="row">
+          <label class="remember">
+            <input v-model="rememberMe" type="checkbox" />
+            Lembrar-me
+          </label>
+          <router-link to="/esqueci-senha" class="forgot-link">Esqueceu a senha?</router-link>
+        </div>
 
         <p v-if="error" class="error-msg">{{ error }}</p>
 
@@ -27,32 +38,32 @@
           {{ loading ? 'Entrando...' : 'Entrar' }}
         </button>
 
+        <SocialButtons @google="handleSocialLogin('google')" @facebook="handleSocialLogin('facebook')" />
+
         <p class="switch-auth">
-          Não tem conta?
-          <router-link :to="cadastroLink">Cadastre-se</router-link>
+          Não tem uma conta?
+          <router-link to="/cadastro-cliente">Cadastre-se grátis</router-link>
         </p>
       </form>
-    </section>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import AccountTypeToggle from '../components/AccountTypeToggle.vue'
+import AuthHeader from '../components/AuthHeader.vue'
+import IconInput from '../components/IconInput.vue'
 import PasswordField from '../components/PasswordField.vue'
+import SocialButtons from '../components/SocialButtons.vue'
 
 const router = useRouter()
 
-const accountType = ref('cliente') // 'cliente' | 'freelancer'
 const email = ref('')
 const password = ref('')
+const rememberMe = ref(false)
 const loading = ref(false)
 const error = ref('')
-
-const cadastroLink = computed(() =>
-  accountType.value === 'cliente' ? '/cadastro-cliente' : '/cadastro-freelancer'
-)
 
 async function handleLogin() {
   error.value = ''
@@ -63,95 +74,89 @@ async function handleLogin() {
     // const { data } = await api.post('/auth/login', {
     //   email: email.value,
     //   senha: password.value,
-    //   tipo: accountType.value,
+    //   lembrar: rememberMe.value,
     // })
 
-    const destino =
-      accountType.value === 'cliente' ? '/dashboard-cliente' : '/dashboard-freelancer'
-    router.push(destino)
+    router.push('/')
   } catch (e) {
     error.value = 'Email ou senha inválidos.'
   } finally {
     loading.value = false
   }
 }
+
+function handleSocialLogin(provider) {
+  // TODO: integrar login social (OAuth) com o provider recebido ('google' | 'facebook')
+  console.log('login social:', provider)
+}
 </script>
 
 <style scoped>
 .page {
-  display: flex;
-  flex-direction: column;
   min-height: 100vh;
-}
-
-.hero {
-  background: linear-gradient(180deg, #16225e 0%, #2c4bc2 55%, #4d72e8 100%);
-  padding: 56px 24px 72px;
-  text-align: center;
-  color: #ffffff;
-}
-
-.hero-title {
-  font-size: 28px;
-  font-weight: 700;
-  margin: 0 0 24px;
-}
-
-.form-section {
-  flex: 1;
+  background: #f3f4f8;
   display: flex;
+  align-items: center;
   justify-content: center;
-  margin-top: -48px;
-  padding: 0 24px 64px;
+  padding: 48px 24px;
+}
+
+.auth-wrap {
+  width: 100%;
+  max-width: 460px;
 }
 
 .login-card {
   background: #ffffff;
   border-radius: 16px;
-  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.12);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
   padding: 40px;
-  width: 100%;
-  max-width: 420px;
   display: flex;
   flex-direction: column;
+  gap: 20px;
 }
 
-.field-label {
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: -8px;
+}
+
+.remember {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-size: 14px;
-  font-weight: 600;
-  color: #1f2937;
-  margin: 16px 0 6px;
+  color: #374151;
+  cursor: pointer;
 }
 
-.field-label:first-of-type {
-  margin-top: 0;
+.remember input {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
 }
 
-.field-input {
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: 10px;
-  border: 1px solid #d1d5db;
-  background: #eceff3;
+.forgot-link {
   font-size: 14px;
-  outline: none;
-  box-sizing: border-box;
+  color: #2f5df5;
+  font-weight: 500;
+  text-decoration: none;
 }
 
-.field-input:focus {
-  border-color: #2c4bc2;
-  background: #ffffff;
+.forgot-link:hover {
+  text-decoration: underline;
 }
 
 .error-msg {
   color: #dc2626;
   font-size: 13px;
-  margin: 12px 0 0;
+  margin: -8px 0 0;
 }
 
 .submit-btn {
-  margin-top: 28px;
-  background: #16225e;
+  background: #2f5df5;
   color: #ffffff;
   border: none;
   border-radius: 10px;
@@ -163,7 +168,7 @@ async function handleLogin() {
 }
 
 .submit-btn:hover:not(:disabled) {
-  background: #223583;
+  background: #2049d6;
 }
 
 .submit-btn:disabled {
@@ -175,11 +180,11 @@ async function handleLogin() {
   text-align: center;
   font-size: 14px;
   color: #4b5563;
-  margin-top: 18px;
+  margin: 0;
 }
 
 .switch-auth a {
-  color: #2c4bc2;
+  color: #2f5df5;
   font-weight: 600;
   text-decoration: none;
 }
