@@ -41,8 +41,7 @@
       </div>
     </section>
 
-    <Categorias />
-
+    <Categorias :limit="3" :is-home="true" />
   </main>
 </template>
 
