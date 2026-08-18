@@ -5,13 +5,9 @@
       <span class="logo-text">CiroLancers</span>
     </RouterLink>
 
-    <div class="search-wrap">
-      <input
-        type="text"
-        v-model="query"
-        placeholder="Buscar profissionais ou serviços..."
-      >
+   <SearchBar />
 
+   <NavbarView />
       <ul v-if="query.length > 0" class="search-suggestions">
         <li v-if="resultados.length === 0" class="suggestion-empty">
           Nenhum resultado encontrado
@@ -20,7 +16,7 @@
           v-for="item in resultados"
           :key="item"
           class="suggestion-item"
-          @click="query = item"
+          @click="buscar(item)"
         >
           {{ item }}
         </li>
@@ -37,27 +33,8 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import Button from '@/components/Button.vue'
-
-const profissionais = [
-  'Eletricista residencial',
-  'Encanador de emergência',
-  'Pintor de paredes',
-  'Diarista',
-  'Personal trainer',
-  'Designer gráfico',
-  'Desenvolvedor web',
-  'Fotógrafo de eventos'
-]
-
-const query = ref('')
-
-const resultados = computed(() => {
-  return profissionais.filter(item =>
-    item.toLowerCase().includes(query.value.toLowerCase())
-  )
-})
+import SearchBar from '@/components/SearchBar.vue'
+import NavbarView from '@/components/NavbarView.vue'
 </script>
 
 <style scoped>
@@ -77,6 +54,7 @@ const resultados = computed(() => {
   display: flex;
   align-items: center;
   gap: 10px;
+  text-decoration: none;
 }
 
 .logo-icon {
@@ -92,6 +70,7 @@ const resultados = computed(() => {
   font-size: 19px;
   color: #111827;
 }
+
 .search-wrap {
   position: relative;
   flex: 1;
@@ -152,13 +131,6 @@ const resultados = computed(() => {
   text-decoration: none;
   font-size: 14px;
   transition: color 0.2s ease;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
 }
 
 .nav-link:hover {
