@@ -56,6 +56,8 @@ import AuthHeader from '../components/AuthHeader.vue'
 import IconInput from '../components/IconInput.vue'
 import PasswordField from '../components/PasswordField.vue'
 import SocialButtons from '../components/SocialButtons.vue'
+import InputForm from '@/components/InputForm.vue'
+
 
 const router = useRouter()
 
@@ -70,13 +72,6 @@ async function handleLogin() {
   loading.value = true
 
   try {
-    // TODO: substituir pela chamada real de autenticação da API
-    // const { data } = await api.post('/auth/login', {
-    //   email: email.value,
-    //   senha: password.value,
-    //   lembrar: rememberMe.value,
-    // })
-
     router.push('/')
   } catch (e) {
     error.value = 'Email ou senha inválidos.'
@@ -86,7 +81,6 @@ async function handleLogin() {
 }
 
 function handleSocialLogin(provider) {
-  // TODO: integrar login social (OAuth) com o provider recebido ('google' | 'facebook')
   console.log('login social:', provider)
 }
 </script>

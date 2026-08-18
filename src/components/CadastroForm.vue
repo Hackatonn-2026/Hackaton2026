@@ -1,6 +1,11 @@
 <script setup>
-import { ref } from 'vue'
-const tipoUsuario = ref('freelancer')
+  import { ref } from 'vue'
+  import InputForm from './InputForm.vue';
+  const tipoUsuario = ref('freelancer')
+  const nome = ref('');  
+  const email = ref('');
+  const telefone = ref('');
+  const identificacao = ref('');
 </script>
 
 <template>
