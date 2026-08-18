@@ -64,9 +64,11 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import Categorias from '@/components/Categorias.vue'
 import ProfessionalCard from '@/components/ProfessionalCard.vue'
+import { useNotificacoes } from '@/composables/useNotificacoes'
 
 const query = ref('')
 const router = useRouter()
+const { adicionar } = useNotificacoes()
 
 const professionals = [
   { id: 1, name: 'Carlos Silva', role: 'Desenvolvedor Full Stack', rating: 4.9, reviews: 127, price: 150, avatar: '/img/carlos.jpg' },
@@ -77,11 +79,7 @@ const professionals = [
 
 function handleVerPerfil(prof) {
   router.push(`/perfil/${prof.id}`)
-import { useNotificacoes } from '@/composables/useNotificacoes'
-
-const query = ref('')
-const router = useRouter()
-const { adicionar } = useNotificacoes()
+}
 
 function buscar() {
   const termo = query.value.trim()
