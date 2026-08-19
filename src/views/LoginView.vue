@@ -1,189 +1,291 @@
 <template>
-  <div class="page">
-    <div class="auth-wrap">
-      <AuthHeader title="Entrar na sua conta" subtitle="Bem-vindo de volta!" />
+  <div class="auth-page">
+    <div class="auth-brand">
+      <span class="auth-brand__logo">ai</span>
+      <span class="auth-brand__name">CiroLancers</span>
+    </div>
 
-      <form class="login-card" @submit.prevent="handleLogin">
-        <IconInput
-          id="email"
-          v-model="email"
-          label="E-mail"
-          type="email"
-          placeholder="seu@email.com"
-          autocomplete="email"
-        >
-          <template #icon>
-            <svg viewBox="0 0 24 24" width="18" height="18">
-              <path
-                fill="currentColor"
-                d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Zm0 2v.01L12 12l8-5.99V6H4Zm16 12V8.24l-7.4 5.55a1 1 0 0 1-1.2 0L4 8.24V18h16Z"
-              />
-            </svg>
-          </template>
-        </IconInput>
+    <h1 class="auth-title">Entrar na sua conta</h1>
+    <p class="auth-subtitle">Bem-vindo de volta!</p>
 
-        <PasswordField id="password" v-model="password" label="Senha" />
-
-        <div class="row">
-          <label class="remember">
-            <input v-model="rememberMe" type="checkbox" />
-            Lembrar-me
-          </label>
-          <router-link to="/esqueci-senha" class="forgot-link">Esqueceu a senha?</router-link>
+    <div class="auth-card">
+      <form @submit.prevent="handleSubmit">
+        <div class="form-grid" style="margin-bottom: 16px">
+          <InputForm
+            label="E-mail"
+            placeholder="seu@email.com"
+            type="email"
+            v-model="email"
+            :error="errors.email"
+          />
         </div>
 
-        <p v-if="error" class="error-msg">{{ error }}</p>
+        <div class="form-grid" style="margin-bottom: 8px">
+          <InputForm
+            label="Senha"
+            placeholder="••••••••"
+            type="password"
+            v-model="senha"
+            :error="errors.senha"
+          />
+        </div>
 
-        <button type="submit" class="submit-btn" :disabled="loading">
+        <div class="auth-row-between">
+          <label class="auth-checkbox-row">
+            <input type="checkbox" v-model="lembrarMe" />
+            Lembrar-me
+          </label>
+          <RouterLink to="/esqueci-senha" class="auth-link">Esqueceu a senha?</RouterLink>
+        </div>
+
+        <button type="submit" class="auth-submit" :disabled="loading">
           {{ loading ? 'Entrando...' : 'Entrar' }}
         </button>
-
-        <SocialButtons @google="handleSocialLogin('google')" @facebook="handleSocialLogin('facebook')" />
-
-        <p class="switch-auth">
-          Não tem uma conta?
-          <router-link to="/cadastro-cliente">Cadastre-se grátis</router-link>
-        </p>
       </form>
+
+      <div class="auth-divider">Ou continue com</div>
+
+      <div class="auth-social-row">
+        <button type="button" class="auth-social-btn" @click="loginComGoogle">
+          <svg width="18" height="18" viewBox="0 0 18 18">
+            <path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.9c1.7-1.57 2.7-3.87 2.7-6.62Z"/>
+            <path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.9-2.26c-.8.54-1.84.86-3.06.86-2.35 0-4.34-1.59-5.05-3.72H.95v2.33A9 9 0 0 0 9 18Z"/>
+            <path fill="#FBBC05" d="M3.95 10.7A5.4 5.4 0 0 1 3.66 9c0-.59.1-1.16.29-1.7V4.97H.95A9 9 0 0 0 0 9c0 1.45.35 2.83.95 4.03l3-2.33Z"/>
+            <path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.58C13.46.9 11.43 0 9 0A9 9 0 0 0 .95 4.97l3 2.33C4.66 5.17 6.65 3.58 9 3.58Z"/>
+          </svg>
+          Google
+        </button>
+
+        <button type="button" class="auth-social-btn" @click="loginComFacebook">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="#1877F2">
+            <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.99 3.66 9.13 8.44 9.88v-6.99h-2.54V12h2.54V9.8c0-2.5 1.49-3.89 3.78-3.89 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99C18.34 21.13 22 16.99 22 12Z"/>
+          </svg>
+          Facebook
+        </button>
+      </div>
+
+      <p class="auth-footer-text">
+        Não tem uma conta?
+        <RouterLink to="/cadastro-cliente" class="auth-link">Cadastre-se grátis</RouterLink>
+      </p>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
-import AuthHeader from '../components/AuthHeader.vue'
-import IconInput from '../components/IconInput.vue'
-import PasswordField from '../components/PasswordField.vue'
-import SocialButtons from '../components/SocialButtons.vue'
-import InputForm from '@/components/InputForm.vue'
-
+import InputForm from '../components/InputForm.vue'
 
 const router = useRouter()
 
 const email = ref('')
-const password = ref('')
-const rememberMe = ref(false)
+const senha = ref('')
+const lembrarMe = ref(false)
 const loading = ref(false)
-const error = ref('')
+const errors = reactive({ email: '', senha: '' })
 
-async function handleLogin() {
-  error.value = ''
+function validate() {
+  errors.email = email.value ? '' : 'Informe seu e-mail'
+  errors.senha = senha.value ? '' : 'Informe sua senha'
+  return !errors.email && !errors.senha
+}
+
+async function handleSubmit() {
+  if (!validate()) return
   loading.value = true
-
   try {
-    router.push('/')
-  } catch (e) {
-    error.value = 'Email ou senha inválidos.'
+    // TODO: integrar com a API de autenticação
+    // await api.post('/login', { email: email.value, senha: senha.value })
+    router.push('/dashboard-cliente')
   } finally {
     loading.value = false
   }
 }
 
-function handleSocialLogin(provider) {
-  console.log('login social:', provider)
+function loginComGoogle() {
+  // TODO: integrar OAuth Google
+}
+
+function loginComFacebook() {
+  // TODO: integrar OAuth Facebook
 }
 </script>
 
 <style scoped>
-.page {
+.auth-page {
   min-height: 100vh;
-  background: #f3f4f8;
+  width: 100%;
+  background: #f3f4f6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px 16px 64px;
+  box-sizing: border-box;
+}
+
+.auth-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.auth-brand__logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #3b5bfd;
+  color: #fff;
+  font-weight: 700;
+  font-size: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 48px 24px;
 }
 
-.auth-wrap {
+.auth-brand__name {
+  font-size: 24px;
+  font-weight: 800;
+  color: #1a1a2e;
+}
+
+.auth-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: #1a1a2e;
+  text-align: center;
+  margin: 0 0 6px;
+}
+
+.auth-subtitle {
+  font-size: 15px;
+  color: #6b7280;
+  text-align: center;
+  margin: 0 0 28px;
+}
+
+.auth-card {
   width: 100%;
   max-width: 460px;
-}
-
-.login-card {
-  background: #ffffff;
+  background: #fff;
   border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
-  padding: 40px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  padding: 32px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 8px 24px rgba(0, 0, 0, 0.04);
+  box-sizing: border-box;
 }
 
-.row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: -8px;
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
 }
 
-.remember {
+.auth-checkbox-row {
   display: flex;
   align-items: center;
   gap: 8px;
   font-size: 14px;
   color: #374151;
+}
+
+.auth-checkbox-row input[type='checkbox'] {
+  width: 18px;
+  height: 18px;
+  accent-color: #1a1a2e;
   cursor: pointer;
 }
 
-.remember input {
-  width: 16px;
-  height: 16px;
-  cursor: pointer;
+.auth-row-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 4px 0 20px;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
-.forgot-link {
+.auth-link {
+  color: #3b5bfd;
   font-size: 14px;
-  color: #2f5df5;
-  font-weight: 500;
+  font-weight: 600;
   text-decoration: none;
 }
 
-.forgot-link:hover {
+.auth-link:hover {
   text-decoration: underline;
 }
 
-.error-msg {
-  color: #dc2626;
-  font-size: 13px;
-  margin: -8px 0 0;
-}
-
-.submit-btn {
-  background: #2f5df5;
-  color: #ffffff;
+.auth-submit {
+  width: 100%;
   border: none;
+  background: #3b5bfd;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 14px;
   border-radius: 10px;
-  padding: 13px;
-  font-size: 15px;
-  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background 0.15s ease;
+  margin-top: 4px;
 }
 
-.submit-btn:hover:not(:disabled) {
-  background: #2049d6;
+.auth-submit:hover {
+  background: #2f4bea;
 }
 
-.submit-btn:disabled {
-  opacity: 0.6;
+.auth-submit:disabled {
+  background: #a5b4fc;
   cursor: not-allowed;
 }
 
-.switch-auth {
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+  color: #9ca3af;
+  font-size: 13px;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #e5e7eb;
+}
+
+.auth-social-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.auth-social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  border-radius: 10px;
+  padding: 11px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a2e;
+  cursor: pointer;
+}
+
+.auth-social-btn:hover {
+  background: #f9fafb;
+}
+
+.auth-footer-text {
   text-align: center;
   font-size: 14px;
-  color: #4b5563;
-  margin: 0;
-}
-
-.switch-auth a {
-  color: #2f5df5;
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.switch-auth a:hover {
-  text-decoration: underline;
+  color: #374151;
+  margin-top: 4px;
 }
 </style>
