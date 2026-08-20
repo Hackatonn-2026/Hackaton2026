@@ -16,7 +16,7 @@
         <h3>Empresa</h3>
         <ul>
           <li><a href="#">Sobre Nós</a></li>
-          <li><a href="#">Como Funciona</a></li>
+          <li><RouterLink to="/como-funciona">Como funciona</RouterLink></li>
           <li><a href="#">Categorias</a></li>
           <li><a href="#">Planos Premium</a></li>
         </ul>

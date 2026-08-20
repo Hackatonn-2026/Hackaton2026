@@ -1,7 +1,7 @@
 <template>
   <nav class="nav-links">
     <RouterLink to="/" class="nav-link">Home</RouterLink>
-    <RouterLink to="/buscar" class="nav-link">Buscar</RouterLink>
+    <RouterLink to="/como-funciona" class="nav-link">Como funciona</RouterLink>
     <RouterLink to="/categorias" class="nav-link">Categorias</RouterLink>
     <RouterLink to="/login" class="nav-link login-link">Login</RouterLink>
   </nav>
