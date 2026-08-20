@@ -14,6 +14,7 @@ import DashboardCliente from '../views/DashboardClienteView.vue'
 import DashboardFreelancer from '../views/DashboardFreelancerView.vue'
 import Sobre from '../views/SobreView.vue'
 import Suporte from '../views/SuporteView.vue'
+import ComoFunciona from '../views/ComoFuncionaView.vue'
 import EsqueciSenha from '../views/EsqueciSenhaView.vue'
 
 export const carregandoRota = ref(false)
@@ -28,6 +29,7 @@ const routes = [
   { path: '/cadastro-freelancer', component: CadastroFreelancer },
   { path: '/categorias', component: Categorias },
   { path: '/buscar', component: Busca },
+  { path: '/como-funciona', component: ComoFunciona },
   { path: '/perfil/:id', component: PerfilFreelancer },
   { path: '/solicitar', component: SolicitarServico },
   { path: '/pagamento', component: Pagamento },
