@@ -8,7 +8,6 @@
    <SearchBar />
 
    <NavbarView />
-
   </header>
 </template>
 
