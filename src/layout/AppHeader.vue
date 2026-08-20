@@ -5,58 +5,16 @@
       <span class="logo-text">CiroLancers</span>
     </RouterLink>
 
-    <div class="search-wrap">
-      <input
-        type="text"
-        v-model="query"
-        placeholder="Buscar profissionais ou serviços..."
-      >
+   <SearchBar />
 
-      <ul v-if="query.length > 0" class="search-suggestions">
-        <li v-if="resultados.length === 0" class="suggestion-empty">
-          Nenhum resultado encontrado
-        </li>
-        <li
-          v-for="item in resultados"
-          :key="item"
-          class="suggestion-item"
-          @click="query = item"
-        >
-          {{ item }}
-        </li>
-      </ul>
-    </div>
+   <NavbarView />
 
-    <nav class="nav-links">
-      <RouterLink to="/categorias" class="nav-link">Categorias</RouterLink>
-      <a href="#como-funciona" class="nav-link">Como funciona</a>
-      <a href="#login" class="nav-link login-link">Login</a>
-      <button class="cadastrar-btn">Cadastrar</button>
-    </nav>
   </header>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-
-const profissionais = [
-  'Eletricista residencial',
-  'Encanador de emergência',
-  'Pintor de paredes',
-  'Diarista',
-  'Personal trainer',
-  'Designer gráfico',
-  'Desenvolvedor web',
-  'Fotógrafo de eventos'
-]
-
-const query = ref('')
-
-const resultados = computed(() => {
-  return profissionais.filter(item =>
-    item.toLowerCase().includes(query.value.toLowerCase())
-  )
-})
+import SearchBar from '@/components/SearchBar.vue'
+import NavbarView from '@/components/NavbarView.vue'
 </script>
 
 <style scoped>
@@ -76,6 +34,7 @@ const resultados = computed(() => {
   display: flex;
   align-items: center;
   gap: 10px;
+  text-decoration: none;
 }
 
 .logo-icon {
@@ -91,6 +50,7 @@ const resultados = computed(() => {
   font-size: 19px;
   color: #111827;
 }
+
 .search-wrap {
   position: relative;
   flex: 1;
@@ -151,13 +111,6 @@ const resultados = computed(() => {
   text-decoration: none;
   font-size: 14px;
   transition: color 0.2s ease;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
 }
 
 .nav-link:hover {
