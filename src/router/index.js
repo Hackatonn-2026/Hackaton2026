@@ -16,6 +16,11 @@ import Sobre from '../views/SobreView.vue'
 import Suporte from '../views/SuporteView.vue'
 import EsqueciSenha from '../views/EsqueciSenhaView.vue'
 
+export const carregandoRota = ref(false)
+const duracaoMinimaLoading = 300
+let temporizadorOcultar = null
+let inicioCarregamento = 0
+
 const routes = [
   { path: '/', component: Home },
   { path: '/login', component: Login },
@@ -31,7 +36,6 @@ const routes = [
   { path: '/sobre', component: Sobre },
   { path: '/suporte', component: Suporte },
   { path: '/esqueci-senha', component: EsqueciSenha },
-
 ]
 
 const router = createRouter({
@@ -43,7 +47,7 @@ const router = createRouter({
     }
 
     return { top: 0 }
-  }
+  },
 })
 
 router.beforeEach(() => {
