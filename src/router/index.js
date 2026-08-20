@@ -13,6 +13,7 @@ import DashboardCliente from '../views/DashboardClienteView.vue'
 import DashboardFreelancer from '../views/DashboardFreelancerView.vue'
 import Sobre from '../views/SobreView.vue'
 import Suporte from '../views/SuporteView.vue'
+import EsqueciSenha from '../views/EsqueciSenhaView.vue'
 
 const routes = [
   { path: '/', component: Home },
@@ -27,8 +28,9 @@ const routes = [
   { path: '/dashboard-cliente', component: DashboardCliente },
   { path: '/dashboard-freelancer', component: DashboardFreelancer },
   { path: '/sobre', component: Sobre },
-  { path: '/suporte', component: Suporte }
-  
+  { path: '/suporte', component: Suporte },
+  { path: '/esqueci-senha', component: EsqueciSenha },
+
 ]
 
 export default createRouter({
