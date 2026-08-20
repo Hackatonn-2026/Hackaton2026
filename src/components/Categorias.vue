@@ -8,16 +8,17 @@
     </div>
 
     <div class="cards">
-      <div
+      <Card
         class="card"
         v-for="category in categories"
         :key="category.name"
+        padding="30px"
       >
         <div class="icon" v-html="category.icon"></div>
 
         <h3>{{ category.name }}</h3>
         <p>{{ category.description }}</p>
-      </div>
+      </Card>
     </div>
 
     <div class="see-all">
@@ -28,6 +29,8 @@
 </template>
 
 <script setup>
+import Card from './Card.vue'
+
 const categories = [
   {
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>`,
