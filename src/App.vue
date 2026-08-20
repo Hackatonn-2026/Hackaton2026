@@ -1,8 +1,10 @@
 <script setup>
-import AppHeader from './layout/AppHeader.vue';
-import TheFooter from './layout/TheFooter.vue';
+import AppHeader from './layout/AppHeader.vue'
+import TheFooter from './layout/TheFooter.vue'
+import Loading from './components/Loading.vue'
 import Notificacoes from './components/Notificacoes.vue'
 import { useNotificacoes } from './composables/useNotificacoes'
+import { carregandoRota } from './router'
 
 const { notificacoes, remover } = useNotificacoes()
 </script>
@@ -11,6 +13,12 @@ const { notificacoes, remover } = useNotificacoes()
   <AppHeader />
   <RouterView />
   <TheFooter />
+
+  <Transition name="loading">
+    <div v-if="carregandoRota" class="loading-overlay" aria-live="polite">
+      <Loading />
+    </div>
+  </Transition>
 
   <div class="notificacoes" aria-live="polite" aria-atomic="true">
     <TransitionGroup name="notificacao">
@@ -34,6 +42,25 @@ const { notificacoes, remover } = useNotificacoes()
   display: grid;
   gap: 10px;
   width: min(calc(100% - 32px), 380px);
+}
+
+.loading-overlay {
+  position: fixed;
+  z-index: 1100;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgb(255 255 255 / 82%);
+}
+
+.loading-enter-active,
+.loading-leave-active {
+  transition: opacity 0.15s ease;
+}
+
+.loading-enter-from,
+.loading-leave-to {
+  opacity: 0;
 }
 
 .notificacao-enter-active,

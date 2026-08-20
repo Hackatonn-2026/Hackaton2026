@@ -42,20 +42,8 @@
       </div>
     </section>
 
-    <Categorias />
-<section class="featured">
-  <h2>Profissionais em Destaque</h2>
-  <p>Conheça alguns dos nossos melhores profissionais</p>
+    <Categorias :limit="3" :is-home="true" />
 
-  <div class="grid">
-    <ProfessionalCard
-      v-for="p in professionals"
-      :key="p.id"
-      :professional="p"
-      @ver-perfil="handleVerPerfil"
-    />
-  </div>
-</section>
   </main>
 </template>
 
