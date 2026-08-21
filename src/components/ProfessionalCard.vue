@@ -1,6 +1,4 @@
 <script setup>
-import Card from './Card.vue'
-
 defineProps({
   professional: {
     type: Object,
@@ -36,7 +34,7 @@ function getColor(name) {
 </script>
 
 <template>
-  <Card class="card" padding="0">
+  <div class="card">
     <div class="card-avatar" :style="{ background: getColor(professional.name) }">
       {{ getInitials(professional.name) }}
     </div>
@@ -58,7 +56,7 @@ function getColor(name) {
         Ver Perfil
       </button>
     </div>
-  </Card>
+  </div>
 </template>
 
 <style scoped>
