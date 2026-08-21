@@ -1,25 +1,11 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div class="branco">
-  <section class="categories">
-    <div class="section-title">
-      <h2>Categorias Populares</h2>
-      <p>Encontre profissionais especializados em diversas áreas</p>
-    </div>
-
-    <div class="cards">
-      <Card
-        class="card"
-        v-for="category in categories"
-        :key="category.name"
-        padding="30px"
-      >
-        <div class="icon" v-html="category.icon"></div>
-
-        <h3>{{ category.name }}</h3>
-        <p>{{ category.description }}</p>
-      </Card>
-    </div>
+    <section class="categories">
+      <div class="section-title">
+        <h2>Categorias Populares</h2>
+        <p>Encontre profissionais especializados em diversas áreas</p>
+      </div>
 
       <!-- Aplica a classe 'home-cards' caso esteja na Home -->
       <div :class="['cards', { 'home-cards': isHome }]">
@@ -47,8 +33,22 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 
- import Card from './Card.vue'
+const props = defineProps({
+  limit: {
+    type: Number,
+    default: null
+  },
+  showButton: {
+    type: Boolean,
+    default: true
+  },
+  isHome: {
+    type: Boolean,
+    default: false
+  }
+})
 
 const categories = [
   {
