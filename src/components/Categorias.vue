@@ -3,18 +3,17 @@
   <div class="branco">
     <section class="categories">
       <div class="section-title">
-        <h2>Categorias Populares</h2>
+        <h2>Categorias</h2>
         <p>Encontre profissionais especializados em diversas áreas</p>
       </div>
 
-      <!-- Aplica a classe 'home-cards' caso esteja na Home -->
       <div :class="['cards', { 'home-cards': isHome }]">
         <RouterLink
           v-for="category in displayedCategories"
           :key="category.name"
-          :to="{ path: '/categorias', query: { busca: category.name } }"
+          :to="{ path: '/buscar', query: { busca: category.name } }"
           class="card"
-        >
+          >
           <div class="icon" v-html="category.icon"></div>
 
           <h3>{{ category.name }}</h3>
@@ -22,7 +21,11 @@
         </RouterLink>
       </div>
 
-      <!-- Exibe o botão apenas se showButton for verdadeiro -->
+      <div class="populares" v-if="isHome">
+        <h2>Categorias Populares</h2>
+        <p>Encontre profissionais especializados em diversas áreas</p>
+      </div>
+
       <div class="see-all" v-if="showButton">
         <RouterLink to="/categorias" class="see-all-btn">
           Ver Todas as Categorias
@@ -177,14 +180,12 @@ const displayedCategories = computed(() => {
   color: #6b7280;
 }
 
-/* Grid padrão para a página de Categorias (com tamanho original) */
 .cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 30px;
 }
 
-/* Grid específico para a Home (força 3 colunas em telas maiores) */
 .cards.home-cards {
   grid-template-columns: repeat(3, 1fr);
 }
@@ -195,7 +196,6 @@ const displayedCategories = computed(() => {
   }
 }
 
-/* Card individual */
 .card {
   display: flex;
   flex-direction: column;
