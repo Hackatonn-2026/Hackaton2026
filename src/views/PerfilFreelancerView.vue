@@ -4,30 +4,16 @@ import ProfileHeader from '../components/ProfileHeader.vue'
 import ProfileTabs from '../components/ProfileTabs.vue'
 import AboutSection from '../components/AboutSection.vue'
 import ServicesSidebar from '../components/ServicesSidebar.vue'
+import { profissionais } from '@/dataJs/profissionais.js'
+import { useRoute } from 'vue-router'
+import AbaAvaliacao from '@/components/AbaAvaliacao.vue'
 
 const activeTab = ref('Sobre')
 
-const profissional = {
-  name: 'Carlos Silva',
-  title: 'Desenvolvedor Full Stack',
-  avatar: 'https://i.pravatar.cc/300?img=12',
-  verified: true,
-  rating: 4.9,
-  reviewsCount: 127,
-  location: 'São Paulo, SP',
-  completedProjects: 256,
-  bio: 'Desenvolvedor Full Stack com mais de 8 anos de experiência no mercado. Especializado em React, Node.js, TypeScript e arquitetura de sistemas escaláveis. Trabalhei em startups e grandes empresas, sempre focando em entregar soluções de alta qualidade que agregam valor ao negócio.',
-  skills: ['React', 'Node.js', 'TypeScript', 'Next.js', 'PostgreSQL', 'MongoDB', 'AWS', 'Docker', 'Git'],
-  experiences: [
-    {
-      role: 'Desenvolvedor Sênior',
-      company: 'Empresa XPTO',
-      period: '2022 - Atual',
-      description: 'Liderança técnica de squad responsável por produtos de e-commerce.',
-    },
-  ],
-}
+  const route = useRoute()
 
+  const profissional = profissionais.find(p => p.id === Number(route.params.id))
+// const profissional = profissionais.find(p => p.id === 1)
 const servicos = [
   {
     title: 'Desenvolvimento de Website',
@@ -88,9 +74,10 @@ function handleScheduleCall() {
             Nenhum item de portfólio ainda.
           </div>
 
-          <div v-else-if="activeTab === 'Avaliações'" class="empty-tab">
-            Nenhuma avaliação ainda.
-          </div>
+          <AbaAvaliacao
+  v-else-if="activeTab === 'Avaliações'"
+  :profissional="profissional"
+/>
         </div>
       </div>
 
