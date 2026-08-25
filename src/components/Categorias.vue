@@ -22,8 +22,7 @@
       </div>
 
       <div class="populares" v-if="isHome">
-        <h2>Categorias Populares</h2>
-        <p>Encontre profissionais especializados em diversas áreas</p>
+       
       </div>
 
       <div class="see-all" v-if="showButton">

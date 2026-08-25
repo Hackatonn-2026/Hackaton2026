@@ -1,7 +1,7 @@
 <template>
   <header class="header">
     <RouterLink to="/" class="logo">
-      <img src="@/assets/aidentro.jpg" alt="Aí dentro" class="logo-icon" />
+      <img src="/src/assets//CL.png" alt="Aí dentro" class="logo-icon" />
       <span class="logo-text">CiroLancers</span>
     </RouterLink>
 
