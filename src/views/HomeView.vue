@@ -42,8 +42,9 @@
       </div>
     </section>
 
-    <Categorias />
-<section class="featured">
+    <Categorias :limit="3" :is-home="true" />
+
+    <section class="featured">
   <h2>Profissionais em Destaque</h2>
   <p>Conheça alguns dos nossos melhores profissionais</p>
 
