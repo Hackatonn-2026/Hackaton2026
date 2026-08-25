@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-  <Categorias />
+<Categorias :show-button="false" />
 </template>
 
 <script setup>
