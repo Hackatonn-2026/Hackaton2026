@@ -9,7 +9,7 @@
 
       <div class="busca-content">
         <aside class="sidebar-wrapper">
-          <FilterSidebar />
+          <FilterSidebar @filtrar="aplicarFiltros" />
         </aside>
 
         <main class="lista-profissionais">
@@ -39,63 +39,88 @@ import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import FilterSidebar from '@/components/FilterSidebar.vue'
 import ProfessionalCard from '@/components/ProfessionalCard.vue'
+import { profissionais } from '@/dataJs/profissionais.js'
+
 const route = useRoute()
 const router = useRouter()
+
+const categoriaQuery = computed(() => route.query.busca || '')
 const categoriaSelecionada = computed(() => route.query.busca || 'Todas as categorias')
 
-const profissionais = ref([
-  {
-    id: 1,
-    name: 'Carlos Silva',
-    role: 'Desenvolvedor Full Stack',
-    category: 'Desenvolvimento',
-    rating: '4.9',
-    reviews: 127,
-    price: '150'
-  },
-  {
-    id: 2,
-    name: 'Ana Costa',
-    role: 'Designer Gráfica',
-    category: 'Design',
-    rating: '5.0',
-    reviews: 89,
-    price: '120'
-  },
-  {
-    id: 3,
-    name: 'Roberto Santos',
-    role: 'Eletricista Residencial',
-    category: 'Elétrica',
-    rating: '4.8',
-    reviews: 203,
-    price: '90'
-  },
-  {
-    id: 4,
-    name: 'Mariana Silva',
-    role: 'UX/UI Designer',
-    category: 'Design',
-    rating: '4.7',
-    reviews: 56,
-    price: '100'
-  }
-])
+// os filtros vêm da FilterSidebar via evento; começam "abertos" (sem restrição)
+const filtros = ref({
+  localizacao: '',
+  precos: [],
+  avaliacoes: [],
+  disponivelAgora: false,
+  apenasVerificados: false,
+})
+
+function aplicarFiltros(novosFiltros) {
+  filtros.value = novosFiltros
+}
+
+// tira acento e caixa para comparar texto (ex: "elétrica" === "eletrica")
+function normalizar(texto) {
+  return texto
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+}
+
+// Categorias.vue usa nomes curtos ("Desenvolvimento") e o profissionais.js
+// usa nomes mais específicos ("Desenvolvimento de Sites"), então comparamos
+// por inclusão nos dois sentidos em vez de igualdade exata
+function categoriaCombina(categoriaProfissional, categoriaBuscada) {
+  if (!categoriaBuscada) return true
+  const a = normalizar(categoriaProfissional)
+  const b = normalizar(categoriaBuscada)
+  return a.includes(b) || b.includes(a)
+}
+
+// transforma textos como "R$ 3.000 - R$ 8.000" ou "R$ 150/hora" em { min, max }
+function parsePriceRange(rangeStr) {
+  const numeros = (rangeStr.match(/\d{1,3}(?:\.\d{3})*(?:,\d+)?/g) || [])
+    .map(n => Number(n.replace(/\./g, '').replace(',', '.')))
+
+  if (numeros.length === 0) return { min: 0, max: Infinity }
+  if (numeros.length === 1) return { min: numeros[0], max: numeros[0] }
+  return { min: numeros[0], max: numeros[1] }
+}
+
+function passaFiltroLocalizacao(prof) {
+  if (!filtros.value.localizacao) return true
+  if (!prof.location) return false
+  return normalizar(prof.location).includes(normalizar(filtros.value.localizacao))
+}
+
+function passaFiltroPreco(prof) {
+  const faixasSelecionadas = filtros.value.precos
+  if (!faixasSelecionadas.length) return true
+
+  return (prof.services || []).some(servico => {
+    const { min: sMin, max: sMax } = parsePriceRange(servico.priceRange)
+    return faixasSelecionadas.some(faixa => sMin <= faixa.max && sMax >= faixa.min)
+  })
+}
+
+function passaFiltroAvaliacao(prof) {
+  const notas = filtros.value.avaliacoes
+  if (!notas.length) return true
+  const limiteMinimo = Math.min(...notas)
+  return prof.rating >= limiteMinimo
+}
 
 const profissionaisFiltrados = computed(() => {
-  // Se não tiver filtro na URL, exibe todos
-  if (!route.query.busca) {
-    return profissionais.value
-  }
-
-  // Retorna apenas os profissionais que tem a mesma categoria da URL
-  return profissionais.value.filter(
-    (p) => p.category === route.query.busca
+  return profissionais.filter(prof =>
+    categoriaCombina(prof.category, categoriaQuery.value)
+    && passaFiltroLocalizacao(prof)
+    && passaFiltroPreco(prof)
+    && passaFiltroAvaliacao(prof)
   )
 })
 
 function irParaPerfil(profissional) {
-  console.log('Navegando para o perfil de:', profissional.name)
   router.push(`/perfil/${profissional.id}`)
 }
 </script>

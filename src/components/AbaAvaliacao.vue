@@ -4,11 +4,18 @@
     <div class="resumo">
       <h2 class="nota-media">{{ profissional.rating }}</h2>
       <p class="estrelas">{{ estrelasTexto(profissional.rating) }}</p>
-      <p class="total">Baseado em {{ profissional.reviewsCount }} avaliações</p>
+      <p class="total">
+        Baseado em {{ profissional.reviewsCount }}
+        {{ profissional.reviewsCount === 1 ? 'avaliação' : 'avaliações' }}
+      </p>
     </div>
 
     <!-- Lista com cada avaliação -->
     <div class="lista">
+      <div v-if="!profissional.reviews?.length" class="sem-avaliacoes">
+        Ainda não há avaliações para este profissional.
+      </div>
+
       <div
         v-for="avaliacao in profissional.reviews"
         :key="avaliacao.id"
@@ -25,22 +32,18 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'AbaAvaliacoes',
-  props: {
-    profissional: {
-      type: Object,
-      required: true,
-    },
+<script setup>
+defineProps({
+  profissional: {
+    type: Object,
+    required: true,
   },
-  methods: {
-    estrelasTexto(nota) {
-      const cheias = Math.round(nota);
-      return '★'.repeat(cheias) + '☆'.repeat(5 - cheias);
-    },
-  },
-};
+})
+
+function estrelasTexto(nota) {
+  const cheias = Math.round(nota)
+  return '★'.repeat(cheias) + '☆'.repeat(5 - cheias)
+}
 </script>
 
 <style scoped>
@@ -69,6 +72,12 @@ export default {
 
 .lista {
   margin-top: 20px;
+}
+
+.sem-avaliacoes {
+  padding: 24px 0;
+  text-align: center;
+  color: #9ca3af;
 }
 
 .avaliacao {

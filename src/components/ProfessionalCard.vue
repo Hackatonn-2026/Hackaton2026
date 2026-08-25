@@ -1,5 +1,7 @@
 <script setup>
-defineProps({
+import { ref } from 'vue'
+
+const props = defineProps({
   professional: {
     type: Object,
     required: true
@@ -7,6 +9,8 @@ defineProps({
 })
 
 const emit = defineEmits(['verPerfil'])
+
+const imagemComErro = ref(false)
 
 function getInitials(name) {
   return name
@@ -17,7 +21,7 @@ function getInitials(name) {
     .toUpperCase()
 }
 
-// profisório antes de termos as fotos
+// usado como fallback enquanto não temos foto real (ou se ela falhar ao carregar)
 function getColor(name) {
   const colors = [
     'linear-gradient(135deg, #667eea, #764ba2)',
@@ -31,25 +35,46 @@ function getColor(name) {
   for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash)
   return colors[Math.abs(hash) % colors.length]
 }
+
+// profissionais.js guarda uma lista de "services" com priceRange, não um preço único.
+// Mostramos o primeiro como referência ("a partir de").
+const precoInicial = props.professional.services?.[0]?.priceRange ?? 'Sob consulta'
+
+const skillsVisiveis = (props.professional.skills || []).slice(0, 3)
 </script>
 
 <template>
   <div class="card">
-    <div class="card-avatar" :style="{ background: getColor(professional.name) }">
-      {{ getInitials(professional.name) }}
+    <div
+      class="card-avatar"
+      :style="(!professional.avatar || imagemComErro) ? { background: getColor(professional.name) } : {}"
+    >
+      <img
+        v-if="professional.avatar && !imagemComErro"
+        :src="professional.avatar"
+        :alt="professional.name"
+        class="avatar-img"
+        @error="imagemComErro = true"
+      >
+      <span v-else>{{ getInitials(professional.name) }}</span>
     </div>
 
     <div class="card-body">
       <h3 class="card-name">{{ professional.name }}</h3>
-      <p class="card-role">{{ professional.role }}</p>
+      <p class="card-role">{{ professional.title }}</p>
+      <p v-if="professional.location" class="card-location">📍 {{ professional.location }}</p>
+
+      <div v-if="skillsVisiveis.length" class="card-skills">
+        <span v-for="skill in skillsVisiveis" :key="skill" class="skill-chip">{{ skill }}</span>
+      </div>
 
       <div class="card-meta">
         <span class="card-rating">
           <span class="star">★</span>
           <strong>{{ professional.rating }}</strong>
-          <span class="reviews">({{ professional.reviews }})</span>
+          <span class="reviews">({{ professional.reviewsCount }})</span>
         </span>
-        <span class="card-price">R$ {{ professional.price }}<small>/h</small></span>
+        <span class="card-price">{{ precoInicial }}</span>
       </div>
 
       <button class="card-button" @click="emit('verPerfil', professional)">
@@ -87,6 +112,13 @@ function getColor(name) {
   font-size: 2.2rem;
   font-weight: 700;
   letter-spacing: 1px;
+  overflow: hidden;
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .card-body {
@@ -103,7 +135,29 @@ function getColor(name) {
 .card-role {
   font-size: 0.9rem;
   color: #6b7280;
-  margin: 0 0 14px;
+  margin: 0 0 6px;
+}
+
+.card-location {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  margin: 0 0 12px;
+}
+
+.card-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.skill-chip {
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 4px 9px;
+  border-radius: 999px;
 }
 
 .card-meta {
@@ -111,7 +165,8 @@ function getColor(name) {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  gap: 8px;
 }
 
 .card-rating {
@@ -119,6 +174,7 @@ function getColor(name) {
   align-items: center;
   gap: 4px;
   color: #444;
+  flex-shrink: 0;
 }
 
 .star {
@@ -133,13 +189,8 @@ function getColor(name) {
 .card-price {
   color: #2563eb;
   font-weight: 700;
-  font-size: 1rem;
-}
-
-.card-price small {
-  font-weight: 500;
-  color: #6b7280;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
+  text-align: right;
 }
 
 .card-button {

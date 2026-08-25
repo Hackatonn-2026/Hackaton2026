@@ -292,7 +292,7 @@ function validate() {
   ) {
     return 'Preencha todos os campos obrigatórios'
   }
-  const emailValido = /^[^\s@]+@[^\s@]+**\.**[^\s@]+$/.test(form.email.trim())
+  const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())
   if (!emailValido) {
     return 'Informe um e-mail válido'
   }

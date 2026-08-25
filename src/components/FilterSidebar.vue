@@ -1,14 +1,32 @@
 <script setup>
-import { reactive } from 'vue'
-const opcoesPreco = ['Até R$ 50', 'R$ 50 - R$ 100', 'R$ 100 - R$ 200', 'Acima de R$ 200']
+import { reactive, watch } from 'vue'
+
+const emit = defineEmits(['filtrar'])
+
+// cada faixa já vem com min/max numéricos, assim quem recebe o evento
+// (BuscaView) não precisa reinterpretar o texto do label
+const opcoesPreco = [
+  { label: 'Até R$ 50', min: 0, max: 50 },
+  { label: 'R$ 50 - R$ 100', min: 50, max: 100 },
+  { label: 'R$ 100 - R$ 200', min: 100, max: 200 },
+  { label: 'Acima de R$ 200', min: 200, max: Infinity },
+]
 const opcoesAvaliacao = [5, 4, 3]
+
 const filtros = reactive({
   localizacao: '',
   precos: [],
   avaliacoes: [],
   disponivelAgora: false,
-  apenasVerificados: false
+  apenasVerificados: false,
 })
+
+// qualquer mudança nos filtros avisa quem estiver escutando
+watch(
+  filtros,
+  () => emit('filtrar', { ...filtros }),
+  { deep: true, immediate: true }
+)
 
 function limparFiltros() {
   filtros.localizacao = ''
@@ -29,9 +47,9 @@ function limparFiltros() {
 
       <fieldset>
         <legend>Preço por hora</legend>
-        <label v-for="opcao in opcoesPreco" :key="opcao" class="check-label">
+        <label v-for="opcao in opcoesPreco" :key="opcao.label" class="check-label">
           <input v-model="filtros.precos" type="checkbox" :value="opcao">
-          <span>{{ opcao }}</span>
+          <span>{{ opcao.label }}</span>
         </label>
       </fieldset>
 
