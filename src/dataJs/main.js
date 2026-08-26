@@ -7,8 +7,6 @@ import BaseButton from './components/Button.vue'
 
 const app = createApp(App)
 
-console.log('VUE APP: mounting...')
-
 app.component('BaseButton', BaseButton)
 app.use(router)
 
