@@ -15,10 +15,9 @@
       <div class="footer-column">
         <h3>Empresa</h3>
         <ul>
-          <li><a href="#">Sobre Nós</a></li>
-          <li><a href="#">Como Funciona</a></li>
-          <li><a href="#">Categorias</a></li>
-          <li><a href="#">Planos Premium</a></li>
+          <li><RouterLink to="/sobre-nos">Sobre Nós</RouterLink></li>
+          <li><RouterLink to="/como-funciona">Como funciona</RouterLink></li>
+          <li><RouterLink to="/categorias">Categorias</RouterLink></li>
         </ul>
       </div>
 

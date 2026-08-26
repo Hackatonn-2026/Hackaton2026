@@ -1,34 +1,13 @@
 <template>
   <header class="header">
     <RouterLink to="/" class="logo">
-      <img src="@/assets/aidentro.jpg" alt="Aí dentro" class="logo-icon" />
+      <img src="/src/assets//logoCL.png" alt="Aí dentro" class="logo-icon" />
       <span class="logo-text">CiroLancers</span>
     </RouterLink>
 
    <SearchBar />
 
    <NavbarView />
-      <ul v-if="query.length > 0" class="search-suggestions">
-        <li v-if="resultados.length === 0" class="suggestion-empty">
-          Nenhum resultado encontrado
-        </li>
-        <li
-          v-for="item in resultados"
-          :key="item"
-          class="suggestion-item"
-          @click="buscar(item)"
-        >
-          {{ item }}
-        </li>
-      </ul>
-    </div>
-
-    <nav class="nav-links">
-      <RouterLink to="/categorias" class="nav-link">Categorias</RouterLink>
-      <a href="#como-funciona" class="nav-link">Como funciona</a>
-      <a href="#login" class="nav-link login-link">Login</a>
-      <BaseButton class="cadastrar-btn">Cadastrar</BaseButton>
-    </nav>
   </header>
 </template>
 
@@ -39,6 +18,9 @@ import NavbarView from '@/components/NavbarView.vue'
 
 <style scoped>
 .header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -46,6 +28,7 @@ import NavbarView from '@/components/NavbarView.vue'
   padding: 12px 64px;
   background: #ffffff;
   border-bottom: 1px solid #eef0f3;
+  box-shadow: 0 2px 8px rgb(15 23 42 / 6%);
   font-family: Arial, sans-serif;
   text-align: center;
 }

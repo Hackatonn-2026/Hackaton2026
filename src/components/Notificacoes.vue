@@ -17,6 +17,10 @@
 <script setup>
 import { computed } from 'vue'
 
+defineOptions({
+  name: 'NotificacaoToast'
+})
+
 const props = defineProps({
   mensagem: {
     type: String,
