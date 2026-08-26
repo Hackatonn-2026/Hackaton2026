@@ -16,7 +16,6 @@
             placeholder="Buscar profissionais ou serviços..."
           />
           <BaseButton type="button" @click="buscar">Pesquisar</BaseButton>
-          <BaseButton type="button">Pesquisar</BaseButton>
         </div>
 
         <div class="stats">
