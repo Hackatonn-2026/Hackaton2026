@@ -18,7 +18,6 @@
           <li><RouterLink to="/sobre-nos">Sobre Nós</RouterLink></li>
           <li><RouterLink to="/como-funciona">Como funciona</RouterLink></li>
           <li><RouterLink to="/categorias">Categorias</RouterLink></li>
-          <li><RouterLink to="/planos">Planos Premium</RouterLink></li>
         </ul>
       </div>
 
