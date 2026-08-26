@@ -352,14 +352,21 @@ async function handleSubmit() {
       contratacoes: tipoUsuario.value === 'contratante' ? [] : undefined,
       tipo: tipoUsuario.value
     }
- usuarioStore.login(
-      usuario,
-      tipoUsuario.value
-    )
-       if (tipoUsuario.value === 'freelancer') {
+
+    try {
+      usuarioStore.cadastrar(
+        usuario,
+        tipoUsuario.value
+      )
+    } catch (erroCadastro) {
+      erro.value = erroCadastro.message
+      return
+    }
+
+    if (tipoUsuario.value === 'freelancer') {
       router.push('/perfil-freelancer')
     }
-       else {
+    else {
       router.push('/dashboard-cliente')
     }
   } catch (error) {
