@@ -8,7 +8,6 @@
    <SearchBar />
 
    <NavbarView />
-
   </header>
 </template>
 
@@ -19,6 +18,9 @@ import NavbarView from '@/components/NavbarView.vue'
 
 <style scoped>
 .header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -26,6 +28,7 @@ import NavbarView from '@/components/NavbarView.vue'
   padding: 12px 64px;
   background: #ffffff;
   border-bottom: 1px solid #eef0f3;
+  box-shadow: 0 2px 8px rgb(15 23 42 / 6%);
   font-family: Arial, sans-serif;
   text-align: center;
 }

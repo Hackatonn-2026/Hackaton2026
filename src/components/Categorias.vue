@@ -180,6 +180,7 @@ const displayedCategories = computed(() => {
   color: #6b7280;
 }
 
+/* Grid padrão para a página de Categorias (com tamanho original) */
 .cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));

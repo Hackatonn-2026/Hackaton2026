@@ -1,3 +1,4 @@
+import { ref } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUsuarioStore } from '@/stores/usuario'
 
@@ -14,7 +15,13 @@ import DashboardCliente from '../views/DashboardClienteView.vue'
 import DashboardFreelancer from '../views/DashboardFreelancerView.vue'
 import Sobre from '../views/SobreView.vue'
 import Suporte from '../views/SuporteView.vue'
+import ComoFunciona from '../views/ComoFuncionaView.vue'
 import EsqueciSenha from '../views/EsqueciSenhaView.vue'
+
+export const carregandoRota = ref(false)
+const duracaoMinimaLoading = 300
+let temporizadorOcultar = null
+let inicioCarregamento = 0
 
 const routes = [
   { path: '/', name: 'home', component: Home },
@@ -42,7 +49,21 @@ const router = createRouter({
       return { el: to.hash, behavior: 'smooth' }
     }
     return { top: 0 }
-  }
+  },
+})
+
+router.beforeEach(() => {
+  window.clearTimeout(temporizadorOcultar)
+  inicioCarregamento = Date.now()
+  carregandoRota.value = true
+})
+
+router.afterEach(() => {
+  const tempoRestante = Math.max(0, duracaoMinimaLoading - (Date.now() - inicioCarregamento))
+
+  temporizadorOcultar = window.setTimeout(() => {
+    carregandoRota.value = false
+  }, tempoRestante)
 })
 
 router.beforeEach((to, from, next) => {
