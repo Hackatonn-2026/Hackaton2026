@@ -1,10 +1,14 @@
 <template>
   <div class="file-upload">
-    <label v-if="label" class="file-upload__label">{{ label }}</label>
+    <label v-if="label" class="file-upload__label">
+      {{ label }}
+    </label>
 
     <label
       class="file-upload__dropzone"
-      :class="{ 'file-upload__dropzone--dragging': isDragging }"
+      :class="{
+        'file-upload__dropzone--dragging': isDragging
+      }"
       @dragover.prevent="isDragging = true"
       @dragleave.prevent="isDragging = false"
       @drop.prevent="onDrop"
@@ -16,18 +20,33 @@
         @change="onChange"
       />
 
-      <svg class="file-upload__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-           stroke-linecap="round" stroke-linejoin="round">
+      <svg
+        class="file-upload__icon"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
         <polyline points="17 8 12 3 7 8" />
         <line x1="12" y1="3" x2="12" y2="15" />
       </svg>
 
       <p class="file-upload__text">
-        <template v-if="fileName">{{ fileName }}</template>
-        <template v-else>Clique para fazer upload ou arraste a imagem</template>
+        <template v-if="fileName">
+          {{ fileName }}
+        </template>
+
+        <template v-else>
+          Clique para fazer upload ou arraste a imagem
+        </template>
       </p>
-      <p class="file-upload__hint">{{ hint }}</p>
+
+      <p class="file-upload__hint">
+        {{ hint }}
+      </p>
     </label>
   </div>
 </template>
@@ -36,30 +55,68 @@
 import { ref } from 'vue'
 
 defineProps({
-  label: { type: String, default: '' },
-  hint: { type: String, default: 'PNG, JPG até 5MB' },
-  accept: { type: String, default: 'image/*' },
-  modelValue: { type: [File, null], default: null }
+  label: {
+    type: String,
+    default: ''
+  },
+
+  hint: {
+    type: String,
+    default: 'PNG, JPG até 5MB'
+  },
+
+  accept: {
+    type: String,
+    default: 'image/*'
+  },
+
+  file: {
+    type: File,
+    default: null
+  }
 })
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:file'])
 
 const isDragging = ref(false)
 const fileName = ref('')
 
 function setFile(file) {
-  if (!file) return
+  if (!file) {
+    return
+  }
+
+  // Verifica se é uma imagem
+  if (!file.type.startsWith('image/')) {
+    alert('Por favor, selecione uma imagem válida.')
+    return
+  }
+
+  // Limita o tamanho para 5 MB
+  const tamanhoMaximo = 5 * 1024 * 1024
+
+  if (file.size > tamanhoMaximo) {
+    alert('A imagem deve ter no máximo 5MB.')
+    return
+  }
+
   fileName.value = file.name
-  emit('update:modelValue', file)
+
+  emit('update:file', file)
 }
 
-function onChange(e) {
-  setFile(e.target.files[0])
+function onChange(event) {
+  const file = event.target.files?.[0]
+
+  setFile(file)
 }
 
-function onDrop(e) {
+function onDrop(event) {
   isDragging.value = false
-  setFile(e.dataTransfer.files[0])
+
+  const file = event.dataTransfer.files?.[0]
+
+  setFile(file)
 }
 </script>
 
@@ -88,7 +145,9 @@ function onDrop(e) {
   border: 1.5px dashed #d1d5db;
   border-radius: 10px;
   cursor: pointer;
-  transition: border-color 0.15s ease, background 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
 }
 
 .file-upload__dropzone:hover,
