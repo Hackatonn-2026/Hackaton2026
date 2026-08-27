@@ -58,7 +58,6 @@ export default {
 .footer {
   background: linear-gradient(135deg, #1e3a8a, #1e40af);
   border: 1px solid #3b82f6;
-  border-radius: 12px;
   padding: 40px 60px 20px;
   color: #ffffff;
   font-family: Arial, sans-serif;

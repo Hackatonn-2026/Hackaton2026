@@ -22,7 +22,7 @@
       </div>
 
       <div class="populares" v-if="isHome">
-       
+
       </div>
 
       <div class="see-all" v-if="showButton">
@@ -161,7 +161,7 @@ const displayedCategories = computed(() => {
 }
 
 .categories {
-  padding: 70px 8%;
+  padding: 70px 19%;
 }
 
 .section-title {
@@ -170,7 +170,7 @@ const displayedCategories = computed(() => {
 }
 
 .section-title h2 {
-  font-size: 42px;
+  font-size: 3.4rem;
   color: #1f2937;
 }
 
