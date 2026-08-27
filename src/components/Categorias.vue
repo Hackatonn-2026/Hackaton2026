@@ -3,6 +3,8 @@
   <div class="branco">
     <section class="categories">
       <div class="section-title">
+              <p class="eyebrow">CIROLANCERS</p>
+
         <h2>Categorias</h2>
         <p>Encontre profissionais especializados em diversas áreas</p>
       </div>
@@ -164,6 +166,7 @@ const displayedCategories = computed(() => {
   padding: 70px 19%;
 }
 
+
 .section-title {
   text-align: center;
   margin-bottom: 50px;
@@ -176,9 +179,15 @@ const displayedCategories = computed(() => {
 
 .section-title p {
   margin-top: 10px;
-  color: #6b7280;
 }
 
+.eyebrow {
+  margin: 0;
+  color: #2563eb;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
 /* Grid padrão para a página de Categorias (com tamanho original) */
 .cards {
   display: grid;

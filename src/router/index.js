@@ -38,7 +38,8 @@ const routes = [
   { path: '/dashboard-freelancer', name: 'dashboard-freelancer', component: DashboardFreelancer },
   { path: '/sobre', name: 'sobre', component: Sobre },
   { path: '/suporte', name: 'suporte', component: Suporte },
-  { path: '/esqueci-senha', name: 'esqueci-senha', component: EsqueciSenha }
+  { path: '/como-funciona', name: 'como-funciona', component: ComoFunciona },
+  { path: '/esqueci-senha', name: 'esqueci-senha', component: EsqueciSenha },
 ]
 
 const router = createRouter({
@@ -72,7 +73,9 @@ router.beforeEach((to, from, next) => {
   const rotasSemLogin = ['login', 'cadastro-cliente', 'cadastro-freelancer']
 
   if (rotasSemLogin.includes(to.name) && state.usuario) {
-       next({ name: state.tipoUsuario === 'freelancer' ? 'dashboard-freelancer' : 'dashboard-cliente' })
+    next({
+      name: state.tipoUsuario === 'freelancer' ? 'dashboard-freelancer' : 'dashboard-cliente',
+    })
   } else {
     next()
   }

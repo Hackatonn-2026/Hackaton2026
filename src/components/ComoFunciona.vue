@@ -16,7 +16,7 @@
         <p>{{ item.descricao }}</p>
       </div>
     </div>
-  </section>
+  </section>  
 </template>
 
 <script setup>
