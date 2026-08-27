@@ -415,6 +415,7 @@ section {
 .btn-primario:hover,
 .btn-secundario:hover {
   transform: translateY(-2px);
+  color: var(--sobre-azul);
 }
 
 .btn-primario {
