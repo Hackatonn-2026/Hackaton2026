@@ -8,6 +8,7 @@ import CadastroFreelancer from '../views/CadastroFreelancerView.vue'
 import Categorias from '../views/CategoriasView.vue'
 import Busca from '../views/BuscaView.vue'
 import PerfilFreelancer from '../views/PerfilFreelancer.vue'
+import PerfilPublico from '../views/PerfilPublicoView.vue'
 import SolicitarServico from '../views/SolicitarServicoView.vue'
 import Pagamento from '../views/PagamentoView.vue'
 import DashboardCliente from '../views/DashboardClienteView.vue'
@@ -24,7 +25,7 @@ const routes = [
   { path: '/cadastro-freelancer', name: 'cadastro-freelancer', component: CadastroFreelancer },
   { path: '/categorias', name: 'categorias', component: Categorias },
   { path: '/buscar', name: 'buscar', component: Busca },
-  { path: '/perfil/:id', name: 'perfil-publico', component: PerfilFreelancer },
+  { path: '/perfil/:id', name: 'perfil-publico', component: PerfilPublico },
   { path: '/perfil-freelancer', name: 'perfil-freelancer', component: PerfilFreelancer },
   { path: '/solicitar', name: 'solicitar', component: SolicitarServico },
   { path: '/pagamento', name: 'pagamento', component: Pagamento },

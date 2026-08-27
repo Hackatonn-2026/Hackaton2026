@@ -15,6 +15,10 @@ function salvarUsuarios(lista) {
   localStorage.setItem('usuarios', JSON.stringify(lista))
 }
 
+function gerarId() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 8)
+}
+
 export function useUsuarioStore() {
 
   // Cadastra um novo usuário na base E já loga com ele
@@ -29,7 +33,7 @@ export function useUsuarioStore() {
       throw new Error('Já existe uma conta com esse e-mail')
     }
 
-    const novoUsuario = { ...usuario, tipo: tipoUsuario }
+    const novoUsuario = { ...usuario, tipo: tipoUsuario, id: gerarId() }
     usuarios.push(novoUsuario)
     salvarUsuarios(usuarios)
 
@@ -105,5 +109,44 @@ export function useUsuarioStore() {
     return usuarioAtualizado
   }
 
-  return { state, cadastrar, login, autenticar, logout, atualizarPerfil }
+  // Registra a contratação de um freelancer pelo cliente logado
+  function contratar(dadosSolicitacao) {
+    if (!state.usuario) {
+      throw new Error('Você precisa estar logado para solicitar um serviço')
+    }
+
+    const usuarios = getUsuarios()
+    const emailAtual = state.usuario.email?.toLowerCase()
+
+    const contratacoes = state.usuario.contratacoes || []
+    const novaContratacao = {
+      ...dadosSolicitacao,
+      dataContratacao: new Date().toISOString()
+    }
+
+    const usuarioAtualizado = {
+      ...state.usuario,
+      contratacoes: [...contratacoes, novaContratacao]
+    }
+
+    const indice = usuarios.findIndex(
+      (u) => u.email?.toLowerCase() === emailAtual
+    )
+    if (indice !== -1) {
+      usuarios[indice] = usuarioAtualizado
+      salvarUsuarios(usuarios)
+    }
+
+    login(usuarioAtualizado, state.tipoUsuario)
+
+    return novaContratacao
+  }
+
+  // Busca um freelancer pelo id (usado no perfil público)
+  function buscarPorId(id) {
+    const usuarios = getUsuarios()
+    return usuarios.find((u) => u.id === id) || null
+  }
+
+  return { state, cadastrar, login, autenticar, logout, atualizarPerfil, contratar, buscarPorId }
 }
