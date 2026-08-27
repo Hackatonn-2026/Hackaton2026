@@ -2,21 +2,21 @@ import { ref } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUsuarioStore } from '@/stores/usuario'
 
-import Home from '../views/HomeView.vue'
-import Login from '../views/LoginView.vue'
-import CadastroCliente from '../views/CadastroClienteView.vue'
-import CadastroFreelancer from '../views/CadastroFreelancerView.vue'
-import Categorias from '../views/CategoriasView.vue'
-import Busca from '../views/BuscaView.vue'
+import Home from '../views/Inicio.vue'
+import Login from '../views/Login.vue'
+import CadastroCliente from '../views/CadastroCliente.vue'
+import CadastroFreelancer from '../views/CadastroFreelancer.vue'
+import Categorias from '../views/Categorias.vue'
+import Busca from '../views/Busca.vue'
 import PerfilFreelancer from '../views/PerfilFreelancer.vue'
-import SolicitarServico from '../views/SolicitarServicoView.vue'
-import Pagamento from '../views/PagamentoView.vue'
-import DashboardCliente from '../views/DashboardClienteView.vue'
-import DashboardFreelancer from '../views/DashboardFreelancerView.vue'
-import Sobre from '../views/SobreView.vue'
-import Suporte from '../views/SuporteView.vue'
-import ComoFunciona from '../views/ComoFuncionaView.vue'
-import EsqueciSenha from '../views/EsqueciSenhaView.vue'
+import SolicitarServico from '../views/SolicitarServico.vue'
+import Pagamento from '../views/Pagamento.vue'
+import DashboardCliente from '../views/PainelCliente.vue'
+import DashboardFreelancer from '../views/PainelFreelancer.vue'
+import Sobre from '../views/Sobre.vue'
+import Suporte from '../views/Suporte.vue'
+import ComoFunciona from '../views/ComoFunciona.vue'
+import EsqueciSenha from '../views/EsqueciSenha.vue'
 
 export const carregandoRota = ref(false)
 const duracaoMinimaLoading = 300
@@ -38,7 +38,8 @@ const routes = [
   { path: '/dashboard-freelancer', name: 'dashboard-freelancer', component: DashboardFreelancer },
   { path: '/sobre', name: 'sobre', component: Sobre },
   { path: '/suporte', name: 'suporte', component: Suporte },
-  { path: '/esqueci-senha', name: 'esqueci-senha', component: EsqueciSenha }
+  { path: '/como-funciona', name: 'como-funciona', component: ComoFunciona },
+  { path: '/esqueci-senha', name: 'esqueci-senha', component: EsqueciSenha },
 ]
 
 const router = createRouter({
@@ -72,7 +73,9 @@ router.beforeEach((to, from, next) => {
   const rotasSemLogin = ['login', 'cadastro-cliente', 'cadastro-freelancer']
 
   if (rotasSemLogin.includes(to.name) && state.usuario) {
-       next({ name: state.tipoUsuario === 'freelancer' ? 'dashboard-freelancer' : 'dashboard-cliente' })
+    next({
+      name: state.tipoUsuario === 'freelancer' ? 'dashboard-freelancer' : 'dashboard-cliente',
+    })
   } else {
     next()
   }

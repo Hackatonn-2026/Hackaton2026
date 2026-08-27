@@ -1,431 +1,128 @@
-<template>
-  <div class="perfil-page">
+<script setup>
+import { ref } from 'vue'
+import ProfileHeader from '../components/CabecalhoPerfil.vue'
+import ProfileTabs from '../components/AbasPerfil.vue'
+import AboutSection from '../components/SecaoSobre.vue'
+import ServicesSidebar from '../components/BarraServicos.vue'
+import { profissionais } from '@/dataJs/profissionais.js'
+import { useRoute } from 'vue-router'
+import AbaAvaliacao from '@/components/AbaAvaliacao.vue'
 
-        <header class="header">
-      <div class="brand">
-        <span class="brand-logo">ai</span>
-        <span class="brand-name">CiroLancers</span>
+const activeTab = ref('Sobre')
+
+  const route = useRoute()
+
+  const profissional = profissionais.find(p => p.id === Number(route.params.id))
+// const profissional = profissionais.find(p => p.id === 1)
+const servicos = [
+  {
+    title: 'Desenvolvimento de Website',
+    priceRange: 'R$ 3.000 - R$ 8.000',
+    duration: '2-4 semanas',
+  },
+  {
+    title: 'App Mobile (iOS/Android)',
+    priceRange: 'R$ 10.000 - R$ 25.000',
+    duration: '1-3 meses',
+  },
+  {
+    title: 'Consultoria Técnica',
+    priceRange: 'R$ 150/hora',
+    duration: 'Por hora',
+  },
+]
+
+function handleRequestQuote() {
+  console.log('Solicitar orçamento')
+}
+
+function handleScheduleCall() {
+  console.log('Agendar conversa')
+}
+</script>
+
+<template>
+  <div class="page-container">
+    <AppHeader />
+
+    <ProfileHeader
+      :name="profissional.name"
+      :title="profissional.title"
+      :avatar="profissional.avatar"
+      :verified="profissional.verified"
+      :rating="profissional.rating"
+      :reviews-count="profissional.reviewsCount"
+      :location="profissional.location"
+      :completed-projects="profissional.completedProjects"
+      @request-quote="handleRequestQuote"
+      @schedule-call="handleScheduleCall"
+    />
+
+    <main class="main-content">
+      <div class="content-card">
+        <ProfileTabs v-model="activeTab" />
+
+        <div class="tab-body">
+          <AboutSection
+            v-if="activeTab === 'Sobre'"
+            :bio="profissional.bio"
+            :skills="profissional.skills"
+            :experiences="profissional.experiences"
+          />
+
+          <div v-else-if="activeTab === 'Portfólio'" class="empty-tab">
+            Nenhum item de portfólio ainda.
+          </div>
+
+          <AbaAvaliacao
+  v-else-if="activeTab === 'Avaliações'"
+  :profissional="profissional"
+/>
+        </div>
       </div>
 
-      <button class="btn-voltar" @click="voltar">
-        ← Voltar
-      </button>
-    </header>
-
-    
-    <main class="perfil-container">
-
-      <section class="perfil-card">
-
-    
-        <div class="perfil-topo">
-
-          <div class="foto-container">
-            <img
-              v-if="freelancer.fotoPerfil"
-              :src="freelancer.fotoPerfil"
-              alt="Foto de perfil"
-              class="foto"
-            />
-
-            <div v-else class="foto-placeholder">
-              {{ primeiraLetra }}
-            </div>
-          </div>
-
-          <div class="informacoes-principais">
-
-            <h1>
-              {{ freelancer.nome }}
-            </h1>
-
-            <h2>
-              {{ freelancer.profissao }}
-            </h2>
-
-            <p class="localizacao">
-              📍 {{ freelancer.cidade }}
-            </p>
-
-          </div>
-
-        </div>
-
-    
-        <section class="secao">
-
-          <h3>Sobre mim</h3>
-
-          <p class="descricao">
-            {{ freelancer.descricao || 'Nenhuma descrição informada.' }}
-          </p>
-
-        </section>
-
-    
-        <section class="secao">
-
-          <h3>Experiência profissional</h3>
-
-          <div class="experiencia">
-
-            <span class="icone">💼</span>
-
-            <div>
-              <strong>Experiência</strong>
-
-              <p>
-                {{ experienciaTexto }}
-              </p>
-            </div>
-
-          </div>
-
-        </section>
-
-            <section class="secao">
-
-          <h3>Áreas de atuação</h3>
-
-          <div class="categorias">
-
-            <span
-              v-for="categoria in freelancer.categorias"
-              :key="categoria"
-              class="categoria"
-            >
-              {{ categoria }}
-            </span>
-
-            <span
-              v-if="!freelancer.categorias?.length"
-              class="sem-categoria"
-            >
-              Nenhuma categoria informada.
-            </span>
-
-          </div>
-
-        </section>
-
-            <section class="contato">
-
-          <h3>Interessado no trabalho?</h3>
-
-          <button class="btn-contato" @click="contatar">
-            Entrar em contato
-          </button>
-
-        </section>
-
-      </section>
-
+      <ServicesSidebar :services="servicos" @request-quote="handleRequestQuote" />
     </main>
-
   </div>
 </template>
 
-
-<script setup>
-
-import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-
-const router = useRouter()
-
-const freelancer = ref({
-  nome: '',
-  profissao: '',
-  cidade: '',
-  descricao: '',
-  anosExperiencia: '',
-  categorias: [],
-  fotoPerfil: null
-})
-
-onMounted(() => {
-
-  const dadosSalvos = localStorage.getItem('freelancerPerfil')
-
-  if (dadosSalvos) {
-    freelancer.value = JSON.parse(dadosSalvos)
-  }
-
-})
-
-
-const primeiraLetra = computed(() => {
-
-  if (!freelancer.value.nome) {
-    return '?'
-  }
-
-  return freelancer.value.nome.charAt(0).toUpperCase()
-
-})
-
-
-const experienciaTexto = computed(() => {
-
-  const experiencias = {
-
-    'menos-1': 'Menos de 1 ano',
-
-    '1-3': '1 a 3 anos',
-
-    '3-5': '3 a 5 anos',
-
-    '5-10': '5 a 10 anos',
-
-    'mais-10': 'Mais de 10 anos'
-
-  }
-
-  return experiencias[freelancer.value.anosExperiencia]
-    || 'Experiência não informada'
-
-})
-
-
-function voltar() {
-  router.back()
-}
-
-
-function contatar() {
-
-  if (freelancer.value.email) {
-
-    window.location.href =
-      `mailto:${freelancer.value.email}`
-
-  }
-
-}
-
-</script>
-
-
 <style scoped>
-
-.perfil-page {
+.page-container {
   min-height: 100vh;
-  background: #f3f4f6;
+  background-color: #f8fafc;
+  font-family: Arial, sans-serif;
 }
 
-/* HEADER */
-
-.header {
-  height: 72px;
-  background: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 6%;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+.main-content {
+  max-width: 1120px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 32px;
+  padding: 32px 24px;
 }
 
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.content-card {
+  background-color: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  padding: 32px;
 }
 
-.brand-logo {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  background: #3b5bfd;
-  color: white;
-  font-weight: 700;
-  font-size: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.tab-body {
+  padding-top: 24px;
 }
 
-.brand-name {
-  font-size: 22px;
-  font-weight: 800;
-  color: #1a1a2e;
-}
-
-.btn-voltar {
-  border: none;
-  background: transparent;
-  color: #3b5bfd;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.perfil-container {
-  max-width: 900px;
-  margin: 40px auto;
-  padding: 0 20px;
-}
-
-.perfil-card {
-  background: white;
-  border-radius: 18px;
-  padding: 40px;
-  box-shadow:
-    0 2px 5px rgba(0,0,0,0.05),
-    0 10px 30px rgba(0,0,0,0.05);
-}
-
-
-
-.perfil-topo {
-  display: flex;
-  align-items: center;
-  gap: 25px;
-  padding-bottom: 30px;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.foto-container {
-  flex-shrink: 0;
-}
-
-.foto {
-  width: 130px;
-  height: 130px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 4px solid #eef2ff;
-}
-
-.foto-placeholder {
-  width: 130px;
-  height: 130px;
-  border-radius: 50%;
-  background: #3b5bfd;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 50px;
-  font-weight: 700;
-}
-.informacoes-principais h1 {
-  margin: 0;
-  font-size: 30px;
-  color: #1a1a2e;
-}
-
-.informacoes-principais h2 {
-  margin: 8px 0;
-  font-size: 18px;
-  font-weight: 600;
-  color: #3b5bfd;
-}
-
-.localizacao {
-  color: #6b7280;
-  margin: 8px 0;
-}
-.secao {
-  padding: 28px 0;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.secao h3 {
-  margin: 0 0 14px;
-  font-size: 18px;
-  color: #1a1a2e;
-}
-
-.descricao {
-  color: #4b5563;
-  line-height: 1.7;
-  font-size: 15px;
-}
-
-.experiencia {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.icone {
-  width: 45px;
-  height: 45px;
-  background: #eef2ff;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.experiencia strong {
-  color: #1a1a2e;
-}
-
-.experiencia p {
-  margin: 5px 0 0;
-  color: #6b7280;
-}
-
-.categorias {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.categoria {
-  background: #eef2ff;
-  color: #3b5bfd;
-  padding: 8px 14px;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.sem-categoria {
-  color: #6b7280;
-}
-
-.contato {
-  padding-top: 30px;
+.empty-tab {
+  color: #9ca3af;
   text-align: center;
+  padding: 32px 0;
+  font-size: 14px;
 }
 
-.contato h3 {
-  color: #1a1a2e;
-  margin-bottom: 18px;
-}
-
-.btn-contato {
-  border: none;
-  background: #3b5bfd;
-  color: white;
-  padding: 13px 28px;
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.btn-contato:hover {
-  background: #2f4bea;
-}
-
-@media (max-width: 600px) {
-
-  .perfil-card {
-    padding: 25px;
+@media (max-width: 900px) {
+  .main-content {
+    grid-template-columns: 1fr;
   }
-
-  .perfil-topo {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .informacoes-principais h1 {
-    font-size: 25px;
-  }
-
 }
-
 </style>

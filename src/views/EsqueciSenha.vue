@@ -60,7 +60,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import InputForm from '../components/InputForm.vue'
+import InputForm from '../components/FormularioEntrada.vue'
 
 const email = ref('')
 const erro = ref('')

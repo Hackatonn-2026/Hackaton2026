@@ -3,8 +3,8 @@
     <div class="footer-container">
       <div class="footer-brand">
         <div class="brand-header">
-          <img src="@/assets/aidentro.jpg" alt="Ciro Lancers" class="logo-img" />
-          <span class="brand-name">Ciro Lancers</span>
+          <img src="/src/assets/logoCL.png" alt="Ciro Lancers" class="logo-img" />
+          <span class="brand-name">CiroLancers</span>
         </div>
         <p class="brand-desc">
           Conectando profissionais talentosos com clientes que precisam de
@@ -15,7 +15,7 @@
       <div class="footer-column">
         <h3>Empresa</h3>
         <ul>
-          <li><RouterLink to="/sobre-nos">Sobre Nós</RouterLink></li>
+          <li><RouterLink to="/sobre">Sobre Nós</RouterLink></li>
           <li><RouterLink to="/como-funciona">Como funciona</RouterLink></li>
           <li><RouterLink to="/categorias">Categorias</RouterLink></li>
         </ul>
@@ -58,7 +58,6 @@ export default {
 .footer {
   background: linear-gradient(135deg, #1e3a8a, #1e40af);
   border: 1px solid #3b82f6;
-  border-radius: 12px;
   padding: 40px 60px 20px;
   color: #ffffff;
   font-family: Arial, sans-serif;
@@ -85,7 +84,7 @@ export default {
 .logo-img {
   width: 40px;
   height: 40px;
-  border-radius: 50%;
+  border-radius: 15%;
   object-fit: cover;
   flex-shrink: 0;
 }

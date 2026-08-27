@@ -95,6 +95,7 @@ const skillsVisiveis = (props.professional.skills || []).slice(0, 3)
   flex-direction: column;
   max-width: 280px;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
+  margin: 12px;
 }
 
 .card:hover {
