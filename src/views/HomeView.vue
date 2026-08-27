@@ -31,12 +31,12 @@
 
     <section class="stats">
       <div class="stat">
-        <h2>15.000+</h2>
+        <h2>32</h2>
         <span>Profissionais Ativos</span>
       </div>
 
       <div class="stat">
-        <h2>50.000+</h2>
+        <h2>1.000</h2>
         <span>Projetos Concluídos</span>
       </div>
 
@@ -46,8 +46,8 @@
       </div>
 
       <div class="stat">
-        <h2>12</h2>
-        <span>Países</span>
+        <h2>1</h2>
+        <span>Estados</span>
       </div>
     </section>
 
