@@ -3,47 +3,75 @@
 
     <section class="hero">
       <div class="hero-content">
-        <h1>Encontre o profissional ideal para qualquer serviço</h1>
-        <p>
-          Conectamos clientes aos melhores profissionais em diversas áreas,
-          com rapidez, segurança e qualidade.
-        </p>
+        <h1>Encontre um profissional agora</h1>
+        <p>Conecte-se com os melhores freelancers para seu projeto</p>
 
         <div class="search">
           <input
             type="text"
             v-model="query"
-            placeholder="Buscar profissionais ou serviços..."
+            placeholder="Qual serviço você procura?"
           />
-          <BaseButton type="button" @click="buscar">Pesquisar</BaseButton>
+          <BaseButton type="button" @click="buscar">Buscar</BaseButton>
         </div>
 
-        <div class="stats">
-          <div class="stat">
-            <h2>2.500+</h2>
-            <span>Profissionais Ativos</span>
-          </div>
-
-          <div class="stat">
-            <h2>12.000+</h2>
-            <span>Projetos Concluídos</span>
-          </div>
-
-          <div class="stat">
-            <h2>98%</h2>
-            <span>Satisfação</span>
-          </div>
-
-          <div class="stat">
-            <h2>27</h2>
-            <span>Estados Atendidos</span>
-          </div>
+        <div class="populares">
+          <span>Popular:</span>
+          <button
+            v-for="termo in buscasPopulares"
+            :key="termo"
+            class="tag-popular"
+            @click="buscarPopular(termo)"
+          >
+            {{ termo }}
+          </button>
         </div>
+      </div>
+    </section>
+
+    <section class="stats">
+      <div class="stat">
+        <h2>32</h2>
+        <span>Profissionais Ativos</span>
+      </div>
+
+      <div class="stat">
+        <h2>1.000</h2>
+        <span>Projetos Concluídos</span>
+      </div>
+
+      <div class="stat">
+        <h2>98%</h2>
+        <span>Satisfação</span>
+      </div>
+
+      <div class="stat">
+        <h2>1</h2>
+        <span>Estados</span>
       </div>
     </section>
 
     <Categorias :limit="3" :is-home="true" />
 
+    <section class="featured">
+      <h2>Profissionais em Destaque</h2>
+      <p>Conheça alguns dos nossos melhores profissionais</p>
+
+      <div class="grid">
+        <ProfessionalCard
+          v-for="p in professionals"
+          :key="p.id"
+          :professional="p"
+          @ver-perfil="handleVerPerfil"
+        />
+      </div>
+    </section>
+
+    <ComoFunciona />
+
+    <Depoimentos />
+
+    <CtaFinal />
   </main>
 </template>
 
@@ -52,11 +80,16 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import Categorias from '@/components/Categorias.vue'
 import ProfessionalCard from '@/components/ProfessionalCard.vue'
+import ComoFunciona from '@/components/ComoFunciona.vue'
+import Depoimentos from '@/components/Depoimentos.vue'
+import CtaFinal from '@/components/CtaFinal.vue'
 import { useNotificacoes } from '@/composables/useNotificacoes'
 
 const query = ref('')
 const router = useRouter()
 const { adicionar } = useNotificacoes()
+
+const buscasPopulares = ['Desenvolvimento Web', 'Design Gráfico', 'Marketing Digital', 'Fotografia']
 
 const professionals = [
   { id: 1, name: 'Carlos Silva', role: 'Desenvolvedor Full Stack', rating: 4.9, reviews: 127, price: 150, avatar: '/img/carlos.jpg' },
@@ -67,6 +100,11 @@ const professionals = [
 
 function handleVerPerfil(prof) {
   router.push(`/perfil/${prof.id}`)
+}
+
+function buscarPopular(termo) {
+  query.value = termo
+  buscar()
 }
 
 function buscar() {
@@ -90,37 +128,45 @@ function buscar() {
 /* HERO */
 
 .hero {
-  padding: 70px 8%;
+  padding: 70px 8% 60px;
   text-align: center;
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
 }
 
 .hero h1 {
   font-size: 48px;
-  color: #1f2937;
-  margin-bottom: 20px;
+  color: #fff;
+  margin-bottom: 16px;
 }
 
 .hero p {
   max-width: 700px;
   margin: auto;
-  color: #6b7280;
+  color: #dbe4ff;
   font-size: 18px;
   line-height: 1.6;
 }
 
 .search {
-  margin: 45px auto;
+  margin: 40px auto 0;
   display: flex;
-  justify-content: center;
+  align-items: center;
   max-width: 750px;
+  background: #fff;
+  border-radius: 50px;
+  padding: 8px 8px 8px 22px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.search-icon {
+  margin-right: 10px;
+  opacity: 0.6;
 }
 
 .search input {
   flex: 1;
-  padding: 16px;
-  border: 1px solid #dcdcdc;
-  border-right: none;
-  border-radius: 10px 0 0 10px;
+  border: none;
+  padding: 12px 0;
   font-size: 16px;
 }
 
@@ -129,20 +175,54 @@ function buscar() {
 }
 
 .search button {
-  width: 170px;
   border: none;
   background: #2563eb;
   color: white;
   font-size: 16px;
   cursor: pointer;
-  border-radius: 0 10px 10px 0;
+  border-radius: 40px;
+  padding: 14px 28px;
 }
+
+.populares {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 14px;
+  color: #dbe4ff;
+}
+
+.tag-popular {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tag-popular:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* STATS */
 
 .stats {
   display: flex;
   justify-content: center;
   gap: 60px;
   flex-wrap: wrap;
+  background: #f8f9fc;
+  padding: 40px 8%;
+}
+
+.stat {
+  text-align: center;
 }
 
 .stat h2 {
@@ -153,10 +233,13 @@ function buscar() {
 .stat span {
   color: #6b7280;
 }
+
+/* FEATURED */
+
 .featured {
   padding: 60px 8% 80px;
   text-align: center;
-  background: #f9fafb;
+  background: #fff;
 }
 
 .featured h2 {
@@ -176,27 +259,26 @@ function buscar() {
   gap: 24px;
   justify-content: center;
 }
-@media(max-width:768px){
 
-.hero h1{
-    font-size:34px;
-}
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 34px;
+  }
 
-.search{
-    flex-direction:column;
-}
+  .search {
+    flex-direction: column;
+    border-radius: 20px;
+    padding: 14px;
+  }
 
-.search input{
-    border-radius:10px;
-    border-right:1px solid #dcdcdc;
-}
+  .search input {
+    width: 100%;
+    text-align: center;
+  }
 
-.search button{
-    width:100%;
-    margin-top:12px;
-    border-radius:10px;
-    padding:16px;
-}
-
+  .search button {
+    width: 100%;
+    margin-top: 10px;
+  }
 }
 </style>

@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
+import { useUsuarioStore } from '@/stores/usuario'
 
 import Home from '../views/HomeView.vue'
 import Login from '../views/LoginView.vue'
@@ -23,21 +24,22 @@ let temporizadorOcultar = null
 let inicioCarregamento = 0
 
 const routes = [
-  { path: '/', component: Home },
-  { path: '/login', component: Login },
-  { path: '/cadastro-cliente', component: CadastroCliente },
-  { path: '/cadastro-freelancer', component: CadastroFreelancer },
-  { path: '/categorias', component: Categorias },
-  { path: '/buscar', component: Busca },
-  { path: '/como-funciona', component: ComoFunciona },
-  { path: '/perfil/:id', component: PerfilFreelancer },
-  { path: '/solicitar', component: SolicitarServico },
-  { path: '/pagamento', component: Pagamento },
-  { path: '/dashboard-cliente', component: DashboardCliente },
-  { path: '/dashboard-freelancer', component: DashboardFreelancer },
-  { path: '/sobre', component: Sobre },
-  { path: '/suporte', component: Suporte },
-  { path: '/esqueci-senha', component: EsqueciSenha },
+  { path: '/', name: 'home', component: Home },
+  { path: '/login', name: 'login', component: Login },
+  { path: '/cadastro-cliente', name: 'cadastro-cliente', component: CadastroCliente },
+  { path: '/cadastro-freelancer', name: 'cadastro-freelancer', component: CadastroFreelancer },
+  { path: '/categorias', name: 'categorias', component: Categorias },
+  { path: '/buscar', name: 'buscar', component: Busca },
+  { path: '/perfil/:id', name: 'perfil-publico', component: PerfilFreelancer },
+  { path: '/perfil-freelancer', name: 'perfil-freelancer', component: PerfilFreelancer },
+  { path: '/solicitar', name: 'solicitar', component: SolicitarServico },
+  { path: '/pagamento', name: 'pagamento', component: Pagamento },
+  { path: '/dashboard-cliente', name: 'dashboard-cliente', component: DashboardCliente },
+  { path: '/dashboard-freelancer', name: 'dashboard-freelancer', component: DashboardFreelancer },
+  { path: '/sobre', name: 'sobre', component: Sobre },
+  { path: '/suporte', name: 'suporte', component: Suporte },
+  { path: '/como-funciona', name: 'como-funciona', component: ComoFunciona },
+  { path: '/esqueci-senha', name: 'esqueci-senha', component: EsqueciSenha },
 ]
 
 const router = createRouter({
@@ -47,7 +49,6 @@ const router = createRouter({
     if (to.hash) {
       return { el: to.hash, behavior: 'smooth' }
     }
-
     return { top: 0 }
   },
 })
@@ -66,9 +67,18 @@ router.afterEach(() => {
   }, tempoRestante)
 })
 
-router.onError(() => {
-  window.clearTimeout(temporizadorOcultar)
-  carregandoRota.value = false
+router.beforeEach((to, from, next) => {
+  const { state } = useUsuarioStore()
+
+  const rotasSemLogin = ['login', 'cadastro-cliente', 'cadastro-freelancer']
+
+  if (rotasSemLogin.includes(to.name) && state.usuario) {
+    next({
+      name: state.tipoUsuario === 'freelancer' ? 'dashboard-freelancer' : 'dashboard-cliente',
+    })
+  } else {
+    next()
+  }
 })
 
 export default router

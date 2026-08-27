@@ -3,18 +3,19 @@
   <div class="branco">
     <section class="categories">
       <div class="section-title">
-        <h2>Categorias Populares</h2>
+              <p class="eyebrow">CIROLANCERS</p>
+
+        <h2>Categorias</h2>
         <p>Encontre profissionais especializados em diversas áreas</p>
       </div>
 
-      <!-- Aplica a classe 'home-cards' caso esteja na Home -->
       <div :class="['cards', { 'home-cards': isHome }]">
         <RouterLink
           v-for="category in displayedCategories"
           :key="category.name"
-          :to="{ path: '/categorias', query: { busca: category.name } }"
+          :to="{ path: '/buscar', query: { busca: category.name } }"
           class="card"
-        >
+          >
           <div class="icon" v-html="category.icon"></div>
 
           <h3>{{ category.name }}</h3>
@@ -22,7 +23,10 @@
         </RouterLink>
       </div>
 
-      <!-- Exibe o botão apenas se showButton for verdadeiro -->
+      <div class="populares" v-if="isHome">
+
+      </div>
+
       <div class="see-all" v-if="showButton">
         <RouterLink to="/categorias" class="see-all-btn">
           Ver Todas as Categorias
@@ -159,8 +163,9 @@ const displayedCategories = computed(() => {
 }
 
 .categories {
-  padding: 70px 8%;
+  padding: 70px 19%;
 }
+
 
 .section-title {
   text-align: center;
@@ -168,15 +173,23 @@ const displayedCategories = computed(() => {
 }
 
 .section-title h2 {
-  font-size: 42px;
+  font-size: 3.4rem;
   color: #1f2937;
 }
 
 .section-title p {
   margin-top: 10px;
   color: #6b7280;
+  font-size: 1.1rem;
 }
 
+.eyebrow {
+  margin: 0;
+  color: #2563eb;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
 /* Grid padrão para a página de Categorias (com tamanho original) */
 .cards {
   display: grid;
@@ -184,7 +197,6 @@ const displayedCategories = computed(() => {
   gap: 30px;
 }
 
-/* Grid específico para a Home (força 3 colunas em telas maiores) */
 .cards.home-cards {
   grid-template-columns: repeat(3, 1fr);
 }
@@ -195,7 +207,6 @@ const displayedCategories = computed(() => {
   }
 }
 
-/* Card individual */
 .card {
   display: flex;
   flex-direction: column;

@@ -1,8 +1,6 @@
 <template>
   <div class="auth-page">
     <div class="auth-brand">
-      <span class="auth-brand__logo">ai</span>
-      <span class="auth-brand__name">CiroLancers</span>
     </div>
 
     <h1 class="auth-title">Entrar na sua conta</h1>
@@ -37,6 +35,10 @@
           </label>
           <RouterLink to="/esqueci-senha" class="auth-link">Esqueceu a senha?</RouterLink>
         </div>
+
+        <p v-if="erroGeral" class="form-error">
+          {{ erroGeral }}
+        </p>
 
         <button type="submit" class="auth-submit" :disabled="loading">
           {{ loading ? 'Entrando...' : 'Entrar' }}
@@ -76,14 +78,17 @@
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import InputForm from '../components/InputForm.vue'
+import { useUsuarioStore } from '@/stores/usuario'
 
 const router = useRouter()
+const usuarioStore = useUsuarioStore()
 
 const email = ref('')
 const senha = ref('')
 const lembrarMe = ref(false)
 const loading = ref(false)
 const errors = reactive({ email: '', senha: '' })
+const erroGeral = ref('')
 
 function validate() {
   errors.email = email.value ? '' : 'Informe seu e-mail'
@@ -92,12 +97,25 @@ function validate() {
 }
 
 async function handleSubmit() {
+  erroGeral.value = ''
+
   if (!validate()) return
+
   loading.value = true
+
   try {
-    // TODO: integrar com a API de autenticação
-    // await api.post('/login', { email: email.value, senha: senha.value })
-    router.push('/dashboard-cliente')
+    const autenticou = usuarioStore.autenticar(email.value, senha.value)
+
+    if (!autenticou) {
+      erroGeral.value = 'E-mail ou senha incorretos'
+      return
+    }
+
+    if (usuarioStore.state.tipoUsuario === 'freelancer') {
+      router.push('/perfil-freelancer')
+    } else {
+      router.push('/dashboard-cliente')
+    }
   } finally {
     loading.value = false
   }
@@ -216,6 +234,16 @@ function loginComFacebook() {
   text-decoration: underline;
 }
 
+.form-error {
+  color: #dc2626;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
 .auth-submit {
   width: 100%;
   border: none;
@@ -277,11 +305,9 @@ function loginComFacebook() {
   color: #1a1a2e;
   cursor: pointer;
 }
-
 .auth-social-btn:hover {
   background: #f9fafb;
 }
-
 .auth-footer-text {
   text-align: center;
   font-size: 14px;
