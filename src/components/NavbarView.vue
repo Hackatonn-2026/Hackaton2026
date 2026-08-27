@@ -4,7 +4,7 @@
     <RouterLink to="/buscar" class="nav-link">Buscar</RouterLink>
     <RouterLink to="/categorias" class="nav-link">Categorias</RouterLink>
 
-      <RouterLink
+    <RouterLink
       v-if="!usuarioStore.state.usuario"
       to="/login"
       class="nav-link login-link"
@@ -12,7 +12,6 @@
       Login
     </RouterLink>
 
-  
     <RouterLink
       v-else
       :to="linkPerfil"
@@ -23,37 +22,34 @@
         :alt="usuarioStore.state.usuario.nome"
         class="avatar-link__img"
       />
+
       <span class="avatar-link__nome">
         {{ usuarioStore.state.usuario.nome }}
       </span>
     </RouterLink>
 
-  
     <button
-    v-if="usuarioStore.state.usuario"
+      v-if="usuarioStore.state.usuario"
       type="button"
       class="nav-link logout-btn"
       @click="sair"
     >
+      Sair
     </button>
-
   </nav>
 </template>
 
 <script setup>
-
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUsuarioStore } from '@/stores/usuario'
 
 const router = useRouter()
-
 const usuarioStore = useUsuarioStore()
 
 const avatarPadrao = '/img/avatar-padrao.png'
 
 const linkPerfil = computed(() => {
-
   const usuario = usuarioStore.state.usuario
 
   if (!usuario) return '/'
@@ -61,17 +57,12 @@ const linkPerfil = computed(() => {
   return usuarioStore.state.tipoUsuario === 'freelancer'
     ? '/perfil-freelancer'
     : '/dashboard-cliente'
-
 })
 
 function sair() {
-
   usuarioStore.logout()
-
   router.push('/')
-
 }
-
 </script>
 
 <style scoped>
@@ -126,17 +117,19 @@ function sair() {
 }
 
 .logout-btn {
-  background: transparent;
-  border: 1px solid #d1d5db;
+  background: #dc2626;
+  border: 1px solid #dc2626;
   padding: 8px 14px;
   border-radius: 8px;
   cursor: pointer;
   font-size: 14px;
-  color: #4b5563;
+  font-weight: 600;
+  color: #fff;
 }
 
 .logout-btn:hover {
-  border-color: #dc2626;
-  color: #dc2626;
+  background: #b91c1c;
+  border-color: #b91c1c;
+  color: #fff;
 }
 </style>
