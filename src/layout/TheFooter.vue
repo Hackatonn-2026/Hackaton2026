@@ -15,7 +15,7 @@
       <div class="footer-column">
         <h3>Empresa</h3>
         <ul>
-          <li><RouterLink to="/sobre-nos">Sobre Nós</RouterLink></li>
+          <li><RouterLink to="/sobre">Sobre Nós</RouterLink></li>
           <li><RouterLink to="/como-funciona">Como funciona</RouterLink></li>
           <li><RouterLink to="/categorias">Categorias</RouterLink></li>
         </ul>
