@@ -1,6 +1,6 @@
 <script setup>
-import SkillTag from './SkillTag.vue'
-import ExperienceItem from './ExperienceItem.vue'
+import SkillTag from './EtiquetaHabilidade.vue'
+import ExperienceItem from './ItemExperiencia.vue'
 
 defineProps({
   bio: String,

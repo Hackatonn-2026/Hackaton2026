@@ -1,7 +1,7 @@
 <script setup>
-import AppHeader from './layout/AppHeader.vue'
-import TheFooter from './layout/TheFooter.vue'
-import Loading from './components/Loading.vue'
+import AppHeader from './layout/Header.vue'
+import TheFooter from './layout/Footer.vue'
+import Loading from './components/Carregamento.vue'
 import Notificacoes from './components/Notificacoes.vue'
 import { useNotificacoes } from './composables/useNotificacoes'
 import { carregandoRota } from './router'

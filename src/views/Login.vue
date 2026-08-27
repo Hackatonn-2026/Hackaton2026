@@ -77,7 +77,7 @@
 <script setup>
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
-import InputForm from '../components/InputForm.vue'
+import InputForm from '../components/FormularioEntrada.vue'
 import { useUsuarioStore } from '@/stores/usuario'
 
 const router = useRouter()

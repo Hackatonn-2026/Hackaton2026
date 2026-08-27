@@ -1,9 +1,9 @@
 <script setup>
 import { ref } from 'vue'
-import ProfileHeader from '../components/ProfileHeader.vue'
-import ProfileTabs from '../components/ProfileTabs.vue'
-import AboutSection from '../components/AboutSection.vue'
-import ServicesSidebar from '../components/ServicesSidebar.vue'
+import ProfileHeader from '../components/CabecalhoPerfil.vue'
+import ProfileTabs from '../components/AbasPerfil.vue'
+import AboutSection from '../components/SecaoSobre.vue'
+import ServicesSidebar from '../components/BarraServicos.vue'
 import { profissionais } from '@/dataJs/profissionais.js'
 import { useRoute } from 'vue-router'
 import AbaAvaliacao from '@/components/AbaAvaliacao.vue'
