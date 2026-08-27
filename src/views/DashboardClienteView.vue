@@ -27,12 +27,21 @@
             {{ usuario.descricao }}
           </p>
         </div>
-        <button
-          type="button"
-          class="perfil-card__sair"
-          @click="sair"
-        >
-        </button>
+        <div class="perfil-card__acoes">
+          <RouterLink
+            to="/editar-perfil"
+            class="perfil-card__editar"
+          >
+            Editar Perfil
+          </RouterLink>
+          <button
+            type="button"
+            class="perfil-card__sair"
+            @click="sair"
+          >
+            Sair
+          </button>
+        </div>
       </div>
       <div class="contratados-section">
         <h2 class="contratados-section__title">
@@ -180,6 +189,27 @@ function sair() {
   line-height: 1.5;
   margin: 0;
 }
+.perfil-card__acoes {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.perfil-card__editar {
+  border: 1px solid #3b5bfd;
+  background: transparent;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #3b5bfd;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+}
+.perfil-card__editar:hover {
+  background: #e8ecff;
+}
 .perfil-card__sair {
   border: 1px solid #d1d5db;
   background: transparent;
@@ -188,7 +218,6 @@ function sair() {
   font-size: 14px;
   color: #4b5563;
   cursor: pointer;
-  flex-shrink: 0;
 }
 .perfil-card__sair:hover {
   border-color: #dc2626;
@@ -277,7 +306,8 @@ function sair() {
     flex-direction: column;
     align-items: flex-start;
   }
-  .perfil-card__sair {
+  .perfil-card__acoes {
+    flex-direction: row;
     align-self: flex-end;
   }
   .contratados-grid {

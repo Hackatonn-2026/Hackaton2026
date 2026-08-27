@@ -7,9 +7,14 @@
         <span class="brand-name">CiroLancers</span>
       </div>
 
-      <button class="btn-voltar" @click="voltar">
-        ← Voltar
-      </button>
+      <div class="header-acoes">
+        <button class="btn-editar" @click="editarPerfil">
+          Editar Perfil
+        </button>
+        <button class="btn-voltar" @click="voltar">
+          ← Voltar
+        </button>
+      </div>
     </header>
 
     
@@ -108,16 +113,6 @@
 
         </section>
 
-            <section class="contato">
-
-          <h3>Interessado no trabalho?</h3>
-
-          <button class="btn-contato" @click="contatar">
-            Entrar em contato
-          </button>
-
-        </section>
-
       </section>
 
     </main>
@@ -128,12 +123,19 @@
 
 <script setup>
 
-import { ref, computed, onMounted } from 'vue'
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useUsuarioStore } from '@/stores/usuario'
 
 const router = useRouter()
+const usuarioStore = useUsuarioStore()
 
-const freelancer = ref({
+if (!usuarioStore.state.usuario) {
+  router.replace('/login')
+}
+
+// dados vêm direto da sessão logada (store), não de uma chave separada do localStorage
+const freelancer = computed(() => usuarioStore.state.usuario || {
   nome: '',
   profissao: '',
   cidade: '',
@@ -141,16 +143,6 @@ const freelancer = ref({
   anosExperiencia: '',
   categorias: [],
   fotoPerfil: null
-})
-
-onMounted(() => {
-
-  const dadosSalvos = localStorage.getItem('freelancerPerfil')
-
-  if (dadosSalvos) {
-    freelancer.value = JSON.parse(dadosSalvos)
-  }
-
 })
 
 
@@ -191,16 +183,8 @@ function voltar() {
   router.back()
 }
 
-
-function contatar() {
-
-  if (freelancer.value.email) {
-
-    window.location.href =
-      `mailto:${freelancer.value.email}`
-
-  }
-
+function editarPerfil() {
+  router.push('/editar-perfil')
 }
 
 </script>
@@ -248,6 +232,27 @@ function contatar() {
   font-size: 22px;
   font-weight: 800;
   color: #1a1a2e;
+}
+
+.header-acoes {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.btn-editar {
+  border: 1px solid #3b5bfd;
+  background: transparent;
+  color: #3b5bfd;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-editar:hover {
+  background: #eef2ff;
 }
 
 .btn-voltar {
@@ -340,6 +345,9 @@ function contatar() {
   color: #4b5563;
   line-height: 1.7;
   font-size: 15px;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  white-space: pre-line;
 }
 
 .experiencia {
@@ -384,31 +392,6 @@ function contatar() {
 
 .sem-categoria {
   color: #6b7280;
-}
-
-.contato {
-  padding-top: 30px;
-  text-align: center;
-}
-
-.contato h3 {
-  color: #1a1a2e;
-  margin-bottom: 18px;
-}
-
-.btn-contato {
-  border: none;
-  background: #3b5bfd;
-  color: white;
-  padding: 13px 28px;
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.btn-contato:hover {
-  background: #2f4bea;
 }
 
 @media (max-width: 600px) {

@@ -70,5 +70,40 @@ export function useUsuarioStore() {
     localStorage.removeItem('tipoUsuario')
   }
 
-  return { state, cadastrar, login, autenticar, logout }
+  // Atualiza os dados do usuário logado (sessão atual + lista de cadastrados)
+  function atualizarPerfil(dadosNovos) {
+    if (!state.usuario) {
+      throw new Error('Nenhum usuário logado')
+    }
+
+    const usuarios = getUsuarios()
+    const emailAtual = state.usuario.email?.toLowerCase()
+
+    // se o e-mail está mudando, garante que o novo não pertence a outra conta
+    const novoEmail = dadosNovos.email?.trim().toLowerCase()
+    if (novoEmail && novoEmail !== emailAtual) {
+      const emailEmUso = usuarios.some(
+        (u) => u.email?.toLowerCase() === novoEmail
+      )
+      if (emailEmUso) {
+        throw new Error('Já existe uma conta com esse e-mail')
+      }
+    }
+
+    const usuarioAtualizado = { ...state.usuario, ...dadosNovos }
+
+    const indice = usuarios.findIndex(
+      (u) => u.email?.toLowerCase() === emailAtual
+    )
+    if (indice !== -1) {
+      usuarios[indice] = usuarioAtualizado
+      salvarUsuarios(usuarios)
+    }
+
+    login(usuarioAtualizado, state.tipoUsuario)
+
+    return usuarioAtualizado
+  }
+
+  return { state, cadastrar, login, autenticar, logout, atualizarPerfil }
 }

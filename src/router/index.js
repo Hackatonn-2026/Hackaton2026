@@ -15,6 +15,7 @@ import DashboardFreelancer from '../views/DashboardFreelancerView.vue'
 import Sobre from '../views/SobreView.vue'
 import Suporte from '../views/SuporteView.vue'
 import EsqueciSenha from '../views/EsqueciSenhaView.vue'
+import EditarPerfil from '../views/EditarPerfilView.vue'
 
 const routes = [
   { path: '/', name: 'home', component: Home },
@@ -31,7 +32,8 @@ const routes = [
   { path: '/dashboard-freelancer', name: 'dashboard-freelancer', component: DashboardFreelancer },
   { path: '/sobre', name: 'sobre', component: Sobre },
   { path: '/suporte', name: 'suporte', component: Suporte },
-  { path: '/esqueci-senha', name: 'esqueci-senha', component: EsqueciSenha }
+  { path: '/esqueci-senha', name: 'esqueci-senha', component: EsqueciSenha },
+  { path: '/editar-perfil', name: 'editar-perfil', component: EditarPerfil }
 ]
 
 const router = createRouter({
@@ -49,9 +51,12 @@ router.beforeEach((to, from, next) => {
   const { state } = useUsuarioStore()
 
   const rotasSemLogin = ['login', 'cadastro-cliente', 'cadastro-freelancer']
+  const rotasSoLogado = ['editar-perfil', 'dashboard-cliente', 'dashboard-freelancer']
 
   if (rotasSemLogin.includes(to.name) && state.usuario) {
-       next({ name: state.tipoUsuario === 'freelancer' ? 'dashboard-freelancer' : 'dashboard-cliente' })
+    next({ name: state.tipoUsuario === 'freelancer' ? 'dashboard-freelancer' : 'dashboard-cliente' })
+  } else if (rotasSoLogado.includes(to.name) && !state.usuario) {
+    next({ name: 'login' })
   } else {
     next()
   }
