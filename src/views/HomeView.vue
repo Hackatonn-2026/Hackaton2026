@@ -7,7 +7,6 @@
         <p>Conecte-se com os melhores freelancers para seu projeto</p>
 
         <div class="search">
-          <span class="search-icon">🔍</span>
           <input
             type="text"
             v-model="query"

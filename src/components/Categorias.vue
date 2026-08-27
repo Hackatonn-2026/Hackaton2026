@@ -179,6 +179,8 @@ const displayedCategories = computed(() => {
 
 .section-title p {
   margin-top: 10px;
+  color: #6b7280;
+  font-size: 1.1rem;
 }
 
 .eyebrow {
