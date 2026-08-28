@@ -108,6 +108,7 @@ import avaliacaoIcon from '../assets/icons/avaliacao.png';
 import localizacaoIcon from '../assets/icons/localizacao.png';
 import cartaoIcon from '../assets/icons/card.png';
 import ouvidoriaIcon from '../assets/icons/ouvidoria.png';
+import CadastroCliente from './CadastroCliente.vue';
 
 // O que diferencia a CiroLancers de plataformas tradicionais
 const valores = [
