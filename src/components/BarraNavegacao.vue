@@ -88,6 +88,11 @@ function sair() {
   color: #2563eb;
 }
 
+.nav-link.router-link-exact-active {
+  font-weight: 700;
+  color: #1f52c0;
+}
+
 .login-link {
   background: #2563eb;
   color: #fff;
