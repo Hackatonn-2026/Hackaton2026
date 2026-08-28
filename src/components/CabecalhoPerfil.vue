@@ -8,6 +8,11 @@ defineProps({
   reviewsCount: Number,
   location: String,
   completedProjects: Number,
+  showEdit: Boolean,
+  allowRequest: {
+    type: Boolean,
+    default: true,
+  },
 })
 
 defineEmits(['request-quote', 'schedule-call', 'toggle-favorite', 'share'])
@@ -21,6 +26,9 @@ defineEmits(['request-quote', 'schedule-call', 'toggle-favorite', 'share'])
       <div class="info-container">
         <div class="name-row">
           <h1 class="name">{{ name }}</h1>
+          <RouterLink v-if="showEdit" to="/editar-perfil" class="edit-profile-link">
+            Editar Perfil
+          </RouterLink>
           <svg v-if="verified" class="verified-icon" viewBox="0 0 20 20" fill="currentColor">
             <path
               fill-rule="evenodd"
@@ -56,7 +64,11 @@ defineEmits(['request-quote', 'schedule-call', 'toggle-favorite', 'share'])
         </div>
 
         <div class="actions-row">
-          <button class="btn-primary" @click="$emit('request-quote')">
+          <button
+            class="btn-primary"
+            :disabled="!allowRequest"
+            @click="$emit('request-quote')"
+          >
             <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.86 9.86 0 01-4-.8L3 20l1.3-3.9A7.96 7.96 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
             </svg>
@@ -128,6 +140,16 @@ defineEmits(['request-quote', 'schedule-call', 'toggle-favorite', 'share'])
   color: #ffffff;
 }
 
+.edit-profile-link {
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  padding: 7px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
 .verified-icon {
   width: 24px;
   height: 24px;
@@ -189,6 +211,11 @@ defineEmits(['request-quote', 'schedule-call', 'toggle-favorite', 'share'])
 
 .btn-primary:hover {
   background-color: #f3f4f6;
+}
+
+.btn-primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 .btn-secondary {

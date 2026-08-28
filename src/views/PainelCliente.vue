@@ -34,13 +34,6 @@
           >
             Editar Perfil
           </RouterLink>
-          <button
-            type="button"
-            class="perfil-card__sair"
-            @click="sair"
-          >
-            Sair
-          </button>
         </div>
       </div>
       <div class="contratados-section">
@@ -68,10 +61,7 @@
         <h2 class="contratados-section__title">
           {{ abaAtiva === 'espera' ? 'Profissionais em espera' : 'Profissionais contratados' }}
         </h2>
-        <div
-          v-if="profissionaisExibidos.length === 0"
-          class="estado-vazio"
-        >
+        <div v-if="profissionaisExibidos.length === 0" class="estado-vazio">
           <div class="estado-vazio__icone">🤝</div>
           <p class="estado-vazio__titulo">
             {{ abaAtiva === 'espera' ? 'Nenhum profissional aguardando resposta' : 'Você ainda não contratou ninguém' }}
@@ -79,58 +69,19 @@
           <p class="estado-vazio__texto">
             {{ abaAtiva === 'espera' ? 'As solicitações enviadas aparecerão aqui.' : 'Quando você contratar um profissional, ele vai aparecer aqui.' }}
           </p>
-          <RouterLink
-            to="/buscar"
-            class="estado-vazio__botao"
-          >
+          <RouterLink to="/buscar" class="estado-vazio__botao">
             Buscar profissionais
           </RouterLink>
         </div>
-        <div
-          v-else
-          class="contratados-grid"
-        >
-          <div
+        <div v-else class="contratados-grid">
+          <ProfessionalCard
             v-for="contratado in profissionaisExibidos"
             :key="contratado.id"
-            class="contratado-card"
-          >
-            <img
-              :src="contratado.fotoPerfil || avatarPadrao"
-              :alt="contratado.nome"
-              class="contratado-card__foto"
-            />
-            <div class="contratado-card__info">
-              <p class="contratado-card__nome">
-                {{ contratado.nome }}
-              </p>
-              <p
-                v-if="contratado.profissao"
-                class="contratado-card__profissao"
-              >
-                {{ contratado.profissao }}
-              </p>
-              <p
-                v-if="contratado.avaliacao || contratado.localizacao"
-                class="contratado-card__detalhes"
-              >
-                <span v-if="contratado.avaliacao">★ {{ contratado.avaliacao }}</span>
-                <span v-if="contratado.localizacao">{{ contratado.localizacao }}</span>
-              </p>
-              <p
-                v-if="abaAtiva === 'espera'"
-                class="contratado-card__status"
-              >
-                Aguardando resposta do freelancer
-              </p>
-              <RouterLink
-                :to="`/perfil/${contratado.id}`"
-                class="contratado-card__perfil"
-              >
-                Ver perfil
-              </RouterLink>
-            </div>
-          </div>
+            :professional="transformarContratacao(contratado)"
+            :show-cancel="abaAtiva === 'espera'"
+            @verPerfil="verPerfilContratado"
+            @cancelar="cancelarPedido"
+          />
         </div>
       </div>
     </div>
@@ -138,9 +89,11 @@
 </template>
 <script setup>
 import { computed, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useUsuarioStore } from '@/stores/usuario'
+import ProfessionalCard from '@/components/CartaoProfissional.vue'
 const router = useRouter()
+const route = useRoute()
 const usuarioStore = useUsuarioStore()
 const avatarPadrao = '/img/avatar-padrao.png'
 if (!usuarioStore.state.usuario) {
@@ -157,10 +110,30 @@ const profissionaisEmEspera = computed(() => (
       : []
   )
 ))
-const abaAtiva = ref('espera')
+const abaAtiva = ref(route.query.aba === 'contratados' ? 'contratados' : 'espera')
 const profissionaisExibidos = computed(() => (
   abaAtiva.value === 'espera' ? profissionaisEmEspera.value : contratacoes.value
 ))
+
+function transformarContratacao(profissional) {
+  return {
+    id: profissional.id,
+    name: profissional.nome || profissional.name || 'Profissional',
+    title: profissional.profissao || profissional.title || 'Profissional freelancer',
+    avatar: profissional.fotoPerfil || profissional.avatar,
+    rating: profissional.avaliacao || profissional.rating || 0,
+    reviewsCount: profissional.reviewsCount || 0,
+    location: profissional.localizacao || profissional.location || '',
+    skills: profissional.skills || [],
+    services: profissional.services || (profissional.precoServico
+      ? [{ title: profissional.profissao, priceRange: profissional.precoServico, duration: 'A combinar' }]
+      : [])
+  }
+}
+
+function verPerfilContratado(profissional) {
+  router.push(`/perfil-freelancer/${profissional.id}`)
+}
 const opcoesSegmento = {
   tecnologia: 'Tecnologia',
   varejo: 'Varejo / E-commerce',
@@ -172,9 +145,8 @@ const opcoesSegmento = {
 const segmentoLabel = computed(() => {
   return opcoesSegmento[usuario.value.segmento] || ''
 })
-function sair() {
-  usuarioStore.logout()
-  router.push('/')
+function cancelarPedido(profissional) {
+  usuarioStore.cancelarContratacao(profissional.id)
 }
 </script>
 <style scoped>
@@ -186,17 +158,17 @@ function sair() {
   box-sizing: border-box;
 }
 .dashboard-container {
-  max-width: 860px;
+  max-width: 1120px;
   margin: 0 auto;
 }
 .perfil-card {
   display: flex;
   align-items: flex-start;
   gap: 20px;
-  background: white;
+  background: #fff;
   border-radius: 16px;
   padding: 28px;
-  box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 8px 24px rgba(0,0,0,.04);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 6%), 0 8px 24px rgb(0 0 0 / 4%);
   margin-bottom: 32px;
 }
 .perfil-card__foto {
@@ -209,6 +181,7 @@ function sair() {
 }
 .perfil-card__info {
   flex: 1;
+  min-width: 0;
 }
 .perfil-card__nome {
   font-size: 22px;
@@ -310,8 +283,14 @@ function sair() {
 }
 .contratados-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 280px));
+  justify-content: start;
+  gap: 24px;
+}
+.contratados-grid :deep(.card) {
+  width: 100%;
+  max-width: none;
+  margin: 0;
 }
 .profissionais-tabs {
   display: flex;
@@ -398,6 +377,21 @@ function sair() {
 }
 .contratado-card__perfil:hover {
   background: #e0e7ff;
+}
+.contratado-card__cancelar {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 7px 12px;
+  border: 1px solid #fecaca;
+  border-radius: 7px;
+  background: #fff;
+  color: #dc2626;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.contratado-card__cancelar:hover {
+  background: #fef2f2;
 }
 @media (max-width: 600px) {
   .perfil-card {

@@ -5,10 +5,14 @@ const props = defineProps({
   professional: {
     type: Object,
     required: true
+  },
+  showCancel: {
+    type: Boolean,
+    default: false
   }
 })
 
-const emit = defineEmits(['verPerfil'])
+const emit = defineEmits(['verPerfil', 'cancelar'])
 
 const imagemComErro = ref(false)
 
@@ -79,6 +83,14 @@ const skillsVisiveis = (props.professional.skills || []).slice(0, 3)
 
       <button class="card-button" @click="emit('verPerfil', professional)">
         Ver Perfil
+      </button>
+      <button
+        v-if="showCancel"
+        class="card-cancel-button"
+        type="button"
+        @click="emit('cancelar', professional)"
+      >
+        Cancelar pedido
       </button>
     </div>
   </div>
@@ -208,5 +220,21 @@ const skillsVisiveis = (props.professional.skills || []).slice(0, 3)
 
 .card-button:hover {
   background: #1d4ed8;
+}
+
+.card-cancel-button {
+  width: 100%;
+  margin-top: 8px;
+  padding: 9px;
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+  background: #fff;
+  color: #dc2626;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.card-cancel-button:hover {
+  background: #fef2f2;
 }
 </style>

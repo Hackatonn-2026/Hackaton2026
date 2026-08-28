@@ -6,6 +6,10 @@ defineProps({
     type: Array,
     default: () => [],
   },
+  allowRequest: {
+    type: Boolean,
+    default: true,
+  },
 })
 
 defineEmits(['request-quote'])
@@ -25,7 +29,11 @@ defineEmits(['request-quote'])
       />
     </div>
 
-    <button class="quote-btn" @click="$emit('request-quote')">
+    <button
+      class="quote-btn"
+      :disabled="!allowRequest"
+      @click="$emit('request-quote')"
+    >
       Solicitar Orçamento
     </button>
   </aside>
@@ -68,5 +76,10 @@ defineEmits(['request-quote'])
 
 .quote-btn:hover {
   background-color: #1d4ed8;
+}
+
+.quote-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 </style>
