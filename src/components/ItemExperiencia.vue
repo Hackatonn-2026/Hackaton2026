@@ -1,42 +1,90 @@
-<script setup>
-defineProps({
-  role: {
-    type: String,
-    required: true,
-  },
-  company: {
-    type: String,
-    default: '',
-  },
-  period: {
-    type: String,
-    default: '',
-  },
-  description: {
-    type: String,
-    default: '',
-  },
-})
-</script>
-
 <template>
-  <div class="flex gap-3">
-    <div class="mt-1 shrink-0 w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center">
-      <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M20 7H4a1 1 0 00-1 1v10a2 2 0 002 2h14a2 2 0 002-2V8a1 1 0 00-1-1zM16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"
-        />
+  <div class="item-experiencia">
+    <div class="icone-box">
+      <svg class="maleta-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/>
       </svg>
     </div>
-    <div>
-      <h4 class="font-semibold text-gray-900">{{ role }}</h4>
-      <p v-if="company || period" class="text-sm text-gray-500">
-        {{ company }}<span v-if="company && period"> · </span>{{ period }}
+
+    <div class="exp-conteudo">
+      <h4 class="exp-cargo">{{ role }}</h4>
+      <p class="exp-detalhes">
+        <span class="exp-empresa">{{ company }}</span>
+        <span v-if="period" class="exp-periodo"> • {{ period }}</span>
       </p>
-      <p v-if="description" class="text-sm text-gray-600 mt-1">{{ description }}</p>
+      <p v-if="description" class="exp-descricao">{{ description }}</p>
     </div>
   </div>
 </template>
+
+<script setup>
+defineProps({
+  role: String,
+  company: String,
+  period: String,
+  description: String,
+})
+</script>
+
+<style scoped>
+.item-experiencia {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 12px 0;
+}
+
+.icone-box {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  min-height: 48px;
+  background-color: #f3f4f6;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.maleta-icon {
+  width: 24px !important;
+  height: 24px !important;
+  max-width: 24px !important;
+  max-height: 24px !important;
+  fill: #9ca3af;
+}
+
+.exp-conteudo {
+  flex: 1;
+}
+
+.exp-cargo {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 4px 0;
+}
+
+.exp-detalhes {
+  font-size: 13px;
+  color: #4b5563;
+  margin: 0 0 6px 0;
+}
+
+.exp-empresa {
+  font-weight: 600;
+  color: #374151;
+}
+
+.exp-periodo {
+  color: #6b7280;
+}
+
+.exp-descricao {
+  font-size: 14px;
+  color: #4b5563;
+  line-height: 1.5;
+  margin: 0;
+}
+</style>
