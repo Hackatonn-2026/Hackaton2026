@@ -163,7 +163,7 @@ const displayedCategories = computed(() => {
 }
 
 .categories {
-  padding: 70px 19%;
+  padding: 70px 19% 24px;
 }
 
 

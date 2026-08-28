@@ -167,7 +167,7 @@ function buscar() {
   color: #6b7280;
 }
 .featured {
-  padding: 60px 8% 80px;
+  padding: 24px 8% 80px;
   text-align: center;
   background: #f9fafb;
 }
