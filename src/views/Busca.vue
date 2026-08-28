@@ -40,9 +40,17 @@ import { useRoute, useRouter } from 'vue-router'
 import FilterSidebar from '@/components/BarraFiltros.vue'
 import ProfessionalCard from '@/components/CartaoProfissional.vue'
 import { profissionais } from '@/dataJs/profissionais.js'
+import { useUsuarioStore } from '@/stores/usuario'
 
 const route = useRoute()
 const router = useRouter()
+const usuarioStore = useUsuarioStore()
+
+function formatarPreco(valor) {
+  const numero = Number(valor)
+  if (!Number.isFinite(numero)) return 'Sob consulta'
+  return numero.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+}
 
 const categoriaQuery = computed(() => route.query.busca || '')
 const categoriaSelecionada = computed(() => route.query.busca || 'Todas as categorias')
