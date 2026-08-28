@@ -79,7 +79,7 @@ const professionals = [
 ]
 
 function handleVerPerfil(prof) {
-  router.push(`/perfil/${prof.id}`)
+  router.push(`/perfil-freelancer/${prof.id}`)
 }
 
 function buscar() {

@@ -9,12 +9,12 @@ import CadastroFreelancer from '../views/CadastroFreelancer.vue'
 import Categorias from '../views/Categorias.vue'
 import Busca from '../views/Busca.vue'
 import PerfilFreelancer from '../views/PerfilFreelancer.vue'
-import PerfilPublico from '../views/PerfilPublicoView.vue'
 import EditarPerfil from '../views/EditarPerfilView.vue'
 import SolicitarServico from '../views/SolicitarServico.vue'
 import Pagamento from '../views/Pagamento.vue'
 import DashboardCliente from '../views/PainelCliente.vue'
 import DashboardFreelancer from '../views/PainelFreelancer.vue'
+import PerfilPublico from '../views/PerfilPublicoView.vue'
 import Sobre from '../views/Sobre.vue'
 import Suporte from '../views/Suporte.vue'
 import ComoFunciona from '../views/ComoFunciona.vue'
@@ -33,7 +33,7 @@ const routes = [
   { path: '/categorias', name: 'categorias', component: Categorias },
   { path: '/buscar', name: 'buscar', component: Busca },
   { path: '/perfil/:id', name: 'perfil-publico', component: PerfilPublico },
-  { path: '/perfil-freelancer', name: 'perfil-freelancer', component: PerfilFreelancer },
+  { path: '/perfil-freelancer/:id?', name: 'perfil-freelancer', component: PerfilFreelancer },
   { path: '/solicitar', name: 'solicitar', component: SolicitarServico },
   { path: '/pagamento', name: 'pagamento', component: Pagamento },
   { path: '/dashboard-cliente', name: 'dashboard-cliente', component: DashboardCliente },

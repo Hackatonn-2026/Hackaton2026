@@ -1,10 +1,5 @@
 <template>
   <div class="auth-page">
-    <div class="auth-brand">
-      <span class="auth-brand__logo">ai</span>
-      <span class="auth-brand__name">CiroLancers</span>
-    </div>
-
     <h1 class="auth-title">Editar Perfil</h1>
     <p class="auth-subtitle">Atualize suas informações</p>
 
@@ -124,11 +119,11 @@
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUsuarioStore } from '@/stores/usuario'
-import InputForm from './InputForm.vue'
-import SelectForm from './SelectForm.vue'
-import TextareaForm from './TextareaForm.vue'
-import CheckboxGroup from './CheckboxGroup.vue'
-import FileUpload from './FileUpload.vue'
+import InputForm from './FormularioEntrada.vue'
+import SelectForm from './FormularioSelecao.vue'
+import TextareaForm from './FormularioTexto.vue'
+import CheckboxGroup from './GrupoCheckbox.vue'
+import FileUpload from './EnvioArquivo.vue'
 
 const router = useRouter()
 const usuarioStore = useUsuarioStore()
