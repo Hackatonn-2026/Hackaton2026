@@ -103,23 +103,6 @@ import NavbarView from '@/components/NavbarView.vue'
   text-align: center;
 }
 
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.nav-link {
-  color: #4b5563;
-  text-decoration: none;
-  font-size: 14px;
-  transition: color 0.2s ease;
-}
-
-.nav-link:hover {
-  color: #2563eb;
-}
-
 .cadastrar-btn {
   background: #2563eb;
   color: #fff;
