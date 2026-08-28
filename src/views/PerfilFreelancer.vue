@@ -88,7 +88,7 @@ const profissional = computed(() => {
     verified: false,
     rating: 0,
     reviewsCount: 0,
-    location: usuario.cidade || 'Localização não informada',
+    location: usuario.regiao || usuario.cidade || 'Localização não informada',
     completedProjects: 0,
     bio: usuario.descricao || 'Nenhuma descrição informada.',
     skills: usuario.categorias || [],

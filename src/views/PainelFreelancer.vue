@@ -22,7 +22,7 @@
           </p>
 
           <div class="perfil-badges">
-            <span v-if="usuario.cidade" class="perfil-badge">📍 {{ usuario.cidade }}</span>
+            <span v-if="usuario.regiao || usuario.cidade" class="perfil-badge">📍 {{ usuario.regiao || usuario.cidade }}</span>
             <span v-if="tipoUsuario === 'freelancer' && experienciaLabel" class="perfil-badge perfil-badge--accent">
               ⏱ {{ experienciaLabel }}
             </span>

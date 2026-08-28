@@ -43,7 +43,7 @@
             <h2>{{ freelancer.profissao }}</h2>
 
             <p class="localizacao">
-              📍 {{ freelancer.cidade }}
+              📍 {{ freelancer.regiao || freelancer.cidade || 'Localização não informada' }}
             </p>
 
           </div>
