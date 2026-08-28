@@ -36,11 +36,7 @@ const profissional = computed(() => {
   }
 })
 
-const servicos = [
-  { title: 'Desenvolvimento de Website', priceRange: 'R$ 3.000 - R$ 8.000', duration: '2-4 semanas' },
-  { title: 'App Mobile (iOS/Android)', priceRange: 'R$ 10.000 - R$ 25.000', duration: '1-3 meses' },
-  { title: 'Consultoria Técnica', priceRange: 'R$ 150/hora', duration: 'Por hora' }
-]
+const servicos = computed(() => profissional.value.services || [])
 
 function handleRequestQuote() {
   if (!usuarioStore.state.usuario) {

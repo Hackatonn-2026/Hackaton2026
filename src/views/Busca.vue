@@ -121,7 +121,7 @@ const profissionaisFiltrados = computed(() => {
 })
 
 function irParaPerfil(profissional) {
-  router.push(`/perfil/${profissional.id}`)
+  router.push(`/perfil-freelancer/${profissional.id}`)
 }
 </script>
 
