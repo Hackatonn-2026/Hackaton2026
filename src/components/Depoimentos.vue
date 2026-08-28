@@ -24,7 +24,7 @@ const lista = [
     nome: 'Maria Fernanda',
   },
   {
-    texto: 'Consegui vários clientes através da Guey. Mudou meu negócio!',
+    texto: 'Consegui vários clientes através do CiroLancer. Mudou meu negócio!',
     nome: 'Pedro Oliveira',
   },
 ]
