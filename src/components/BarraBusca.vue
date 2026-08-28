@@ -1,5 +1,8 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const profissionais = [
   'Eletricista residencial',
@@ -13,12 +16,33 @@ const profissionais = [
 ]
 
 const query = ref('')
+const mostrarSugestoes = ref(false)
 
 const resultados = computed(() => {
   return profissionais.filter(item =>
     item.toLowerCase().includes(query.value.toLowerCase())
   )
 })
+
+function buscar() {
+  const termo = query.value.trim()
+
+  if (!termo) return
+
+  mostrarSugestoes.value = false
+  router.push({ path: '/buscar', query: { busca: termo } })
+}
+
+function fecharSugestoes(event) {
+  const elemento = event.target
+
+  if (elemento instanceof Node && !elemento.closest('.search-wrap')) {
+    mostrarSugestoes.value = false
+  }
+}
+
+onMounted(() => document.addEventListener('click', fecharSugestoes))
+onBeforeUnmount(() => document.removeEventListener('click', fecharSugestoes))
 </script>
 
 <template>
@@ -28,10 +52,12 @@ const resultados = computed(() => {
       v-model="query"
       type="text"
       placeholder="Buscar profissionais ou serviços..."
+      @focus="mostrarSugestoes = query.length > 0"
+      @keydown.enter.prevent="buscar"
     >
 
     <ul
-      v-if="query.length > 0"
+      v-if="mostrarSugestoes && query.length > 0"
       class="search-suggestions"
     >
       <li
@@ -45,7 +71,7 @@ const resultados = computed(() => {
         v-for="item in resultados"
         :key="item"
         class="suggestion-item"
-        @click="query = item"
+        @click="query = item; mostrarSugestoes = false"
       >
         {{ item }}
       </li>
