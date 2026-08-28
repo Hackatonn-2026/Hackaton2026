@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import InputForm from './InputForm.vue'
+import InputForm from '../components/FormularioEntrada.vue'
 
 defineProps({
   tipoUsuario: String

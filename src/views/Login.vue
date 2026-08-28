@@ -1,8 +1,6 @@
 <template>
   <div class="auth-page">
     <div class="auth-brand">
-      <span class="auth-brand__logo">ai</span>
-      <span class="auth-brand__name">CiroLancers</span>
     </div>
 
     <h1 class="auth-title">Entrar na sua conta</h1>
@@ -79,7 +77,7 @@
 <script setup>
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
-import InputForm from '../components/InputForm.vue'
+import InputForm from '../components/FormularioEntrada.vue'
 import { useUsuarioStore } from '@/stores/usuario'
 
 const router = useRouter()

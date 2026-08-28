@@ -1,22 +1,29 @@
+import { ref } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUsuarioStore } from '@/stores/usuario'
 
-import Home from '../views/HomeView.vue'
-import Login from '../views/LoginView.vue'
-import CadastroCliente from '../views/CadastroClienteView.vue'
-import CadastroFreelancer from '../views/CadastroFreelancerView.vue'
-import Categorias from '../views/CategoriasView.vue'
-import Busca from '../views/BuscaView.vue'
+import Home from '../views/Inicio.vue'
+import Login from '../views/Login.vue'
+import CadastroCliente from '../views/CadastroCliente.vue'
+import CadastroFreelancer from '../views/CadastroFreelancer.vue'
+import Categorias from '../views/Categorias.vue'
+import Busca from '../views/Busca.vue'
 import PerfilFreelancer from '../views/PerfilFreelancer.vue'
 import PerfilPublico from '../views/PerfilPublicoView.vue'
-import SolicitarServico from '../views/SolicitarServicoView.vue'
-import Pagamento from '../views/PagamentoView.vue'
-import DashboardCliente from '../views/DashboardClienteView.vue'
-import DashboardFreelancer from '../views/DashboardFreelancerView.vue'
-import Sobre from '../views/SobreView.vue'
-import Suporte from '../views/SuporteView.vue'
-import EsqueciSenha from '../views/EsqueciSenhaView.vue'
 import EditarPerfil from '../views/EditarPerfilView.vue'
+import SolicitarServico from '../views/SolicitarServico.vue'
+import Pagamento from '../views/Pagamento.vue'
+import DashboardCliente from '../views/PainelCliente.vue'
+import DashboardFreelancer from '../views/PainelFreelancer.vue'
+import Sobre from '../views/Sobre.vue'
+import Suporte from '../views/Suporte.vue'
+import ComoFunciona from '../views/ComoFunciona.vue'
+import EsqueciSenha from '../views/EsqueciSenha.vue'
+
+export const carregandoRota = ref(false)
+const duracaoMinimaLoading = 300
+let temporizadorOcultar = null
+let inicioCarregamento = 0
 
 const routes = [
   { path: '/', name: 'home', component: Home },
@@ -33,8 +40,9 @@ const routes = [
   { path: '/dashboard-freelancer', name: 'dashboard-freelancer', component: DashboardFreelancer },
   { path: '/sobre', name: 'sobre', component: Sobre },
   { path: '/suporte', name: 'suporte', component: Suporte },
+  { path: '/como-funciona', name: 'como-funciona', component: ComoFunciona },
   { path: '/esqueci-senha', name: 'esqueci-senha', component: EsqueciSenha },
-  { path: '/editar-perfil', name: 'editar-perfil', component: EditarPerfil }
+  { path: '/editar-perfil', name: 'editar-perfil', component: EditarPerfil },
 ]
 
 const router = createRouter({
@@ -45,7 +53,21 @@ const router = createRouter({
       return { el: to.hash, behavior: 'smooth' }
     }
     return { top: 0 }
-  }
+  },
+})
+
+router.beforeEach(() => {
+  window.clearTimeout(temporizadorOcultar)
+  inicioCarregamento = Date.now()
+  carregandoRota.value = true
+})
+
+router.afterEach(() => {
+  const tempoRestante = Math.max(0, duracaoMinimaLoading - (Date.now() - inicioCarregamento))
+
+  temporizadorOcultar = window.setTimeout(() => {
+    carregandoRota.value = false
+  }, tempoRestante)
 })
 
 router.beforeEach((to, from, next) => {

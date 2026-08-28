@@ -162,18 +162,26 @@
         Se você identificou algum problema, fraude ou comportamento
         inadequado na plataforma, por favor nos informe imediatamente.
       </p>
-      <button class="botao-denuncia">Fazer Denúncia</button>
+      <button class="botao-denuncia" type="button" @click="iniciarDenuncia">
+        Fazer Denúncia
+      </button>
     </section>
   </main>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { useNotificacoes } from '@/composables/useNotificacoes'
 
 const abertaIndex = ref(null)
+const { adicionar } = useNotificacoes()
 
 function alternar(index) {
   abertaIndex.value = abertaIndex.value === index ? null : index
+}
+
+function iniciarDenuncia() {
+  adicionar('Recebemos seu pedido. Nossa equipe entrará em contato para registrar a denúncia.', 'info')
 }
 
 const perguntas = [

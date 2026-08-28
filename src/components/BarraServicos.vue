@@ -1,5 +1,5 @@
 <script setup>
-import ServicesCard from './ServicesCard.vue'
+import ServicesCard from './CartaoServico.vue'
 
 defineProps({
   services: {

@@ -1,18 +1,25 @@
 import { reactive } from 'vue'
 
-// Sessão atual (quem está logado agora)
-const state = reactive({
-  usuario: JSON.parse(localStorage.getItem('usuario')) || null,
-  tipoUsuario: localStorage.getItem('tipoUsuario') || null
-})
+const usuarioSalvo = JSON.parse(localStorage.getItem('usuario')) || null
+const contasSalvas = JSON.parse(localStorage.getItem('contas')) || []
+const usuariosSalvos = JSON.parse(localStorage.getItem('usuarios')) || []
 
-// Helpers para a "base de dados" de usuários cadastrados
-function getUsuarios() {
-  return JSON.parse(localStorage.getItem('usuarios')) || []
+if (usuarioSalvo && !contasSalvas.some(conta => conta.email === usuarioSalvo.email)) {
+  contasSalvas.push(usuarioSalvo)
+  localStorage.setItem('contas', JSON.stringify(contasSalvas))
 }
 
-function salvarUsuarios(lista) {
-  localStorage.setItem('usuarios', JSON.stringify(lista))
+const state = reactive({
+  usuario: usuarioSalvo,
+  tipoUsuario: localStorage.getItem('tipoUsuario') || usuarioSalvo?.tipo || null
+})
+
+function getUsuarios() {
+  return JSON.parse(localStorage.getItem('usuarios')) || usuariosSalvos
+}
+
+function salvarUsuarios(usuarios) {
+  localStorage.setItem('usuarios', JSON.stringify(usuarios))
 }
 
 function gerarId() {
@@ -20,51 +27,83 @@ function gerarId() {
 }
 
 export function useUsuarioStore() {
-
-  // Cadastra um novo usuário na base E já loga com ele
-  function cadastrar(usuario, tipoUsuario) {
-    const usuarios = getUsuarios()
-
-    const jaExiste = usuarios.some(
-      (u) => u.email?.toLowerCase() === usuario.email.trim().toLowerCase()
-    )
-
-    if (jaExiste) {
-      throw new Error('Já existe uma conta com esse e-mail')
-    }
-
-    const novoUsuario = { ...usuario, tipo: tipoUsuario, id: gerarId() }
-    usuarios.push(novoUsuario)
-    salvarUsuarios(usuarios)
-
-    login(novoUsuario, tipoUsuario)
-  }
-
-  // Define a sessão atual (usuário logado)
   function login(usuario, tipoUsuario) {
     state.usuario = usuario
     state.tipoUsuario = tipoUsuario
 
+    const contas = JSON.parse(localStorage.getItem('contas')) || []
+    const indiceConta = contas.findIndex(conta => conta.email?.toLowerCase() === usuario.email?.toLowerCase())
+    if (indiceConta >= 0) contas[indiceConta] = usuario
+    else contas.push(usuario)
+    localStorage.setItem('contas', JSON.stringify(contas))
     localStorage.setItem('usuario', JSON.stringify(usuario))
     localStorage.setItem('tipoUsuario', tipoUsuario)
+
+    const usuarios = getUsuarios()
+    const indiceUsuario = usuarios.findIndex(item => item.email?.toLowerCase() === usuario.email?.toLowerCase())
+    if (indiceUsuario >= 0) usuarios[indiceUsuario] = usuario
+    else usuarios.push(usuario)
+    salvarUsuarios(usuarios)
   }
 
-  // Confere email/senha contra TODOS os usuários cadastrados
-  function autenticar(email, senha) {
+  function cadastrar(usuario, tipoUsuario) {
     const usuarios = getUsuarios()
-
-    const encontrado = usuarios.find((u) => {
-      const emailConfere = u.email?.toLowerCase() === email.trim().toLowerCase()
-      const senhaConfere = u.senha === senha
-      return emailConfere && senhaConfere
-    })
-
-    if (!encontrado) {
-      return false
+    if (usuarios.some(item => item.email?.toLowerCase() === usuario.email.trim().toLowerCase())) {
+      throw new Error('Já existe uma conta com esse e-mail')
     }
+    const novoUsuario = { ...usuario, tipo: tipoUsuario, id: gerarId() }
+    usuarios.push(novoUsuario)
+    salvarUsuarios(usuarios)
+    login(novoUsuario, tipoUsuario)
+  }
 
-    login(encontrado, encontrado.tipo)
+  function autenticar(email, senha) {
+    const contas = [...getUsuarios(), ...(JSON.parse(localStorage.getItem('contas')) || [])]
+    const conta = contas.find(usuario => (
+      usuario.email?.toLowerCase() === email.trim().toLowerCase() && usuario.senha === senha
+    ))
+    if (!conta) return false
+    login(conta, conta.tipo || localStorage.getItem('tipoUsuario'))
     return true
+  }
+
+  function adicionarContratacao(profissional) {
+    if (!state.usuario) return false
+    const profissionaisEmEspera = state.usuario.profissionaisEmEspera || []
+    const jaAdicionado = profissionaisEmEspera.some(item => item.id === profissional.id)
+    if (!jaAdicionado) {
+      state.usuario.profissionaisEmEspera = [...profissionaisEmEspera, {
+        id: profissional.id,
+        nome: profissional.name,
+        profissao: profissional.title,
+        fotoPerfil: profissional.avatar,
+        avaliacao: profissional.rating,
+        localizacao: profissional.location,
+        dataContratacao: new Date().toISOString()
+      }]
+    }
+    login(state.usuario, state.tipoUsuario)
+    return !jaAdicionado
+  }
+
+  function atualizarPerfil(dadosNovos) {
+    if (!state.usuario) throw new Error('Nenhum usuário logado')
+    const usuarioAtualizado = { ...state.usuario, ...dadosNovos }
+    login(usuarioAtualizado, state.tipoUsuario)
+    return usuarioAtualizado
+  }
+
+  function contratar(dadosSolicitacao) {
+    if (!state.usuario) throw new Error('Você precisa estar logado para solicitar um serviço')
+    const contratacoes = state.usuario.contratacoes || []
+    const novaContratacao = { ...dadosSolicitacao, dataContratacao: new Date().toISOString() }
+    const usuarioAtualizado = { ...state.usuario, contratacoes: [...contratacoes, novaContratacao] }
+    login(usuarioAtualizado, state.tipoUsuario)
+    return novaContratacao
+  }
+
+  function buscarPorId(id) {
+    return getUsuarios().find(usuario => usuario.id === id) || null
   }
 
   function logout() {
@@ -74,79 +113,5 @@ export function useUsuarioStore() {
     localStorage.removeItem('tipoUsuario')
   }
 
-  // Atualiza os dados do usuário logado (sessão atual + lista de cadastrados)
-  function atualizarPerfil(dadosNovos) {
-    if (!state.usuario) {
-      throw new Error('Nenhum usuário logado')
-    }
-
-    const usuarios = getUsuarios()
-    const emailAtual = state.usuario.email?.toLowerCase()
-
-    // se o e-mail está mudando, garante que o novo não pertence a outra conta
-    const novoEmail = dadosNovos.email?.trim().toLowerCase()
-    if (novoEmail && novoEmail !== emailAtual) {
-      const emailEmUso = usuarios.some(
-        (u) => u.email?.toLowerCase() === novoEmail
-      )
-      if (emailEmUso) {
-        throw new Error('Já existe uma conta com esse e-mail')
-      }
-    }
-
-    const usuarioAtualizado = { ...state.usuario, ...dadosNovos }
-
-    const indice = usuarios.findIndex(
-      (u) => u.email?.toLowerCase() === emailAtual
-    )
-    if (indice !== -1) {
-      usuarios[indice] = usuarioAtualizado
-      salvarUsuarios(usuarios)
-    }
-
-    login(usuarioAtualizado, state.tipoUsuario)
-
-    return usuarioAtualizado
-  }
-
-  // Registra a contratação de um freelancer pelo cliente logado
-  function contratar(dadosSolicitacao) {
-    if (!state.usuario) {
-      throw new Error('Você precisa estar logado para solicitar um serviço')
-    }
-
-    const usuarios = getUsuarios()
-    const emailAtual = state.usuario.email?.toLowerCase()
-
-    const contratacoes = state.usuario.contratacoes || []
-    const novaContratacao = {
-      ...dadosSolicitacao,
-      dataContratacao: new Date().toISOString()
-    }
-
-    const usuarioAtualizado = {
-      ...state.usuario,
-      contratacoes: [...contratacoes, novaContratacao]
-    }
-
-    const indice = usuarios.findIndex(
-      (u) => u.email?.toLowerCase() === emailAtual
-    )
-    if (indice !== -1) {
-      usuarios[indice] = usuarioAtualizado
-      salvarUsuarios(usuarios)
-    }
-
-    login(usuarioAtualizado, state.tipoUsuario)
-
-    return novaContratacao
-  }
-
-  // Busca um freelancer pelo id (usado no perfil público)
-  function buscarPorId(id) {
-    const usuarios = getUsuarios()
-    return usuarios.find((u) => u.id === id) || null
-  }
-
-  return { state, cadastrar, login, autenticar, logout, atualizarPerfil, contratar, buscarPorId }
+  return { state, cadastrar, login, autenticar, adicionarContratacao, logout, atualizarPerfil, contratar, buscarPorId }
 }

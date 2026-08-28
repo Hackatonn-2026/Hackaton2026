@@ -1,7 +1,7 @@
 <template>
   <nav class="nav-links">
     <RouterLink to="/" class="nav-link">Home</RouterLink>
-    <RouterLink to="/buscar" class="nav-link">Buscar</RouterLink>
+    <RouterLink to="/como-funciona" class="nav-link">Como funciona</RouterLink>
     <RouterLink to="/categorias" class="nav-link">Categorias</RouterLink>
 
     <RouterLink
@@ -32,9 +32,14 @@
       v-if="usuarioStore.state.usuario"
       type="button"
       class="nav-link logout-btn"
+      aria-label="Sair da conta"
+      title="Sair da conta"
       @click="sair"
     >
-      Sair
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4m-5-5 5-5-5-5m5 5H3" />
+      </svg>
+      <span>Sair</span>
     </button>
   </nav>
 </template>
@@ -117,13 +122,16 @@ function sair() {
 }
 
 .logout-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
   background: #dc2626;
   border: 1px solid #dc2626;
-  padding: 8px 14px;
+  padding: 9px 14px;
   border-radius: 8px;
   cursor: pointer;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   color: #fff;
 }
 
@@ -131,5 +139,15 @@ function sair() {
   background: #b91c1c;
   border-color: #b91c1c;
   color: #fff;
+}
+
+.logout-btn:focus-visible {
+  outline: 3px solid rgb(248 113 113 / 45%);
+  outline-offset: 2px;
+}
+
+.logout-btn svg {
+  width: 16px;
+  height: 16px;
 }
 </style>
