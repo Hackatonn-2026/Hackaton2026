@@ -4,14 +4,13 @@
     <RouterLink to="/como-funciona" class="nav-link">Como funciona</RouterLink>
     <RouterLink to="/categorias" class="nav-link">Categorias</RouterLink>
 
-      <RouterLink
+    <RouterLink
       v-if="!usuarioStore.state.usuario"
       to="/login"
       class="nav-link login-link"
     >
       Login
     </RouterLink>
-
 
     <RouterLink
       v-else
@@ -23,11 +22,11 @@
         :alt="usuarioStore.state.usuario.nome"
         class="avatar-link__img"
       />
+
       <span class="avatar-link__nome">
         {{ usuarioStore.state.usuario.nome }}
       </span>
     </RouterLink>
-
 
     <button
       v-if="usuarioStore.state.usuario"
@@ -42,24 +41,20 @@
       </svg>
       <span>Sair</span>
     </button>
-
   </nav>
 </template>
 
 <script setup>
-
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUsuarioStore } from '@/stores/usuario'
 
 const router = useRouter()
-
 const usuarioStore = useUsuarioStore()
 
 const avatarPadrao = '/img/avatar-padrao.png'
 
 const linkPerfil = computed(() => {
-
   const usuario = usuarioStore.state.usuario
 
   if (!usuario) return '/'
@@ -67,17 +62,12 @@ const linkPerfil = computed(() => {
   return usuarioStore.state.tipoUsuario === 'freelancer'
     ? '/perfil-freelancer'
     : '/dashboard-cliente'
-
 })
 
 function sair() {
-
   usuarioStore.logout()
-
   router.push('/')
-
 }
-
 </script>
 
 <style scoped>
