@@ -8,8 +8,11 @@
     <div class="perfil-card">
       <div class="perfil-header">
         <div class="perfil-avatar">
-          <img v-if="fotoUrl" :src="fotoUrl" alt="Foto de perfil" />
-          <span v-else>{{ iniciais }}</span>
+          <img
+            :src="fotoUrl || avatarPadrao"
+            alt="Foto de perfil"
+            @error="$event.target.src = avatarPadrao"
+          />
         </div>
 
         <div class="perfil-header__info">
@@ -78,6 +81,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
+import avatarPadrao from '@/assets/icons/avatar.png'
 
 const props = defineProps({
 
@@ -98,8 +102,7 @@ const props = defineProps({
 
 const route = useRoute()
 
-// só mostra o botão de editar quando é a rota do "meu perfil"
-// (a rota /perfil/:id, usada pra ver o perfil público de outros freelancers, não mostra o botão)
+// Mostra o botão só no perfil do usuário logado.
 const ehMeuPerfil = computed(() => route.name === 'perfil-freelancer')
 
 const opcoesExperiencia = [
@@ -115,15 +118,6 @@ const experienciaLabel = computed(() => {
   return opcao ? opcao.label : ''
 })
 
-const iniciais = computed(() => {
-  if (!props.usuario.nome) return '?'
-  return props.usuario.nome
-    .trim()
-    .split(/\s+/)
-    .slice(0, 2)
-    .map(parte => parte[0]?.toUpperCase())
-    .join('')
-})
 const fotoUrl = computed(() => {
   const foto = props.usuario.fotoPerfil
   if (!foto) return null

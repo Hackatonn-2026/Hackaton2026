@@ -92,10 +92,10 @@ import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useUsuarioStore } from '@/stores/usuario'
 import ProfessionalCard from '@/components/CartaoProfissional.vue'
+import avatarPadrao from '@/assets/icons/avatar.png'
 const router = useRouter()
 const route = useRoute()
 const usuarioStore = useUsuarioStore()
-const avatarPadrao = '/img/avatar-padrao.png'
 if (!usuarioStore.state.usuario) {
   router.replace('/login')
 }

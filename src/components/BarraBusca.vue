@@ -18,7 +18,7 @@ const todosProfissionais = computed(() => [
   }))
 ])
 
-// Filtra sugestões tanto por nome de profissional quanto por categoria
+// Filtra nomes, categorias e profissões.
 const resultados = computed(() => {
   const texto = query.value.trim().toLowerCase()
   if (!texto) return []
@@ -44,7 +44,7 @@ const resultados = computed(() => {
   return sugestoes.slice(0, 6)
 })
 
-// Ir para a página de busca ao apertar ENTER
+// Enter abre a busca com o termo digitado.
 function irParaBusca() {
   const texto = query.value.trim()
   if (!texto) return
@@ -57,7 +57,7 @@ function irParaBusca() {
   query.value = ''
 }
 
-// Ao clicar numa sugestão da lista
+// Clique no perfil ou na categoria sugerida.
 function selecionarSugestao(item) {
   if (item.tipo === 'perfil') {
     router.push(`/perfil/${item.id}`)

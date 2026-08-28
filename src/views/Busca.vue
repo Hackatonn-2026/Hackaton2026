@@ -91,6 +91,7 @@ const filtros = ref({
 })
 
 function aplicarFiltros(novosFiltros) {
+  // Pega os filtros que foram marcados na lateral.
   filtros.value = novosFiltros
 }
 
@@ -102,7 +103,7 @@ function normalizar(texto) {
     .replace(/[\u0300-\u036f]/g, '')
 }
 
-// Verifica se o texto bate com a Categoria OU Nome OU Título do profissional
+// A busca olha a categoria, o nome e a profissão.
 function termoCombina(prof, termoBuscado) {
   if (!termoBuscado) return true
 
@@ -151,6 +152,7 @@ function passaFiltroAvaliacao(prof) {
 }
 
 const profissionaisFiltrados = computed(() => {
+  // Aqui ficam só os profissionais que combinam com a pesquisa.
   return todosProfissionais.value.filter(prof =>
     termoCombina(prof, categoriaQuery.value)
     && passaFiltroLocalizacao(prof)
@@ -160,7 +162,7 @@ const profissionaisFiltrados = computed(() => {
 })
 
 function irParaPerfil(profissional) {
-  // Trata objeto ou ID direto
+  // Clicar no card abre o perfil desse profissional.
   const id = typeof profissional === 'object' ? profissional.id : profissional
   router.push(`/perfil/${id}`)
 }

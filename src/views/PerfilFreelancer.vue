@@ -17,6 +17,7 @@ const activeTab = ref('Sobre')
 const abaContratacoes = ref(route.query.aba === 'espera' ? 'espera' : 'contratados')
 const contratacoesSection = ref(null)
 
+// Se veio pela aba de espera, já leva a tela até os pedidos.
 function rolarParaContratacoes() {
   if (route.query.aba !== 'espera') return
   requestAnimationFrame(() => {
@@ -52,6 +53,7 @@ function criarExperiencia(usuario) {
 }
 
 const profissional = computed(() => {
+  // Procura primeiro na lista pronta e depois nos usuários cadastrados.
   const encontrado = profissionais.find(item => String(item.id) === String(route.params.id))
   if (encontrado) return encontrado
 

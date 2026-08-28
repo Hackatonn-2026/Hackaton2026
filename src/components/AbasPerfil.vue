@@ -1,4 +1,5 @@
 <script setup>
+// A aba muda quando o usuário clica em outra opção.
 defineProps({
   tabs: {
     type: Array,

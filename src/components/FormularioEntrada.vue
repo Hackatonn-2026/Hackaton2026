@@ -56,7 +56,7 @@ const props = defineProps({
   placeholder: { type: String, default: '' },
   type: { type: String, default: 'text' }, // text | email | password | tel
   modelValue: { type: [String, Number], default: '' },
-  // ícone: user | email | password | phone | location | briefcase | link
+  // Ícone mostrado dentro do campo.
   icon: { type: String, default: '' },
   error: { type: String, default: '' },
   maxlength: { type: [String, Number], default: null }
@@ -75,7 +75,7 @@ const resolvedType = computed(() => {
   return props.type
 })
 
-// mapa de ícones (auto por type, ou sobrescrito por prop "icon")
+// Escolhe o ícone pelo tipo do campo.
 const icons = {
   user: 'M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z',
   email: 'M4 4h16v16H4V4Zm0 0 8 8 8-8',

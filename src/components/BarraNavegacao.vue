@@ -48,11 +48,10 @@
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUsuarioStore } from '@/stores/usuario'
+import avatarPadrao from '@/assets/icons/avatar.png'
 
 const router = useRouter()
 const usuarioStore = useUsuarioStore()
-
-const avatarPadrao = '/img/avatar-padrao.png'
 
 const linkPerfil = computed(() => {
   const usuario = usuarioStore.state.usuario

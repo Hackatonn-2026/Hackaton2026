@@ -94,7 +94,7 @@ function setFile(file) {
     return
   }
 
-  // Limita o tamanho para 5 MB
+  // Limita o arquivo a 5 MB.
   const tamanhoMaximo = 5 * 1024 * 1024
 
   if (file.size > tamanhoMaximo) {

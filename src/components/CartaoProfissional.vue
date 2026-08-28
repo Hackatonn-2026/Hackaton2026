@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import avatarPadrao from '@/assets/icons/avatar.png'
 
 const props = defineProps({
   professional: {
@@ -16,32 +17,7 @@ const emit = defineEmits(['verPerfil', 'cancelar'])
 
 const imagemComErro = ref(false)
 
-function getInitials(name) {
-  return name
-    .split(' ')
-    .map(n => n[0])
-    .slice(0, 2)
-    .join('')
-    .toUpperCase()
-}
-
-// usado como fallback enquanto não temos foto real (ou se ela falhar ao carregar)
-function getColor(name) {
-  const colors = [
-    'linear-gradient(135deg, #667eea, #764ba2)',
-    'linear-gradient(135deg, #f093fb, #f5576c)',
-    'linear-gradient(135deg, #4facfe, #00f2fe)',
-    'linear-gradient(135deg, #43e97b, #38f9d7)',
-    'linear-gradient(135deg, #fa709a, #fee140)',
-    'linear-gradient(135deg, #30cfd0, #330867)',
-  ]
-  let hash = 0
-  for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash)
-  return colors[Math.abs(hash) % colors.length]
-}
-
-// profissionais.js guarda uma lista de "services" com priceRange, não um preço único.
-// Mostramos o primeiro como referência ("a partir de").
+// Mostra o preço do primeiro serviço.
 const precoInicial = props.professional.services?.[0]?.priceRange ?? 'Sob consulta'
 
 const skillsVisiveis = (props.professional.skills || []).slice(0, 3)
@@ -51,16 +27,13 @@ const skillsVisiveis = (props.professional.skills || []).slice(0, 3)
   <div class="card">
     <div
       class="card-avatar"
-      :style="(!professional.avatar || imagemComErro) ? { background: getColor(professional.name) } : {}"
     >
       <img
-        v-if="professional.avatar && !imagemComErro"
-        :src="professional.avatar"
+        :src="professional.avatar && !imagemComErro ? professional.avatar : avatarPadrao"
         :alt="professional.name"
         class="avatar-img"
         @error="imagemComErro = true"
       >
-      <span v-else>{{ getInitials(professional.name) }}</span>
     </div>
 
     <div class="card-body">

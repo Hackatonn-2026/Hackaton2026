@@ -22,7 +22,6 @@
         Sou Profissional
       </button>
     </div>
-    <!-- CARD -->
     <div class="auth-card">
       <form @submit.prevent="handleSubmit">
 
@@ -140,7 +139,6 @@
             accept="application/pdf"
           />
         </div>
-        <!-- TERMOS -->
         <label class="auth-checkbox-row">
           <input
             type="checkbox"
@@ -170,7 +168,6 @@
         >
           {{ erro }}
         </p>
-        <!-- BOTÃO -->
         <button
           type="submit"
           class="auth-submit"
@@ -195,6 +192,7 @@
 import { reactive, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUsuarioStore } from '@/stores/usuario'
+import avatarPadrao from '@/assets/icons/avatar.png'
 import InputForm from './FormularioEntrada.vue'
 import SelectForm from './FormularioSelecao.vue'
 import TextareaForm from './FormularioTexto.vue'
@@ -211,8 +209,7 @@ const usuarioStore = useUsuarioStore()
 const tipoUsuario = ref(props.tipoInicial)
 const loading = ref(false)
 const erro = ref('')
-// avatar padrão usado quando o usuário não envia foto
-const AVATAR_PADRAO = '/img/avatar-padrao.png'
+// O avatar padrão fica só para quem está se cadastrando como contratante.
 const form = reactive({
   nome: '',
   email: '',
@@ -229,6 +226,7 @@ const form = reactive({
   certificados: null,
   aceitaTermos: false
 })
+
 const opcoesExperiencia = [
   {
     value: 'menos-1',
@@ -269,6 +267,7 @@ const categoriasDisponiveis = [
   'Limpeza',
   'Música'
 ]
+// Regiões que o freelancer pode escolher.
 const opcoesRegiao = [
   { value: 'norte', label: 'Norte' },
   { value: 'sul', label: 'Sul' },
@@ -276,6 +275,7 @@ const opcoesRegiao = [
   { value: 'oeste', label: 'Oeste' }
 ]
 function trocarTipo(tipo) {
+  // Troca o formulário entre cliente e freelancer.
   tipoUsuario.value = tipo
 }
 watch(tipoUsuario, (tipo) => {
@@ -314,6 +314,7 @@ function converterImagem(file) {
   })
 }
 function validate() {
+  // Se faltar algo obrigatório, nem tenta salvar o cadastro.
   if (
    !form.nome.trim() ||
     !form.email.trim() ||
@@ -363,18 +364,20 @@ async function handleSubmit() {
     if (!foto && form.fotoPerfil) {
       foto = await converterImagem(form.fotoPerfil)
     }
-    if (!foto) {
-      foto = AVATAR_PADRAO
+    if (!foto && tipoUsuario.value === 'freelancer') {
+      erro.value = 'Você precisa aceitar os termos para continuar'
+      return
+    }
+    if (!foto && tipoUsuario.value === 'contratante') {
+      foto = avatarPadrao
     }
     const certificadoNome = form.certificados
       ? form.certificados.name
       : null
 
-    const {
-      fotoPerfil,
-      certificados,
-      ...resto
-    } = form
+    const resto = { ...form }
+    delete resto.fotoPerfil
+    delete resto.certificados
     const usuario = {
       ...resto,
       nome: form.nome.trim(),
@@ -387,7 +390,7 @@ async function handleSubmit() {
       precoServico: form.precoServico.trim(),
       fotoPerfil: foto,
       certificadoNome,
-      // lista de profissionais contratados (preenchida depois, ao contratar alguém)
+        // Começa a lista de contratações do cliente.
       contratacoes: tipoUsuario.value === 'contratante' ? [] : undefined,
       tipo: tipoUsuario.value
     }
