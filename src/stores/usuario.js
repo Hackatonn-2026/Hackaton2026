@@ -55,6 +55,42 @@ export function useUsuarioStore() {
     return true
 
   }
+
+  function adicionarContratacao(profissional) {
+    if (!state.usuario) return false
+
+    const profissionaisEmEspera = state.usuario.profissionaisEmEspera || []
+    const jaAdicionado = profissionaisEmEspera.some(item => item.id === profissional.id)
+
+    if (!jaAdicionado) {
+      state.usuario.profissionaisEmEspera = [
+        ...profissionaisEmEspera,
+        {
+          id: profissional.id,
+          nome: profissional.name,
+          profissao: profissional.title,
+          fotoPerfil: profissional.avatar,
+          avaliacao: profissional.rating,
+          localizacao: profissional.location,
+          dataContratacao: new Date().toISOString()
+        }
+      ]
+    }
+
+    localStorage.setItem('usuario', JSON.stringify(state.usuario))
+
+    const contas = JSON.parse(localStorage.getItem('contas')) || []
+    const indiceConta = contas.findIndex(
+      conta => conta.email?.toLowerCase() === state.usuario.email?.toLowerCase()
+    )
+    if (indiceConta >= 0) {
+      contas[indiceConta] = state.usuario
+      localStorage.setItem('contas', JSON.stringify(contas))
+    }
+
+    return !jaAdicionado
+  }
+
   function logout() {
 
     state.usuario = null
@@ -63,6 +99,6 @@ export function useUsuarioStore() {
     localStorage.removeItem('tipoUsuario')
   }
 
-  return { state, login, autenticar, logout }
+  return { state, login, autenticar, adicionarContratacao, logout }
 
 }

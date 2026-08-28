@@ -5,12 +5,15 @@ import ProfileTabs from '../components/AbasPerfil.vue'
 import AboutSection from '../components/SecaoSobre.vue'
 import ServicesSidebar from '../components/BarraServicos.vue'
 import { profissionais } from '@/dataJs/profissionais.js'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import AbaAvaliacao from '@/components/AbaAvaliacao.vue'
+import { useUsuarioStore } from '@/stores/usuario'
 
 const activeTab = ref('Sobre')
 
   const route = useRoute()
+  const router = useRouter()
+  const usuarioStore = useUsuarioStore()
 
   const profissional = profissionais.find(p => p.id === Number(route.params.id))
 // const profissional = profissionais.find(p => p.id === 1)
@@ -33,7 +36,13 @@ const servicos = [
 ]
 
 function handleRequestQuote() {
-  console.log('Solicitar orçamento')
+  if (!usuarioStore.state.usuario) {
+    router.push('/login')
+    return
+  }
+
+  usuarioStore.adicionarContratacao(profissional)
+  router.push('/dashboard-cliente')
 }
 
 function handleScheduleCall() {
