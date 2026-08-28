@@ -124,11 +124,11 @@
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUsuarioStore } from '@/stores/usuario'
-import InputForm from './InputForm.vue'
-import SelectForm from './SelectForm.vue'
-import TextareaForm from './TextareaForm.vue'
-import CheckboxGroup from './CheckboxGroup.vue'
-import FileUpload from './FileUpload.vue'
+import InputForm from './FormularioEntrada.vue'
+import SelectForm from './FormularioSelecao.vue'
+import TextareaForm from './FormularioTexto.vue'
+import CheckboxGroup from './GrupoCheckbox.vue'
+import FileUpload from './EnvioArquivo.vue'
 
 const router = useRouter()
 const usuarioStore = useUsuarioStore()
