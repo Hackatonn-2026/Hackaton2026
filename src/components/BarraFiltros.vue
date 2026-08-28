@@ -3,8 +3,7 @@ import { reactive, watch } from 'vue'
 
 const emit = defineEmits(['filtrar'])
 
-// cada faixa já vem com min/max numéricos, assim quem recebe o evento
-// (BuscaView) não precisa reinterpretar o texto do label
+// Faixas de preço que aparecem para o usuário.
 const opcoesPreco = [
   { label: 'Até R$ 50', min: 0, max: 50 },
   { label: 'R$ 50 - R$ 100', min: 50, max: 100 },
@@ -21,7 +20,8 @@ const filtros = reactive({
   apenasVerificados: false,
 })
 
-// qualquer mudança nos filtros avisa quem estiver escutando
+// Quando marca uma opção, ela fica guardada aqui.
+// Toda mudança já atualiza a lista de resultados.
 watch(
   filtros,
   () => emit('filtrar', { ...filtros }),
@@ -29,6 +29,7 @@ watch(
 )
 
 function limparFiltros() {
+  // Limpa tudo e mostra a lista completa de novo.
   filtros.localizacao = ''
   filtros.precos = []
   filtros.avaliacoes = []

@@ -110,7 +110,7 @@ import cartaoIcon from '../assets/icons/card.png';
 import ouvidoriaIcon from '../assets/icons/ouvidoria.png';
 import CadastroCliente from './CadastroCliente.vue';
 
-// O que diferencia a CiroLancers de plataformas tradicionais
+// O que faz a CiroLancers ser diferente.
 const valores = [
   {
     icone: maosIcon,
@@ -134,7 +134,7 @@ const valores = [
   },
 ];
 
-// Passo a passo para quem contrata
+// O caminho de quem entra para contratar.
 const passosCliente = [
   "Cadastro gratuito na plataforma",
   "Publica uma demanda descrevendo o serviço e a categoria",
@@ -143,7 +143,7 @@ const passosCliente = [
   "Contrata com o pagamento protegido até a conclusão do serviço",
 ];
 
-// Passo a passo para quem presta serviço
+// O caminho de quem entra para oferecer um serviço.
 const passosPrestador = [
   "Cadastro gratuito na plataforma",
   "Cria um perfil profissional com áreas de atuação e portfólio",
@@ -152,7 +152,7 @@ const passosPrestador = [
   "Recebe o pagamento com segurança após a conclusão do serviço",
 ];
 
-// Itens da seção de segurança e qualidade
+// Recursos que deixam a contratação mais segura.
 const seguranca = [
   {
     icone: segurancaIcon,

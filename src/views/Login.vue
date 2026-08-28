@@ -91,12 +91,14 @@ const errors = reactive({ email: '', senha: '' })
 const erroGeral = ref('')
 
 function validate() {
+  // Primeiro confere se os dois campos foram preenchidos.
   errors.email = email.value ? '' : 'Informe seu e-mail'
   errors.senha = senha.value ? '' : 'Informe sua senha'
   return !errors.email && !errors.senha
 }
 
 async function handleSubmit() {
+  // Depois do login, cada usuário vai para a sua área.
   erroGeral.value = ''
 
   if (!validate()) return
@@ -122,11 +124,11 @@ async function handleSubmit() {
 }
 
 function loginComGoogle() {
-  // TODO: integrar OAuth Google
+  // Só de bonito por enquanto.
 }
 
 function loginComFacebook() {
-  // TODO: integrar OAuth Facebook
+  // Só de bonito por enquanto.
 }
 </script>
 

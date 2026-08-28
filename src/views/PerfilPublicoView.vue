@@ -26,15 +26,11 @@
 
           <div class="foto-container">
             <img
-              v-if="freelancer.fotoPerfil"
-              :src="freelancer.fotoPerfil"
+              :src="freelancer.fotoPerfil || avatarPadrao"
               alt="Foto de perfil"
               class="foto"
+              @error="$event.target.src = avatarPadrao"
             />
-
-            <div v-else class="foto-placeholder">
-              {{ primeiraLetra }}
-            </div>
           </div>
 
           <div class="informacoes-principais">
@@ -43,7 +39,7 @@
             <h2>{{ freelancer.profissao }}</h2>
 
             <p class="localizacao">
-              📍 {{ freelancer.cidade }}
+              📍 {{ freelancer.regiao || freelancer.cidade || 'Localização não informada' }}
             </p>
 
           </div>
@@ -105,6 +101,7 @@
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useUsuarioStore } from '@/stores/usuario'
+import avatarPadrao from '@/assets/icons/avatar.png'
 
 const route = useRoute()
 const router = useRouter()

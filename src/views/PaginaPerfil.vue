@@ -4,7 +4,7 @@
 
 <script setup>
 import { useUsuarioStore } from '@/stores/usuario'
-import PerfilCard from '@/components/PerfilCard.vue' // esse é o arquivo que você mandou
+import PerfilCard from '@/components/PerfilCard.vue'
 
 const { state } = useUsuarioStore()
 </script>

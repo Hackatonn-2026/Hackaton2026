@@ -22,7 +22,6 @@
         Sou Profissional
       </button>
     </div>
-    <!-- CARD -->
     <div class="auth-card">
       <form @submit.prevent="handleSubmit">
 
@@ -33,35 +32,43 @@
           <div class="form-grid">
             <InputForm
               v-model="form.nome"
-              label="Nome Completo"
+              label="Nome Completo *"
               placeholder="Seu nome"
               icon="user"
             />
             <InputForm
               v-model="form.email"
-              label="E-mail"
+              label="E-mail *"
               placeholder="seu@email.com"
               type="email"
             />
             <InputForm
               v-model="form.senha"
-              label="Senha"
+              label="Senha *"
               placeholder="Digite sua senha"
               type="password"
             />
             <InputForm
               v-model="form.telefone"
-              label="Telefone"
+              label="Telefone *"
               placeholder="(11) 99999-9999"
               type="tel"
             />
           </div>
-          <div class="campo-largo">
+          <div v-if="tipoUsuario !== 'freelancer'" class="campo-largo">
             <InputForm
               v-model="form.cidade"
-              label="Cidade"
+              label="Cidade *"
               placeholder="São Paulo, SP"
               icon="location"
+            />
+          </div>
+          <div v-else class="campo-largo">
+            <SelectForm
+              v-model="form.regiao"
+              label="Região *"
+              placeholder="Selecione sua região"
+              :options="opcoesRegiao"
             />
           </div>
         </div>
@@ -74,7 +81,7 @@
           </h2>
           <InputForm
             v-model="form.profissao"
-            label="Profissão/Especialidade"
+            label="Profissão/Especialidade *"
             placeholder="Ex: Desenvolvedor Full Stack"
             icon="briefcase"
           />
@@ -89,7 +96,7 @@
           <div class="campo">
             <SelectForm
               v-model="form.anosExperiencia"
-              label="Anos de Experiência"
+              label="Anos de Experiência *"
               :options="opcoesExperiencia"
             />
           </div>
@@ -111,7 +118,7 @@
           <div class="campo">
             <FileUpload
               v-model:file="form.fotoPerfil"
-              label="Foto de Perfil"
+              label="Foto de Perfil *"
               @update:file="onFotoSelecionada"
             />
             <div
@@ -127,19 +134,18 @@
           </div>
           <FileUpload
             v-model:file="form.certificados"
-            label="Certificados (Opcional)"
+            label="Certificados *"
             hint="PDF até 10MB"
             accept="application/pdf"
           />
         </div>
-        <!-- TERMOS -->
         <label class="auth-checkbox-row">
           <input
             type="checkbox"
             v-model="form.aceitaTermos"
           />
           <span>
-            Eu concordo com os
+            * Eu concordo com os
             <RouterLink
               to="/suporte"
               class="auth-link"
@@ -155,13 +161,13 @@
             </RouterLink>
           </span>
         </label>
+        <p class="required-note">* Indica um campo obrigatório</p>
                <p
           v-if="erro"
           class="form-error"
         >
           {{ erro }}
         </p>
-        <!-- BOTÃO -->
         <button
           type="submit"
           class="auth-submit"
@@ -186,6 +192,7 @@
 import { reactive, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUsuarioStore } from '@/stores/usuario'
+import avatarPadrao from '@/assets/icons/avatar.png'
 import InputForm from './FormularioEntrada.vue'
 import SelectForm from './FormularioSelecao.vue'
 import TextareaForm from './FormularioTexto.vue'
@@ -202,14 +209,14 @@ const usuarioStore = useUsuarioStore()
 const tipoUsuario = ref(props.tipoInicial)
 const loading = ref(false)
 const erro = ref('')
-// avatar padrão usado quando o usuário não envia foto
-const AVATAR_PADRAO = '/img/avatar-padrao.png'
+// O avatar padrão fica só para quem está se cadastrando como contratante.
 const form = reactive({
   nome: '',
   email: '',
   senha: '',
   telefone: '',
   cidade: '',
+  regiao: '',
   profissao: '',
   precoServico: '',
   anosExperiencia: '',
@@ -219,6 +226,7 @@ const form = reactive({
   certificados: null,
   aceitaTermos: false
 })
+
 const opcoesExperiencia = [
   {
     value: 'menos-1',
@@ -259,7 +267,15 @@ const categoriasDisponiveis = [
   'Limpeza',
   'Música'
 ]
+// Regiões que o freelancer pode escolher.
+const opcoesRegiao = [
+  { value: 'norte', label: 'Norte' },
+  { value: 'sul', label: 'Sul' },
+  { value: 'leste', label: 'Leste' },
+  { value: 'oeste', label: 'Oeste' }
+]
 function trocarTipo(tipo) {
+  // Troca o formulário entre cliente e freelancer.
   tipoUsuario.value = tipo
 }
 watch(tipoUsuario, (tipo) => {
@@ -298,12 +314,13 @@ function converterImagem(file) {
   })
 }
 function validate() {
+  // Se faltar algo obrigatório, nem tenta salvar o cadastro.
   if (
    !form.nome.trim() ||
     !form.email.trim() ||
     !form.senha ||
     !form.telefone.trim() ||
-    !form.cidade.trim()
+    (tipoUsuario.value === 'freelancer' ? !form.regiao : !form.cidade.trim())
   ) {
     return 'Preencha todos os campos obrigatórios'
   }
@@ -323,6 +340,12 @@ function validate() {
   ) {
     return 'Informe seus anos de experiência'
   }
+  if (
+    tipoUsuario.value === 'freelancer' &&
+    (!form.fotoPerfil || !form.certificados)
+  ) {
+    return 'Você precisa aceitar os termos para continuar'
+  }
   if (!form.aceitaTermos) {
     return 'Você precisa aceitar os termos para continuar'
   }
@@ -341,18 +364,20 @@ async function handleSubmit() {
     if (!foto && form.fotoPerfil) {
       foto = await converterImagem(form.fotoPerfil)
     }
-    if (!foto) {
-      foto = AVATAR_PADRAO
+    if (!foto && tipoUsuario.value === 'freelancer') {
+      erro.value = 'Você precisa aceitar os termos para continuar'
+      return
+    }
+    if (!foto && tipoUsuario.value === 'contratante') {
+      foto = avatarPadrao
     }
     const certificadoNome = form.certificados
       ? form.certificados.name
       : null
 
-    const {
-      fotoPerfil,
-      certificados,
-      ...resto
-    } = form
+    const resto = { ...form }
+    delete resto.fotoPerfil
+    delete resto.certificados
     const usuario = {
       ...resto,
       nome: form.nome.trim(),
@@ -360,11 +385,12 @@ async function handleSubmit() {
       senha: form.senha,
       telefone: form.telefone.trim(),
       cidade: form.cidade.trim(),
+      regiao: form.regiao,
       profissao: form.profissao.trim(),
       precoServico: form.precoServico.trim(),
       fotoPerfil: foto,
       certificadoNome,
-      // lista de profissionais contratados (preenchida depois, ao contratar alguém)
+        // Começa a lista de contratações do cliente.
       contratacoes: tipoUsuario.value === 'contratante' ? [] : undefined,
       tipo: tipoUsuario.value
     }
@@ -536,6 +562,11 @@ async function handleSubmit() {
   height: 18px;
   margin-top: 2px;
   accent-color: #3b5bfd;
+}
+.required-note {
+  margin: 8px 0 0 26px;
+  color: #6b7280;
+  font-size: 12px;
 }
 .auth-link {
   color: #3b5bfd;

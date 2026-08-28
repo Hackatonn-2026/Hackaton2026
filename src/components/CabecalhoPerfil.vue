@@ -1,4 +1,6 @@
 <script setup>
+import avatarPadrao from '@/assets/icons/avatar.png'
+
 defineProps({
   name: String,
   title: String,
@@ -21,7 +23,12 @@ defineEmits(['request-quote', 'schedule-call', 'toggle-favorite', 'share'])
 <template>
   <section class="profile-header">
     <div class="header-container">
-      <img :src="avatar" :alt="name" class="avatar" />
+      <img
+        :src="avatar || avatarPadrao"
+        :alt="name"
+        class="avatar"
+        @error="$event.target.src = avatarPadrao"
+      />
 
       <div class="info-container">
         <div class="name-row">

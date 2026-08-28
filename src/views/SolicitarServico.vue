@@ -25,14 +25,11 @@
 
         <div class="freelancer-resumo">
           <img
-            v-if="freelancer.fotoPerfil"
-            :src="freelancer.fotoPerfil"
+            :src="freelancer.fotoPerfil || avatarPadrao"
             alt="Foto do freelancer"
             class="freelancer-foto"
+            @error="$event.target.src = avatarPadrao"
           />
-          <div v-else class="freelancer-foto-placeholder">
-            {{ primeiraLetra }}
-          </div>
 
           <div class="freelancer-info">
             <strong>{{ freelancer.nome || 'Profissional' }}</strong>
@@ -104,6 +101,7 @@
 import { computed, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useUsuarioStore } from '@/stores/usuario'
+import avatarPadrao from '@/assets/icons/avatar.png'
 
 const route = useRoute()
 const router = useRouter()
@@ -113,19 +111,13 @@ if (!usuarioStore.state.usuario) {
   router.replace('/login')
 }
 
-// dados do freelancer que está sendo contratado, recebidos por query da URL
-// ex: /solicitar?id=123&nome=Fulano&profissao=Designer&fotoPerfil=...
+// Usa os dados do profissional que veio da tela anterior.
 const freelancer = computed(() => ({
   id: route.query.id || null,
   nome: route.query.nome || '',
   profissao: route.query.profissao || '',
   fotoPerfil: route.query.fotoPerfil || null
 }))
-
-const primeiraLetra = computed(() => {
-  if (!freelancer.value.nome) return '?'
-  return freelancer.value.nome.charAt(0).toUpperCase()
-})
 
 const loading = ref(false)
 const erro = ref('')

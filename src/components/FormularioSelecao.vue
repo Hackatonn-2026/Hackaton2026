@@ -40,7 +40,7 @@ const props = defineProps({
   label: { type: String, default: '' },
   placeholder: { type: String, default: 'Selecione' },
   modelValue: { type: [String, Number], default: '' },
-  options: { type: Array, default: () => [] }, // ['a','b'] ou [{value,label}]
+  options: { type: Array, default: () => [] }, // Lista de opções do select.
   icon: { type: String, default: 'graduation' }
 })
 

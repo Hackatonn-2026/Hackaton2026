@@ -132,11 +132,10 @@ import SelectForm from './FormularioSelecao.vue'
 import TextareaForm from './FormularioTexto.vue'
 import CheckboxGroup from './GrupoCheckbox.vue'
 import FileUpload from './EnvioArquivo.vue'
+import avatarPadrao from '@/assets/icons/avatar.png'
 
 const router = useRouter()
 const usuarioStore = useUsuarioStore()
-
-const AVATAR_PADRAO = '/img/avatar-padrao.png'
 
 const usuarioAtual = usuarioStore.state.usuario
 const tipoUsuario = usuarioStore.state.tipoUsuario
@@ -162,7 +161,7 @@ const form = reactive({
   anosExperiencia: usuarioAtual?.anosExperiencia || '',
   descricao: usuarioAtual?.descricao || '',
   categorias: usuarioAtual?.categorias || [],
-  fotoPerfil: usuarioAtual?.fotoPerfil || AVATAR_PADRAO
+  fotoPerfil: usuarioAtual?.fotoPerfil || avatarPadrao
 })
 
 const opcoesExperiencia = [

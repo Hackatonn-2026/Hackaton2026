@@ -73,7 +73,7 @@ async function handleSubmit() {
 
   loading.value = true
   try {
-    // TODO: integrar com a API de recuperação de senha
+    // Recuperação ainda não está ligada ao servidor.
     // await api.post('/recuperar-senha', { email: email.value })
     enviado.value = true
   } finally {

@@ -54,7 +54,7 @@
 <script setup>
 import { ref } from 'vue'
 
-defineProps({
+const props = defineProps({
   label: {
     type: String,
     default: ''
@@ -86,13 +86,15 @@ function setFile(file) {
     return
   }
 
-  // Verifica se é uma imagem
-  if (!file.type.startsWith('image/')) {
-    alert('Por favor, selecione uma imagem válida.')
+  const aceitaPdf = props.accept.includes('application/pdf')
+  const arquivoValido = aceitaPdf ? file.type === 'application/pdf' : file.type.startsWith('image/')
+
+  if (!arquivoValido) {
+    alert(aceitaPdf ? 'Por favor, selecione um PDF válido.' : 'Por favor, selecione uma imagem válida.')
     return
   }
 
-  // Limita o tamanho para 5 MB
+  // Limita o arquivo a 5 MB.
   const tamanhoMaximo = 5 * 1024 * 1024
 
   if (file.size > tamanhoMaximo) {

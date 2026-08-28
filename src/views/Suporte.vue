@@ -214,7 +214,7 @@ const perguntas = [
   background: #fff;
 }
 
-/* HERO — mesmo padrão do hero da Home */
+/* Abertura da página de suporte. */
 .hero {
   padding: 70px 8% 40px;
   text-align: center;
@@ -234,7 +234,7 @@ const perguntas = [
   line-height: 1.6;
 }
 
-/* CARDS DE CONTATO — mesmo estilo dos cards de categoria da Home */
+/* Canais para falar com a equipe. */
 .contatos {
   display: flex;
   justify-content: center;
@@ -282,7 +282,7 @@ const perguntas = [
   font-size: 14px;
 }
 
-/* SEÇÕES DE CONTEÚDO */
+/* Textos e orientações da página. */
 .suporte-section {
   scroll-margin-top: 90px;
   max-width: 900px;
