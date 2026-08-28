@@ -1,9 +1,7 @@
 <template>
   <div class="auth-page">
     <h1 class="auth-title">Criar Conta</h1>
-    <p class="auth-subtitle">
-      Junte-se à maior plataforma de freelancers do Brasil
-    </p>
+    <p class="auth-subtitle">Junte-se à maior plataforma de freelancers do Brasil</p>
     <div class="auth-tabs">
       <button
         type="button"
@@ -24,11 +22,8 @@
     </div>
     <div class="auth-card">
       <form @submit.prevent="handleSubmit">
-
         <div class="form-section">
-          <h2 class="form-section__title">
-            Dados Pessoais
-          </h2>
+          <h2 class="form-section__title">Dados Pessoais</h2>
           <div class="form-grid">
             <InputForm
               v-model="form.nome"
@@ -72,13 +67,8 @@
             />
           </div>
         </div>
-               <div
-          v-if="tipoUsuario === 'freelancer'"
-          class="form-section"
-        >
-          <h2 class="form-section__title">
-            Informações Profissionais
-          </h2>
+        <div v-if="tipoUsuario === 'freelancer'" class="form-section">
+          <h2 class="form-section__title">Informações Profissionais</h2>
           <InputForm
             v-model="form.profissao"
             label="Profissão/Especialidade *"
@@ -121,14 +111,8 @@
               label="Foto de Perfil *"
               @update:file="onFotoSelecionada"
             />
-            <div
-              v-if="previewFoto"
-              class="foto-preview"
-            >
-              <img
-                :src="previewFoto"
-                alt="Pré-visualização da foto de perfil"
-              />
+            <div v-if="previewFoto" class="foto-preview">
+              <img :src="previewFoto" alt="Pré-visualização da foto de perfil" />
               <span>Assim sua foto vai aparecer no seu perfil</span>
             </div>
           </div>
@@ -140,56 +124,31 @@
           />
         </div>
         <label class="auth-checkbox-row">
-          <input
-            type="checkbox"
-            v-model="form.aceitaTermos"
-          />
+          <input type="checkbox" v-model="form.aceitaTermos" />
           <span>
             * Eu concordo com os
-            <RouterLink
-              to="/suporte"
-              class="auth-link"
-            >
-              Termos de Uso
-            </RouterLink>
+            <RouterLink to="/suporte" class="auth-link"> Termos de Uso </RouterLink>
             e
-            <RouterLink
-              to="/suporte"
-              class="auth-link"
-            >
-              Política de Privacidade
-            </RouterLink>
+            <RouterLink to="/suporte" class="auth-link"> Política de Privacidade </RouterLink>
           </span>
         </label>
         <p class="required-note">* Indica um campo obrigatório</p>
-               <p
-          v-if="erro"
-          class="form-error"
-        >
+        <p v-if="erro" class="form-error">
           {{ erro }}
         </p>
-        <button
-          type="submit"
-          class="auth-submit"
-          :disabled="loading"
-        >
+        <button type="submit" class="auth-submit" :disabled="loading">
           {{ loading ? 'Criando conta...' : 'Criar Conta' }}
         </button>
       </form>
       <p class="auth-footer-text">
         Já tem uma conta?
-        <RouterLink
-          to="/login"
-          class="auth-link"
-        >
-          Faça login
-        </RouterLink>
+        <RouterLink to="/login" class="auth-link"> Faça login </RouterLink>
       </p>
     </div>
   </div>
 </template>
 <script setup>
-import { reactive, ref, watch } from 'vue'
+import { onMounted, reactive, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUsuarioStore } from '@/stores/usuario'
 import avatarPadrao from '@/assets/icons/avatar.png'
@@ -201,14 +160,16 @@ import FileUpload from './EnvioArquivo.vue'
 const props = defineProps({
   tipoInicial: {
     type: String,
-    default: 'freelancer'
-  }
+    default: 'freelancer',
+  },
 })
 const router = useRouter()
 const usuarioStore = useUsuarioStore()
 const tipoUsuario = ref(props.tipoInicial)
 const loading = ref(false)
 const erro = ref('')
+const STORAGE_KEY = 'cadastro-form-dados'
+const STORAGE_TIPO_KEY = 'cadastro-form-tipo'
 // O avatar padrão fica só para quem está se cadastrando como contratante.
 const form = reactive({
   nome: '',
@@ -224,30 +185,67 @@ const form = reactive({
   categorias: [],
   fotoPerfil: null,
   certificados: null,
-  aceitaTermos: false
+  aceitaTermos: false,
 })
+
+function restaurarFormulario() {
+  const salvo = sessionStorage.getItem(STORAGE_KEY)
+  if (!salvo) return
+
+  try {
+    const dados = JSON.parse(salvo)
+    Object.assign(form, {
+      nome: dados.nome || '',
+      email: dados.email || '',
+      senha: dados.senha || '',
+      telefone: dados.telefone || '',
+      cidade: dados.cidade || '',
+      regiao: dados.regiao || '',
+      profissao: dados.profissao || '',
+      precoServico: dados.precoServico || '',
+      anosExperiencia: dados.anosExperiencia || '',
+      descricao: dados.descricao || '',
+      categorias: Array.isArray(dados.categorias) ? dados.categorias : [],
+      aceitaTermos: Boolean(dados.aceitaTermos),
+      fotoPerfil: null,
+      certificados: null,
+    })
+  } catch (error) {
+    console.warn('Não foi possível restaurar o cadastro salvo', error)
+  }
+}
+
+function salvarFormulario() {
+  const payload = {
+    ...form,
+    fotoPerfil: form.fotoPerfil ? { name: form.fotoPerfil.name } : null,
+    certificados: form.certificados ? { name: form.certificados.name } : null,
+  }
+
+  sessionStorage.setItem(STORAGE_KEY, JSON.stringify(payload))
+}
 
 const opcoesExperiencia = [
   {
     value: 'menos-1',
-    label: 'Menos de 1 ano'
+    label: 'Menos de 1 ano',
   },
   {
     value: '1-3',
-    label: '1 a 3 anos'
+    label: '1 a 3 anos',
   },
   {
     value: '3-5',
-    label: '3 a 5 anos'
+    label: '3 a 5 anos',
   },
   {
     value: '5-10',
-    label: '5 a 10 anos'
+    label: '5 a 10 anos',
   },
   {
     value: 'mais-10',
-    label: 'Mais de 10 anos'
-  }
+    label: 'Mais de 10 anos',
+  },
 ]
 const categoriasDisponiveis = [
   'Desenvolvimento',
@@ -265,28 +263,55 @@ const categoriasDisponiveis = [
   'Redação',
   'Consultoria',
   'Limpeza',
-  'Música'
+  'Música',
 ]
 // Regiões que o freelancer pode escolher.
 const opcoesRegiao = [
   { value: 'norte', label: 'Norte' },
   { value: 'sul', label: 'Sul' },
   { value: 'leste', label: 'Leste' },
-  { value: 'oeste', label: 'Oeste' }
+  { value: 'oeste', label: 'Oeste' },
 ]
 function trocarTipo(tipo) {
   // Troca o formulário entre cliente e freelancer.
   tipoUsuario.value = tipo
 }
 watch(tipoUsuario, (tipo) => {
-  const destino =
-    tipo === 'freelancer'
-      ? '/cadastro-freelancer'
-      : '/cadastro-cliente'
+  sessionStorage.setItem(STORAGE_TIPO_KEY, tipo)
+  const destino = tipo === 'freelancer' ? '/cadastro-freelancer' : '/cadastro-cliente'
   if (router.currentRoute.value.path !== destino) {
-    router.replace(destino)
+    router.push(destino)
   }
 })
+
+watch(
+  () => ({
+    nome: form.nome,
+    email: form.email,
+    senha: form.senha,
+    telefone: form.telefone,
+    cidade: form.cidade,
+    regiao: form.regiao,
+    profissao: form.profissao,
+    precoServico: form.precoServico,
+    anosExperiencia: form.anosExperiencia,
+    descricao: form.descricao,
+    categorias: form.categorias,
+    aceitaTermos: form.aceitaTermos,
+  }),
+  () => salvarFormulario(),
+  { deep: true },
+)
+
+onMounted(() => {
+  const tipoSalvo = sessionStorage.getItem(STORAGE_TIPO_KEY)
+  if (tipoSalvo === 'freelancer' || tipoSalvo === 'contratante') {
+    tipoUsuario.value = tipoSalvo
+  }
+
+  restaurarFormulario()
+})
+
 const previewFoto = ref(null)
 function onFotoSelecionada(file) {
   if (!file) {
@@ -315,35 +340,32 @@ function converterImagem(file) {
 }
 function validate() {
   // Se faltar algo obrigatório, nem tenta salvar o cadastro.
-  if (
-   !form.nome.trim() ||
-    !form.email.trim() ||
-    !form.senha ||
-    !form.telefone.trim() ||
-    (tipoUsuario.value === 'freelancer' ? !form.regiao : !form.cidade.trim())
-  ) {
+  if (!form.nome.trim()) {
+    return 'Preencha o nome'
+  }
+  if (!form.email.trim()) {
+    return 'Preencha o e-mail'
+  }
+  if (!form.senha) {
+    return 'Preencha a senha'
+  }
+  if (!form.telefone.trim()) {
+    return 'Preencha o telefone'
+  }
+  if (tipoUsuario.value === 'freelancer' ? !form.regiao : !form.cidade.trim()) {
     return 'Preencha todos os campos obrigatórios'
   }
   const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())
   if (!emailValido) {
     return 'Informe um e-mail válido'
   }
-  if (
-    tipoUsuario.value === 'freelancer' &&
-    !form.profissao.trim()
-  ) {
+  if (tipoUsuario.value === 'freelancer' && !form.profissao.trim()) {
     return 'Informe sua profissão'
   }
-  if (
-    tipoUsuario.value === 'freelancer' &&
-    !form.anosExperiencia
-  ) {
+  if (tipoUsuario.value === 'freelancer' && !form.anosExperiencia) {
     return 'Informe seus anos de experiência'
   }
-  if (
-    tipoUsuario.value === 'freelancer' &&
-    (!form.fotoPerfil || !form.certificados)
-  ) {
+  if (tipoUsuario.value === 'freelancer' && (!form.fotoPerfil || !form.certificados)) {
     return 'Você precisa aceitar os termos para continuar'
   }
   if (!form.aceitaTermos) {
@@ -359,7 +381,6 @@ async function handleSubmit() {
   }
   loading.value = true
   try {
-
     let foto = previewFoto.value
     if (!foto && form.fotoPerfil) {
       foto = await converterImagem(form.fotoPerfil)
@@ -371,9 +392,7 @@ async function handleSubmit() {
     if (!foto && tipoUsuario.value === 'contratante') {
       foto = avatarPadrao
     }
-    const certificadoNome = form.certificados
-      ? form.certificados.name
-      : null
+    const certificadoNome = form.certificados ? form.certificados.name : null
 
     const resto = { ...form }
     delete resto.fotoPerfil
@@ -390,34 +409,29 @@ async function handleSubmit() {
       precoServico: form.precoServico.trim(),
       fotoPerfil: foto,
       certificadoNome,
-        // Começa a lista de contratações do cliente.
+      // Começa a lista de contratações do cliente.
       contratacoes: tipoUsuario.value === 'contratante' ? [] : undefined,
-      tipo: tipoUsuario.value
+      tipo: tipoUsuario.value,
     }
 
     try {
-      usuarioStore.cadastrar(
-        usuario,
-        tipoUsuario.value
-      )
+      usuarioStore.cadastrar(usuario, tipoUsuario.value)
     } catch (erroCadastro) {
       erro.value = erroCadastro.message
       return
     }
 
+    sessionStorage.removeItem(STORAGE_KEY)
+    sessionStorage.removeItem(STORAGE_TIPO_KEY)
+
     if (tipoUsuario.value === 'freelancer') {
       router.push('/perfil-freelancer')
-    }
-    else {
+    } else {
       router.push('/dashboard-cliente')
     }
   } catch (error) {
-    console.error(
-      'Erro ao cadastrar:',
-      error
-    )
-    erro.value =
-      'Não foi possível criar a conta.'
+    console.error('Erro ao cadastrar:', error)
+    erro.value = 'Não foi possível criar a conta.'
   } finally {
     loading.value = false
   }
@@ -477,8 +491,7 @@ async function handleSubmit() {
   background: white;
   border-radius: 12px;
   padding: 6px;
-  box-shadow:
-    0 1px 3px rgba(0,0,0,.06);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
   margin-bottom: 20px;
   box-sizing: border-box;
 }
@@ -504,8 +517,8 @@ async function handleSubmit() {
   border-radius: 16px;
   padding: 32px;
   box-shadow:
-    0 1px 3px rgba(0,0,0,.06),
-    0 8px 24px rgba(0,0,0,.04);
+    0 1px 3px rgba(0, 0, 0, 0.06),
+    0 8px 24px rgba(0, 0, 0, 0.04);
   box-sizing: border-box;
 }
 .form-section {

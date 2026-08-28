@@ -64,7 +64,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import Categorias from '@/components/Categorias.vue'
-import ProfessionalCard from '@/components/ProfessionalCard.vue'
+import ProfessionalCard from '@/components/CartaoProfissional.vue'
 import { useNotificacoes } from '@/composables/useNotificacoes'
 
 const query = ref('')

@@ -13,7 +13,6 @@ import EditarPerfil from '../views/EditarPerfilView.vue'
 import SolicitarServico from '../views/SolicitarServico.vue'
 import Pagamento from '../views/Pagamento.vue'
 import DashboardCliente from '../views/PainelCliente.vue'
-import DashboardFreelancer from '../views/PainelFreelancer.vue'
 import Sobre from '../views/Sobre.vue'
 import Suporte from '../views/Suporte.vue'
 import ComoFunciona from '../views/ComoFunciona.vue'
@@ -36,7 +35,6 @@ const routes = [
   { path: '/solicitar', name: 'solicitar', component: SolicitarServico },
   { path: '/pagamento', name: 'pagamento', component: Pagamento },
   { path: '/dashboard-cliente', name: 'dashboard-cliente', component: DashboardCliente },
-  { path: '/dashboard-freelancer', name: 'dashboard-freelancer', component: DashboardFreelancer },
   { path: '/sobre', name: 'sobre', component: Sobre },
   { path: '/suporte', name: 'suporte', component: Suporte },
   { path: '/como-funciona', name: 'como-funciona', component: ComoFunciona },
@@ -73,10 +71,10 @@ router.beforeEach((to, from, next) => {
   const { state } = useUsuarioStore()
 
   const rotasSemLogin = ['login', 'cadastro-cliente', 'cadastro-freelancer']
-  const rotasSoLogado = ['editar-perfil', 'dashboard-cliente', 'dashboard-freelancer']
+  const rotasSoLogado = ['editar-perfil', 'dashboard-cliente']
 
   if (rotasSemLogin.includes(to.name) && state.usuario) {
-    next({ name: state.tipoUsuario === 'freelancer' ? 'dashboard-freelancer' : 'dashboard-cliente' })
+    next({ name: state.tipoUsuario === 'freelancer' ? 'perfil-freelancer' : 'dashboard-cliente' })
   } else if (rotasSoLogado.includes(to.name) && !state.usuario) {
     next({ name: 'login' })
   } else {

@@ -1,44 +1,44 @@
-# .
+CiroLancers
 
-This template should help get you started developing with Vue 3 in Vite.
+Marketplace de serviços freelance, feito em Vue 3 + Vite como projeto de hackathon.
 
-## Recommended IDE Setup
+Tema e objetivo
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+Conectar clientes e profissionais autônomos de Joinville (SC), dando mais segurança e valorização ao prestador de serviço (sem "uberização") e mais confiança ao cliente (avaliações, pagamento protegido).
 
-## Recommended Browser Setup
+Funcionalidades planejadas
+Cadastro e login (cliente e freelancer)
+Recuperação de senha
+Busca e filtro de profissionais por categoria
+Perfil público do freelancer (portfólio, avaliações, serviços)
+Edição de perfil
+Solicitação de serviço (contratação)
+Painel do cliente e painel do freelancer
+Pagamento
+Notificações
+Páginas institucionais (Sobre, Como Funciona, Suporte)
+Funcionalidades desenvolvidas
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+Quase tudo da lista acima foi implementado e está funcional: cadastro/login, busca, perfil, contratação, painéis de cliente e freelancer, notificações e as páginas institucionais.
 
-## Customize configuration
+A página de Pagamento não foi finalizada — ficou só o título, sem formulário ou lógica.
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+Vale lembrar que o projeto é só front-end: não tem backend, os dados (usuários, contratações, sessão) ficam salvos no localStorage do navegador.
 
-## Project Setup
+Dificuldades encontradas
 
-```sh
-npm install
-```
+Pelo histórico de commits do repositório dá pra ver que o time enfrentou bastante conflito de merge entre branches (várias mensagens tipo "arrumei os conflitos"), precisou reverter algumas mudanças que quebraram partes já prontas, e boa parte do trabalho ficou concentrada nos últimos dias antes da entrega — o que é comum em hackathon, mas deixou menos tempo para fechar o pagamento.
 
-### Compile and Hot-Reload for Development
+Divisão das atividades
+Integrante	Frente principal
+Carlos Miguel de Oliveira Dados de profissionais, perfil do freelancer, home
+Eloisa Muller	Login/cadastro, edição de perfil, painéis e solicitação de serviço
+Guilherme Bloemer Santos	Rotas, perfil do freelancer, home, login, integração geral
+Nicolas Martins Paiva	Home, categorias, filtros, header
+Valentina Damas	Header, busca, notificações, Sobre e perfil público
 
-```sh
-npm run dev
-```
+9/10
 
-### Compile and Minify for Production
+Justificativa
 
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+Faltou alguns recursos, como a aba de favoritos.
