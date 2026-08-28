@@ -25,6 +25,11 @@
   color: #2563eb;
 }
 
+.nav-link.router-link-exact-active {
+  color: #2563eb;
+  font-weight: bold;
+}
+
 .login-link {
   background: #2563eb;
   color: #fff;
@@ -35,6 +40,10 @@
 
 .login-link:hover {
   background: #1d4ed8;
+  color: #fff;
+}
+
+.login-link.router-link-exact-active {
   color: #fff;
 }
 </style>
