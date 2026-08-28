@@ -27,27 +27,57 @@
             {{ usuario.descricao }}
           </p>
         </div>
-        <button
-          type="button"
-          class="perfil-card__sair"
-          @click="sair"
-        >
-        </button>
+        <div class="perfil-card__acoes">
+          <RouterLink
+            to="/editar-perfil"
+            class="perfil-card__editar"
+          >
+            Editar Perfil
+          </RouterLink>
+          <button
+            type="button"
+            class="perfil-card__sair"
+            @click="sair"
+          >
+            Sair
+          </button>
+        </div>
       </div>
       <div class="contratados-section">
+        <div class="profissionais-tabs" role="tablist" aria-label="Profissionais">
+          <button
+            type="button"
+            class="profissionais-tab"
+            :class="{ 'profissionais-tab--ativa': abaAtiva === 'contratados' }"
+            @click="abaAtiva = 'contratados'"
+          >
+            Contratados
+            <span>{{ contratacoes.length }}</span>
+          </button>
+          <button
+            type="button"
+            class="profissionais-tab"
+            :class="{ 'profissionais-tab--ativa': abaAtiva === 'espera' }"
+            @click="abaAtiva = 'espera'"
+          >
+            Em espera
+            <span>{{ profissionaisEmEspera.length }}</span>
+          </button>
+        </div>
+
         <h2 class="contratados-section__title">
-          Profissionais Contratados
+          {{ abaAtiva === 'espera' ? 'Profissionais em espera' : 'Profissionais contratados' }}
         </h2>
         <div
-          v-if="contratacoes.length === 0"
+          v-if="profissionaisExibidos.length === 0"
           class="estado-vazio"
         >
           <div class="estado-vazio__icone">🤝</div>
           <p class="estado-vazio__titulo">
-            Você ainda não contratou ninguém
+            {{ abaAtiva === 'espera' ? 'Nenhum profissional aguardando resposta' : 'Você ainda não contratou ninguém' }}
           </p>
           <p class="estado-vazio__texto">
-            Quando você contratar um profissional, ele vai aparecer aqui.
+            {{ abaAtiva === 'espera' ? 'As solicitações enviadas aparecerão aqui.' : 'Quando você contratar um profissional, ele vai aparecer aqui.' }}
           </p>
           <RouterLink
             to="/buscar"
@@ -61,7 +91,7 @@
           class="contratados-grid"
         >
           <div
-            v-for="contratado in contratacoes"
+            v-for="contratado in profissionaisExibidos"
             :key="contratado.id"
             class="contratado-card"
           >
@@ -81,11 +111,24 @@
                 {{ contratado.profissao }}
               </p>
               <p
-                v-if="contratado.dataContratacao"
-                class="contratado-card__data"
+                v-if="contratado.avaliacao || contratado.localizacao"
+                class="contratado-card__detalhes"
               >
-                Contratado em {{ formatarData(contratado.dataContratacao) }}
+                <span v-if="contratado.avaliacao">★ {{ contratado.avaliacao }}</span>
+                <span v-if="contratado.localizacao">{{ contratado.localizacao }}</span>
               </p>
+              <p
+                v-if="abaAtiva === 'espera'"
+                class="contratado-card__status"
+              >
+                Aguardando resposta do freelancer
+              </p>
+              <RouterLink
+                :to="`/perfil/${contratado.id}`"
+                class="contratado-card__perfil"
+              >
+                Ver perfil
+              </RouterLink>
             </div>
           </div>
         </div>
@@ -94,7 +137,7 @@
   </div>
 </template>
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUsuarioStore } from '@/stores/usuario'
 const router = useRouter()
@@ -104,7 +147,20 @@ if (!usuarioStore.state.usuario) {
   router.replace('/login')
 }
 const usuario = computed(() => usuarioStore.state.usuario || {})
-const contratacoes = computed(() => usuario.value.contratacoes || [])
+const contratacoes = computed(() => (
+  usuario.value.profissionaisEmEspera ? usuario.value.contratacoes || [] : []
+))
+const profissionaisEmEspera = computed(() => (
+  usuario.value.profissionaisEmEspera || (
+    usuario.value.contratacoes && !usuario.value.profissionaisEmEspera
+      ? usuario.value.contratacoes
+      : []
+  )
+))
+const abaAtiva = ref('espera')
+const profissionaisExibidos = computed(() => (
+  abaAtiva.value === 'espera' ? profissionaisEmEspera.value : contratacoes.value
+))
 const opcoesSegmento = {
   tecnologia: 'Tecnologia',
   varejo: 'Varejo / E-commerce',
@@ -116,9 +172,6 @@ const opcoesSegmento = {
 const segmentoLabel = computed(() => {
   return opcoesSegmento[usuario.value.segmento] || ''
 })
-function formatarData(data) {
-  return new Date(data).toLocaleDateString('pt-BR')
-}
 function sair() {
   usuarioStore.logout()
   router.push('/')
@@ -180,6 +233,27 @@ function sair() {
   line-height: 1.5;
   margin: 0;
 }
+.perfil-card__acoes {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.perfil-card__editar {
+  border: 1px solid #3b5bfd;
+  background: transparent;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #3b5bfd;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+}
+.perfil-card__editar:hover {
+  background: #e8ecff;
+}
 .perfil-card__sair {
   border: 1px solid #d1d5db;
   background: transparent;
@@ -188,7 +262,6 @@ function sair() {
   font-size: 14px;
   color: #4b5563;
   cursor: pointer;
-  flex-shrink: 0;
 }
 .perfil-card__sair:hover {
   border-color: #dc2626;
@@ -240,6 +313,36 @@ function sair() {
   grid-template-columns: repeat(2, 1fr);
   gap: 16px;
 }
+.profissionais-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #e5e7eb;
+}
+.profissionais-tab {
+  padding: 10px 14px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: #6b7280;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.profissionais-tab span {
+  display: inline-flex;
+  min-width: 20px;
+  justify-content: center;
+  margin-left: 4px;
+  color: #9ca3af;
+}
+.profissionais-tab--ativa {
+  border-bottom-color: #3b5bfd;
+  color: #3b5bfd;
+}
+.profissionais-tab--ativa span {
+  color: #3b5bfd;
+}
 .contratado-card {
   display: flex;
   align-items: center;
@@ -267,17 +370,42 @@ function sair() {
   color: #3b5bfd;
   margin: 0 0 2px;
 }
-.contratado-card__data {
+.contratado-card__detalhes {
+  display: flex;
+  gap: 10px;
   font-size: 12px;
-  color: #9ca3af;
-  margin: 0;
+  color: #6b7280;
+  margin: 0 0 2px;
+}
+.contratado-card__detalhes span:first-child {
+  color: #d97706;
+  font-weight: 600;
+}
+.contratado-card__status {
+  font-size: 12px;
+  color: #b45309;
+  margin: 4px 0 8px;
+}
+.contratado-card__perfil {
+  display: inline-block;
+  padding: 7px 12px;
+  border-radius: 7px;
+  background: #eef2ff;
+  color: #3b5bfd;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+}
+.contratado-card__perfil:hover {
+  background: #e0e7ff;
 }
 @media (max-width: 600px) {
   .perfil-card {
     flex-direction: column;
     align-items: flex-start;
   }
-  .perfil-card__sair {
+  .perfil-card__acoes {
+    flex-direction: row;
     align-self: flex-end;
   }
   .contratados-grid {

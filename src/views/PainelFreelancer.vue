@@ -28,6 +28,14 @@
             </span>
           </div>
         </div>
+
+        <RouterLink
+          v-if="ehMeuPerfil"
+          to="/editar-perfil"
+          class="perfil-editar-btn"
+        >
+          Editar Perfil
+        </RouterLink>
       </div>
 
       <div v-if="tipoUsuario === 'freelancer' && usuario.descricao" class="form-section">
@@ -69,6 +77,7 @@
 
 <script setup>
 import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 
 const props = defineProps({
 
@@ -86,6 +95,12 @@ const props = defineProps({
     default: 'freelancer'
   }
 })
+
+const route = useRoute()
+
+// só mostra o botão de editar quando é a rota do "meu perfil"
+// (a rota /perfil/:id, usada pra ver o perfil público de outros freelancers, não mostra o botão)
+const ehMeuPerfil = computed(() => route.name === 'perfil-freelancer')
 
 const opcoesExperiencia = [
   { value: 'menos-1', label: 'Menos de 1 ano' },
@@ -142,6 +157,8 @@ const nomeCertificado = computed(() => {
 .perfil-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
 .perfil-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; padding: 6px 12px; border-radius: 999px; background: #f3f4f6; color: #1a1a2e; }
 .perfil-badge--accent { background: #e8ecff; color: #3b5bfd; font-weight: 700; }
+.perfil-editar-btn { flex-shrink: 0; align-self: flex-start; border: 1px solid #3b5bfd; background: transparent; padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: 600; color: #3b5bfd; text-decoration: none; }
+.perfil-editar-btn:hover { background: #e8ecff; }
 .form-section { margin-bottom: 8px; }
 .form-section + .form-section { margin-top: 20px; padding-top: 20px; border-top: 1px solid #e5e7eb; }
 .form-section__title { font-size: 16px; font-weight: 700; color: #1a1a2e; margin: 0 0 12px; }
@@ -151,4 +168,8 @@ const nomeCertificado = computed(() => {
 .perfil-contact-row { display: flex; align-items: center; gap: 10px; font-size: 14px; color: #1a1a2e; padding: 8px 0; }
 .perfil-contact-icon { width: 30px; height: 30px; border-radius: 9px; background: #e8ecff; color: #3b5bfd; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 14px; }
 .perfil-cert-chip { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid #e5e7eb; border-radius: 10px; background: #f3f4f6; font-size: 13.5px; font-weight: 500; color: #1a1a2e; }
+@media (max-width: 600px) {
+  .perfil-header { flex-wrap: wrap; }
+  .perfil-editar-btn { margin-left: auto; }
+}
 </style>

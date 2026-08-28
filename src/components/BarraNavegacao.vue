@@ -4,7 +4,7 @@
     <RouterLink to="/como-funciona" class="nav-link">Como funciona</RouterLink>
     <RouterLink to="/categorias" class="nav-link">Categorias</RouterLink>
 
-      <RouterLink
+    <RouterLink
       v-if="!usuarioStore.state.usuario"
       to="/login"
       class="nav-link login-link"
@@ -12,7 +12,6 @@
       Login
     </RouterLink>
 
-  
     <RouterLink
       v-else
       :to="linkPerfil"
@@ -23,37 +22,39 @@
         :alt="usuarioStore.state.usuario.nome"
         class="avatar-link__img"
       />
+
       <span class="avatar-link__nome">
         {{ usuarioStore.state.usuario.nome }}
       </span>
     </RouterLink>
 
-  
     <button
-    v-if="usuarioStore.state.usuario"
+      v-if="usuarioStore.state.usuario"
       type="button"
       class="nav-link logout-btn"
+      aria-label="Sair da conta"
+      title="Sair da conta"
       @click="sair"
     >
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4m-5-5 5-5-5-5m5 5H3" />
+      </svg>
+      <span>Sair</span>
     </button>
-
   </nav>
 </template>
 
 <script setup>
-
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUsuarioStore } from '@/stores/usuario'
 
 const router = useRouter()
-
 const usuarioStore = useUsuarioStore()
 
 const avatarPadrao = '/img/avatar-padrao.png'
 
 const linkPerfil = computed(() => {
-
   const usuario = usuarioStore.state.usuario
 
   if (!usuario) return '/'
@@ -61,17 +62,12 @@ const linkPerfil = computed(() => {
   return usuarioStore.state.tipoUsuario === 'freelancer'
     ? '/perfil-freelancer'
     : '/dashboard-cliente'
-
 })
 
 function sair() {
-
   usuarioStore.logout()
-
   router.push('/')
-
 }
-
 </script>
 
 <style scoped>
@@ -126,17 +122,32 @@ function sair() {
 }
 
 .logout-btn {
-  background: transparent;
-  border: 1px solid #d1d5db;
-  padding: 8px 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: #dc2626;
+  border: 1px solid #dc2626;
+  padding: 9px 14px;
   border-radius: 8px;
   cursor: pointer;
   font-size: 14px;
-  color: #4b5563;
+  font-weight: 700;
+  color: #fff;
 }
 
 .logout-btn:hover {
-  border-color: #dc2626;
-  color: #dc2626;
+  background: #b91c1c;
+  border-color: #b91c1c;
+  color: #fff;
+}
+
+.logout-btn:focus-visible {
+  outline: 3px solid rgb(248 113 113 / 45%);
+  outline-offset: 2px;
+}
+
+.logout-btn svg {
+  width: 16px;
+  height: 16px;
 }
 </style>
