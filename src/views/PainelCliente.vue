@@ -14,26 +14,15 @@
           <p class="perfil-card__segmento">
             {{ segmentoLabel }}
           </p>
-          <p
-            v-if="usuario.cidade"
-            class="perfil-card__cidade"
-          >
+          <p v-if="usuario.cidade" class="perfil-card__cidade">
             {{ usuario.cidade }}
           </p>
-          <p
-            v-if="usuario.descricao"
-            class="perfil-card__descricao"
-          >
+          <p v-if="usuario.descricao" class="perfil-card__descricao">
             {{ usuario.descricao }}
           </p>
         </div>
         <div class="perfil-card__acoes">
-          <RouterLink
-            to="/editar-perfil"
-            class="perfil-card__editar"
-          >
-            Editar Perfil
-          </RouterLink>
+          <RouterLink to="/editar-perfil" class="perfil-card__editar"> Editar Perfil </RouterLink>
         </div>
       </div>
       <div class="contratados-section">
@@ -62,16 +51,21 @@
           {{ abaAtiva === 'espera' ? 'Profissionais em espera' : 'Profissionais contratados' }}
         </h2>
         <div v-if="profissionaisExibidos.length === 0" class="estado-vazio">
-          <div class="estado-vazio__icone">🤝</div>
           <p class="estado-vazio__titulo">
-            {{ abaAtiva === 'espera' ? 'Nenhum profissional aguardando resposta' : 'Você ainda não contratou ninguém' }}
+            {{
+              abaAtiva === 'espera'
+                ? 'Nenhum profissional aguardando resposta'
+                : 'Você ainda não contratou ninguém'
+            }}
           </p>
           <p class="estado-vazio__texto">
-            {{ abaAtiva === 'espera' ? 'As solicitações enviadas aparecerão aqui.' : 'Quando você contratar um profissional, ele vai aparecer aqui.' }}
+            {{
+              abaAtiva === 'espera'
+                ? 'As solicitações enviadas aparecerão aqui.'
+                : 'Quando você contratar um profissional, ele vai aparecer aqui.'
+            }}
           </p>
-          <RouterLink to="/buscar" class="estado-vazio__botao">
-            Buscar profissionais
-          </RouterLink>
+          <RouterLink to="/buscar" class="estado-vazio__botao"> Buscar profissionais </RouterLink>
         </div>
         <div v-else class="contratados-grid">
           <ProfessionalCard
@@ -100,20 +94,20 @@ if (!usuarioStore.state.usuario) {
   router.replace('/login')
 }
 const usuario = computed(() => usuarioStore.state.usuario || {})
-const contratacoes = computed(() => (
-  usuario.value.profissionaisEmEspera ? usuario.value.contratacoes || [] : []
-))
-const profissionaisEmEspera = computed(() => (
-  usuario.value.profissionaisEmEspera || (
-    usuario.value.contratacoes && !usuario.value.profissionaisEmEspera
+const contratacoes = computed(() =>
+  usuario.value.profissionaisEmEspera ? usuario.value.contratacoes || [] : [],
+)
+const profissionaisEmEspera = computed(
+  () =>
+    usuario.value.profissionaisEmEspera ||
+    (usuario.value.contratacoes && !usuario.value.profissionaisEmEspera
       ? usuario.value.contratacoes
-      : []
-  )
-))
+      : []),
+)
 const abaAtiva = ref(route.query.aba === 'contratados' ? 'contratados' : 'espera')
-const profissionaisExibidos = computed(() => (
-  abaAtiva.value === 'espera' ? profissionaisEmEspera.value : contratacoes.value
-))
+const profissionaisExibidos = computed(() =>
+  abaAtiva.value === 'espera' ? profissionaisEmEspera.value : contratacoes.value,
+)
 
 function transformarContratacao(profissional) {
   return {
@@ -125,9 +119,17 @@ function transformarContratacao(profissional) {
     reviewsCount: profissional.reviewsCount || 0,
     location: profissional.localizacao || profissional.location || '',
     skills: profissional.skills || [],
-    services: profissional.services || (profissional.precoServico
-      ? [{ title: profissional.profissao, priceRange: profissional.precoServico, duration: 'A combinar' }]
-      : [])
+    services:
+      profissional.services ||
+      (profissional.precoServico
+        ? [
+            {
+              title: profissional.profissao,
+              priceRange: profissional.precoServico,
+              duration: 'A combinar',
+            },
+          ]
+        : []),
   }
 }
 
@@ -140,7 +142,7 @@ const opcoesSegmento = {
   saude: 'Saúde',
   educacao: 'Educação',
   financeiro: 'Financeiro',
-  outro: 'Outro'
+  outro: 'Outro',
 }
 const segmentoLabel = computed(() => {
   return opcoesSegmento[usuario.value.segmento] || ''
@@ -168,7 +170,9 @@ function cancelarPedido(profissional) {
   background: #fff;
   border-radius: 16px;
   padding: 28px;
-  box-shadow: 0 1px 3px rgb(0 0 0 / 6%), 0 8px 24px rgb(0 0 0 / 4%);
+  box-shadow:
+    0 1px 3px rgb(0 0 0 / 6%),
+    0 8px 24px rgb(0 0 0 / 4%);
   margin-bottom: 32px;
 }
 .perfil-card__foto {
@@ -253,10 +257,6 @@ function cancelarPedido(profissional) {
   padding: 48px 24px;
   text-align: center;
 }
-.estado-vazio__icone {
-  font-size: 36px;
-  margin-bottom: 10px;
-}
 .estado-vazio__titulo {
   font-size: 16px;
   font-weight: 700;
@@ -329,7 +329,7 @@ function cancelarPedido(profissional) {
   background: white;
   border-radius: 14px;
   padding: 16px;
-  box-shadow: 0 1px 3px rgba(0,0,0,.06);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 .contratado-card__foto {
   width: 52px;
@@ -406,5 +406,4 @@ function cancelarPedido(profissional) {
     grid-template-columns: 1fr;
   }
 }
-
 </style>
