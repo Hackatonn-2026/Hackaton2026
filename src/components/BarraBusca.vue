@@ -2,9 +2,21 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { profissionais } from '@/dataJs/profissionais.js'
+import { useUsuarioStore } from '@/stores/usuario'
 
 const router = useRouter()
+const usuarioStore = useUsuarioStore()
 const query = ref('')
+
+const todosProfissionais = computed(() => [
+  ...profissionais,
+  ...usuarioStore.listarFreelancers().map(usuario => ({
+    id: usuario.id,
+    name: usuario.nome,
+    title: usuario.profissao || 'Profissional freelancer',
+    category: (usuario.categorias || []).join(' ')
+  }))
+])
 
 // Filtra sugestões tanto por nome de profissional quanto por categoria
 const resultados = computed(() => {
@@ -13,9 +25,9 @@ const resultados = computed(() => {
 
   const sugestoes = []
 
-  profissionais.forEach(p => {
+  todosProfissionais.value.forEach(p => {
     const nome = p.name || p.nome || ''
-    const cat = p.category || p.categoria || ''
+    const cat = p.category || p.categoria || (p.categorias || []).join(' ')
     const titulo = p.title || p.titulo || ''
 
     if (nome.toLowerCase().includes(texto)) {
