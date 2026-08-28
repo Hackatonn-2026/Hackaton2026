@@ -7,27 +7,7 @@
 
    <SearchBar />
 
-      <ul v-if="query.length > 0" class="search-suggestions">
-        <li v-if="resultados.length === 0" class="suggestion-empty">
-          Nenhum resultado encontrado
-        </li>
-        <li
-          v-for="item in resultados"
-          :key="item"
-          class="suggestion-item"
-          @click="query = item"
-        >
-          {{ item }}
-        </li>
-      </ul>
-    </div>
-
-    <nav class="nav-links">
-      <RouterLink to="/categorias" class="nav-link">Categorias</RouterLink>
-      <a href="#como-funciona" class="nav-link">Como funciona</a>
-      <a href="#login" class="nav-link login-link">Login</a>
-      <Button class="cadastrar-btn">Cadastrar</Button>
-    </nav>
+   <NavbarView />
   </header>
 </template>
 
