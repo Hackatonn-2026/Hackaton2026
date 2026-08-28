@@ -1,8 +1,8 @@
 <script setup>
-import { ref, computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { onMounted, ref, computed, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { profissionais } from '@/dataJs/profissionais.js'
-import AppHeader from '@/layout/Header.vue'
+import { useUsuarioStore } from '@/stores/usuario'
 import ProfileHeader from '../components/CabecalhoPerfil.vue'
 import ProfileTabs from '../components/AbasPerfil.vue'
 import AboutSection from '../components/SecaoSobre.vue'
