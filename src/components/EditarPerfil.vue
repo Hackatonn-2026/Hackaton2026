@@ -73,6 +73,14 @@
             placeholder="Ex: Desenvolvedor Full Stack"
             icon="briefcase"
           />
+          <InputForm
+            v-model="form.precoServico"
+            label="Preço do serviço"
+            placeholder="Ex: 150"
+            type="number"
+            min="0"
+            step="0.01"
+          />
 
           <div class="campo">
             <SelectForm
@@ -150,6 +158,7 @@ const form = reactive({
   telefone: usuarioAtual?.telefone || '',
   cidade: usuarioAtual?.cidade || '',
   profissao: usuarioAtual?.profissao || '',
+  precoServico: usuarioAtual?.precoServico || '',
   anosExperiencia: usuarioAtual?.anosExperiencia || '',
   descricao: usuarioAtual?.descricao || '',
   categorias: usuarioAtual?.categorias || [],
@@ -167,10 +176,20 @@ const opcoesExperiencia = [
 const categoriasDisponiveis = [
   'Desenvolvimento',
   'Design',
+  'Elétrica',
+  'Informática',
+  'Jardinagem',
+  'Fotografia',
+  'Aulas Particulares',
+  'Pintura',
+  'Mecânica',
   'Marketing',
+  'Tradução',
+  'Edição de Vídeo',
+  'Redação',
   'Consultoria',
-  'Edição',
-  'Tradução'
+  'Limpeza',
+  'Música'
 ]
 
 const novaFoto = ref(null)
@@ -243,6 +262,7 @@ async function handleSubmit() {
       telefone: form.telefone.trim(),
       cidade: form.cidade.trim(),
       profissao: form.profissao.trim(),
+      precoServico: form.precoServico.trim(),
       fotoPerfil: foto
     }
 

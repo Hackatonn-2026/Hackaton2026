@@ -40,9 +40,17 @@ import { useRoute, useRouter } from 'vue-router'
 import FilterSidebar from '@/components/BarraFiltros.vue'
 import ProfessionalCard from '@/components/CartaoProfissional.vue'
 import { profissionais } from '@/dataJs/profissionais.js'
+import { useUsuarioStore } from '@/stores/usuario'
 
 const route = useRoute()
 const router = useRouter()
+const usuarioStore = useUsuarioStore()
+
+function formatarPreco(valor) {
+  const numero = Number(valor)
+  if (!Number.isFinite(numero)) return 'Sob consulta'
+  return numero.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+}
 
 const categoriaQuery = computed(() => route.query.busca || '')
 const categoriaSelecionada = computed(() => route.query.busca || 'Todas as categorias')
@@ -112,7 +120,25 @@ function passaFiltroAvaliacao(prof) {
 }
 
 const profissionaisFiltrados = computed(() => {
-  return profissionais.filter(prof =>
+  const cadastrados = usuarioStore.listarFreelancers().map(usuario => ({
+    id: usuario.id,
+    category: usuario.categorias?.[0] || usuario.profissao || '',
+    name: usuario.nome,
+    title: usuario.profissao,
+    avatar: usuario.fotoPerfil,
+    rating: usuario.rating || 0,
+    reviewsCount: usuario.reviewsCount || 0,
+    location: usuario.cidade,
+    completedProjects: usuario.completedProjects || 0,
+    bio: usuario.descricao,
+    skills: usuario.categorias || [],
+    experiences: [],
+    services: usuario.precoServico
+      ? [{ title: usuario.profissao, priceRange: formatarPreco(usuario.precoServico), duration: 'A combinar' }]
+      : []
+  }))
+
+  return [...profissionais, ...cadastrados].filter(prof =>
     categoriaCombina(prof.category, categoriaQuery.value)
     && passaFiltroLocalizacao(prof)
     && passaFiltroPreco(prof)

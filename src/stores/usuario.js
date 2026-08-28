@@ -79,11 +79,25 @@ export function useUsuarioStore() {
         fotoPerfil: profissional.avatar,
         avaliacao: profissional.rating,
         localizacao: profissional.location,
+        precoServico: profissional.services?.[0]?.priceRange || profissional.precoServico,
+        services: profissional.services || [],
+        skills: profissional.skills || [],
         dataContratacao: new Date().toISOString()
       }]
     }
     login(state.usuario, state.tipoUsuario)
     return !jaAdicionado
+  }
+
+  function cancelarContratacao(id) {
+    if (!state.usuario) return false
+    const profissionaisEmEspera = state.usuario.profissionaisEmEspera || []
+    const usuarioAtualizado = {
+      ...state.usuario,
+      profissionaisEmEspera: profissionaisEmEspera.filter(item => String(item.id) !== String(id))
+    }
+    login(usuarioAtualizado, state.tipoUsuario)
+    return profissionaisEmEspera.length !== usuarioAtualizado.profissionaisEmEspera.length
   }
 
   function atualizarPerfil(dadosNovos) {
@@ -103,7 +117,11 @@ export function useUsuarioStore() {
   }
 
   function buscarPorId(id) {
-    return getUsuarios().find(usuario => usuario.id === id) || null
+    return getUsuarios().find(usuario => String(usuario.id) === String(id)) || null
+  }
+
+  function listarFreelancers() {
+    return getUsuarios().filter(usuario => usuario.tipo === 'freelancer')
   }
 
   function logout() {
@@ -113,5 +131,5 @@ export function useUsuarioStore() {
     localStorage.removeItem('tipoUsuario')
   }
 
-  return { state, cadastrar, login, autenticar, adicionarContratacao, logout, atualizarPerfil, contratar, buscarPorId }
+  return { state, cadastrar, login, autenticar, adicionarContratacao, cancelarContratacao, logout, atualizarPerfil, contratar, buscarPorId, listarFreelancers }
 }

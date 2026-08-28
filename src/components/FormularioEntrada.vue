@@ -18,6 +18,7 @@
         :placeholder="placeholder"
         :value="modelValue"
         :maxlength="maxlength"
+        v-bind="$attrs"
         @input="$emit('update:modelValue', $event.target.value)"
       />
 
@@ -47,6 +48,8 @@
 
 <script setup>
 import { ref, computed } from 'vue'
+
+defineOptions({ inheritAttrs: false })
 
 const props = defineProps({
   label: { type: String, default: '' },

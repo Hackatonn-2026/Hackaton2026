@@ -82,6 +82,14 @@
             placeholder="Ex: Desenvolvedor Full Stack"
             icon="briefcase"
           />
+          <InputForm
+            v-model="form.precoServico"
+            label="Preço do serviço"
+            placeholder="Ex: 150"
+            type="number"
+            min="0"
+            step="0.01"
+          />
           <div class="campo">
             <SelectForm
               v-model="form.anosExperiencia"
@@ -207,6 +215,7 @@ const form = reactive({
   telefone: '',
   cidade: '',
   profissao: '',
+  precoServico: '',
   anosExperiencia: '',
   descricao: '',
   categorias: [],
@@ -239,10 +248,20 @@ const opcoesExperiencia = [
 const categoriasDisponiveis = [
   'Desenvolvimento',
   'Design',
+  'Elétrica',
+  'Informática',
+  'Jardinagem',
+  'Fotografia',
+  'Aulas Particulares',
+  'Pintura',
+  'Mecânica',
   'Marketing',
+  'Tradução',
+  'Edição de Vídeo',
+  'Redação',
   'Consultoria',
-  'Edição',
-  'Tradução'
+  'Limpeza',
+  'Música'
 ]
 function trocarTipo(tipo) {
   tipoUsuario.value = tipo
@@ -346,6 +365,7 @@ async function handleSubmit() {
       telefone: form.telefone.trim(),
       cidade: form.cidade.trim(),
       profissao: form.profissao.trim(),
+      precoServico: form.precoServico.trim(),
       fotoPerfil: foto,
       certificadoNome,
       // lista de profissionais contratados (preenchida depois, ao contratar alguém)

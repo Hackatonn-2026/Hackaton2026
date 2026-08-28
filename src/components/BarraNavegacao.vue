@@ -60,7 +60,7 @@ const linkPerfil = computed(() => {
   if (!usuario) return '/'
 
   return usuarioStore.state.tipoUsuario === 'freelancer'
-    ? '/perfil-freelancer'
+    ? `/perfil-freelancer/${usuario.id}`
     : '/dashboard-cliente'
 })
 
