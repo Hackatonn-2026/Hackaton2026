@@ -12,8 +12,8 @@
 </template>
 
 <script setup>
-import SearchBar from '@/components/SearchBar.vue'
-import NavbarView from '@/components/NavbarView.vue'
+import SearchBar from '@/components/BarraBusca.vue'
+import NavbarView from '@/components/BarraNavegacao.vue'
 </script>
 
 <style scoped>

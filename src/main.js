@@ -3,7 +3,7 @@ import './assets/main.css'
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
-import BaseButton from './components/Button.vue'
+import BaseButton from './components/Botao.vue'
 
 const app = createApp(App)
 

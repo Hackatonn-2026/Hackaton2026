@@ -37,8 +37,8 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import FilterSidebar from '@/components/FilterSidebar.vue'
-import ProfessionalCard from '@/components/ProfessionalCard.vue'
+import FilterSidebar from '@/components/BarraFiltros.vue'
+import ProfessionalCard from '@/components/CartaoProfissional.vue'
 import { profissionais } from '@/dataJs/profissionais.js'
 
 const route = useRoute()
@@ -121,7 +121,7 @@ const profissionaisFiltrados = computed(() => {
 })
 
 function irParaPerfil(profissional) {
-  router.push(`/perfil/${profissional.id}`)
+  router.push(`/perfil-freelancer/${profissional.id}`)
 }
 </script>
 

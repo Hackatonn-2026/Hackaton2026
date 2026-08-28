@@ -29,7 +29,7 @@
     <!-- CARD -->
     <div class="auth-card">
       <form @submit.prevent="handleSubmit">
-       
+
         <div class="form-section">
           <h2 class="form-section__title">
             Dados Pessoais
@@ -103,7 +103,7 @@
               :options="categoriasDisponiveis"
             />
           </div>
-       
+
           <div class="campo">
             <FileUpload
               v-model:file="form.fotoPerfil"
@@ -182,11 +182,11 @@
 import { reactive, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUsuarioStore } from '@/stores/usuario'
-import InputForm from './InputForm.vue'
-import SelectForm from './SelectForm.vue'
-import TextareaForm from './TextareaForm.vue'
-import CheckboxGroup from './CheckboxGroup.vue'
-import FileUpload from './FileUpload.vue'
+import InputForm from './FormularioEntrada.vue'
+import SelectForm from './FormularioSelecao.vue'
+import TextareaForm from './FormularioTexto.vue'
+import CheckboxGroup from './GrupoCheckbox.vue'
+import FileUpload from './EnvioArquivo.vue'
 const props = defineProps({
   tipoInicial: {
     type: String,
@@ -352,14 +352,21 @@ async function handleSubmit() {
       contratacoes: tipoUsuario.value === 'contratante' ? [] : undefined,
       tipo: tipoUsuario.value
     }
- usuarioStore.login(
-      usuario,
-      tipoUsuario.value
-    )
-       if (tipoUsuario.value === 'freelancer') {
+
+    try {
+      usuarioStore.cadastrar(
+        usuario,
+        tipoUsuario.value
+      )
+    } catch (erroCadastro) {
+      erro.value = erroCadastro.message
+      return
+    }
+
+    if (tipoUsuario.value === 'freelancer') {
       router.push('/perfil-freelancer')
     }
-       else {
+    else {
       router.push('/dashboard-cliente')
     }
   } catch (error) {
