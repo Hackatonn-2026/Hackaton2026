@@ -1,8 +1,8 @@
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { useUsuarioStore } from '@/stores/usuario'
+import { ref, computed } from 'vue'
+import { useRoute } from 'vue-router'
 import { profissionais } from '@/dataJs/profissionais.js'
+import AppHeader from '@/layout/Header.vue'
 import ProfileHeader from '../components/CabecalhoPerfil.vue'
 import ProfileTabs from '../components/AbasPerfil.vue'
 import AboutSection from '../components/SecaoSobre.vue'
@@ -167,7 +167,7 @@ function handleScheduleCall() {
       :avatar="profissional.avatar"
       :verified="profissional.verified"
       :rating="profissional.rating"
-      :reviews-count="profissional.reviewsCount"
+      :reviews-count="profissional.reviewsCount || 0"
       :location="profissional.location"
       :completed-projects="profissional.completedProjects"
       :show-edit="ehMeuPerfil"

@@ -15,7 +15,7 @@
         <main class="lista-profissionais">
 
           <div v-if="profissionaisFiltrados.length === 0" class="empty-state">
-            Nenhum profissional encontrado para esta categoria.
+            Nenhum profissional encontrado para esta busca.
           </div>
 
           <div class="cards-grid" v-else>
@@ -55,7 +55,6 @@ function formatarPreco(valor) {
 const categoriaQuery = computed(() => route.query.busca || '')
 const categoriaSelecionada = computed(() => route.query.busca || 'Todas as categorias')
 
-// os filtros vêm da FilterSidebar via evento; começam "abertos" (sem restrição)
 const filtros = ref({
   localizacao: '',
   precos: [],
@@ -68,25 +67,30 @@ function aplicarFiltros(novosFiltros) {
   filtros.value = novosFiltros
 }
 
-// tira acento e caixa para comparar texto (ex: "elétrica" === "eletrica")
 function normalizar(texto) {
+  if (!texto) return ''
   return texto
     .toLowerCase()
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
 }
 
-// Categorias.vue usa nomes curtos ("Desenvolvimento") e o profissionais.js
-// usa nomes mais específicos ("Desenvolvimento de Sites"), então comparamos
-// por inclusão nos dois sentidos em vez de igualdade exata
-function categoriaCombina(categoriaProfissional, categoriaBuscada) {
-  if (!categoriaBuscada) return true
-  const a = normalizar(categoriaProfissional)
-  const b = normalizar(categoriaBuscada)
-  return a.includes(b) || b.includes(a)
+// Verifica se o texto bate com a Categoria OU Nome OU Título do profissional
+function termoCombina(prof, termoBuscado) {
+  if (!termoBuscado) return true
+
+  const termo = normalizar(termoBuscado)
+  const catProf = normalizar(prof.category)
+  const nomeProf = normalizar(prof.name || prof.nome)
+  const tituloProf = normalizar(prof.title || prof.titulo)
+
+  const bateCategoria = catProf.includes(termo) || termo.includes(catProf)
+  const bateNome = nomeProf.includes(termo)
+  const bateTitulo = tituloProf.includes(termo)
+
+  return bateCategoria || bateNome || bateTitulo
 }
 
-// transforma textos como "R$ 3.000 - R$ 8.000" ou "R$ 150/hora" em { min, max }
 function parsePriceRange(rangeStr) {
   const numeros = (rangeStr.match(/\d{1,3}(?:\.\d{3})*(?:,\d+)?/g) || [])
     .map(n => Number(n.replace(/\./g, '').replace(',', '.')))
@@ -120,26 +124,8 @@ function passaFiltroAvaliacao(prof) {
 }
 
 const profissionaisFiltrados = computed(() => {
-  const cadastrados = usuarioStore.listarFreelancers().map(usuario => ({
-    id: usuario.id,
-    category: usuario.categorias?.[0] || usuario.profissao || '',
-    name: usuario.nome,
-    title: usuario.profissao,
-    avatar: usuario.fotoPerfil,
-    rating: usuario.rating || 0,
-    reviewsCount: usuario.reviewsCount || 0,
-    location: usuario.cidade,
-    completedProjects: usuario.completedProjects || 0,
-    bio: usuario.descricao,
-    skills: usuario.categorias || [],
-    experiences: [],
-    services: usuario.precoServico
-      ? [{ title: usuario.profissao, priceRange: formatarPreco(usuario.precoServico), duration: 'A combinar' }]
-      : []
-  }))
-
-  return [...profissionais, ...cadastrados].filter(prof =>
-    categoriaCombina(prof.category, categoriaQuery.value)
+  return profissionais.filter(prof =>
+    termoCombina(prof, categoriaQuery.value)
     && passaFiltroLocalizacao(prof)
     && passaFiltroPreco(prof)
     && passaFiltroAvaliacao(prof)
@@ -147,7 +133,9 @@ const profissionaisFiltrados = computed(() => {
 })
 
 function irParaPerfil(profissional) {
-  router.push(`/perfil-freelancer/${profissional.id}`)
+  // Trata objeto ou ID direto
+  const id = typeof profissional === 'object' ? profissional.id : profissional
+  router.push(`/perfil/${id}`)
 }
 </script>
 
