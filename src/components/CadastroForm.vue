@@ -1,9 +1,5 @@
 <template>
   <div class="auth-page">
-    <div class="auth-brand">
-      <span class="auth-brand__logo">ai</span>
-      <span class="auth-brand__name">CiroLancers</span>
-    </div>
     <h1 class="auth-title">Criar Conta</h1>
     <p class="auth-subtitle">
       Junte-se à maior plataforma de freelancers do Brasil

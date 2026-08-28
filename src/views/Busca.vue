@@ -46,6 +46,33 @@ const route = useRoute()
 const router = useRouter()
 const usuarioStore = useUsuarioStore()
 
+const profissionaisCadastrados = computed(() => (
+  usuarioStore.listarFreelancers().map(usuario => ({
+    id: usuario.id,
+    category: (usuario.categorias || []).join(' '),
+    name: usuario.nome,
+    title: usuario.profissao || 'Profissional freelancer',
+    avatar: usuario.fotoPerfil,
+    rating: usuario.rating || 0,
+    reviewsCount: usuario.reviewsCount || 0,
+    location: usuario.cidade || '',
+    skills: usuario.categorias || [],
+    services: usuario.precoServico
+      ? [{
+          title: usuario.profissao || 'Serviço profissional',
+          priceRange: formatarPreco(usuario.precoServico),
+          duration: 'A combinar'
+        }]
+      : []
+  }))
+))
+
+const todosProfissionais = computed(() => {
+  const cadastrados = new Map(profissionaisCadastrados.value.map(prof => [String(prof.id), prof]))
+  return [...profissionais, ...cadastrados.values()]
+    .filter((prof, index, lista) => lista.findIndex(item => String(item.id) === String(prof.id)) === index)
+})
+
 function formatarPreco(valor) {
   const numero = Number(valor)
   if (!Number.isFinite(numero)) return 'Sob consulta'
@@ -124,7 +151,7 @@ function passaFiltroAvaliacao(prof) {
 }
 
 const profissionaisFiltrados = computed(() => {
-  return profissionais.filter(prof =>
+  return todosProfissionais.value.filter(prof =>
     termoCombina(prof, categoriaQuery.value)
     && passaFiltroLocalizacao(prof)
     && passaFiltroPreco(prof)
