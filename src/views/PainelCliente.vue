@@ -62,7 +62,6 @@
           {{ abaAtiva === 'espera' ? 'Profissionais em espera' : 'Profissionais contratados' }}
         </h2>
         <div v-if="profissionaisExibidos.length === 0" class="estado-vazio">
-          <div class="estado-vazio__icone">🤝</div>
           <p class="estado-vazio__titulo">
             {{ abaAtiva === 'espera' ? 'Nenhum profissional aguardando resposta' : 'Você ainda não contratou ninguém' }}
           </p>

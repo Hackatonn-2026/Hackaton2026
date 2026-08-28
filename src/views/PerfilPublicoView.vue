@@ -1,19 +1,15 @@
 <template>
   <div class="perfil-page">
-
     <header class="header">
       <div class="brand">
         <span class="brand-logo">ai</span>
         <span class="brand-name">CiroLancers</span>
       </div>
 
-      <button class="btn-voltar" @click="voltar">
-        ← Voltar
-      </button>
+      <button class="btn-voltar" @click="voltar">← Voltar</button>
     </header>
 
     <main class="perfil-container">
-
       <section v-if="!freelancer" class="perfil-card">
         <div class="nao-encontrado">
           <p>Este perfil não foi encontrado.</p>
@@ -21,29 +17,28 @@
       </section>
 
       <section v-else class="perfil-card">
-
         <div class="perfil-topo">
-
           <div class="foto-container">
             <img
-              :src="freelancer.fotoPerfil || avatarPadrao"
+              v-if="freelancer.fotoPerfil"
+              :src="freelancer.fotoPerfil"
               alt="Foto de perfil"
               class="foto"
               @error="$event.target.src = avatarPadrao"
             />
+            <div v-else class="foto-placeholder">
+              {{ primeiraLetra }}
+            </div>
           </div>
 
           <div class="informacoes-principais">
-
             <h1>{{ freelancer.nome }}</h1>
             <h2>{{ freelancer.profissao }}</h2>
 
             <p class="localizacao">
               📍 {{ freelancer.regiao || freelancer.cidade || 'Localização não informada' }}
             </p>
-
           </div>
-
         </div>
 
         <section class="secao">
@@ -67,17 +62,10 @@
         <section class="secao">
           <h3>Áreas de atuação</h3>
           <div class="categorias">
-            <span
-              v-for="categoria in freelancer.categorias"
-              :key="categoria"
-              class="categoria"
-            >
+            <span v-for="categoria in freelancer.categorias" :key="categoria" class="categoria">
               {{ categoria }}
             </span>
-            <span
-              v-if="!freelancer.categorias?.length"
-              class="sem-categoria"
-            >
+            <span v-if="!freelancer.categorias?.length" class="sem-categoria">
               Nenhuma categoria informada.
             </span>
           </div>
@@ -85,15 +73,10 @@
 
         <section class="contato">
           <h3>Interessado no trabalho?</h3>
-          <button class="btn-contato" @click="solicitarServico">
-            Solicitar Serviço
-          </button>
+          <button class="btn-contato" @click="solicitarServico">Solicitar Serviço</button>
         </section>
-
       </section>
-
     </main>
-
   </div>
 </template>
 
@@ -120,10 +103,9 @@ const experienciaTexto = computed(() => {
     '1-3': '1 a 3 anos',
     '3-5': '3 a 5 anos',
     '5-10': '5 a 10 anos',
-    'mais-10': 'Mais de 10 anos'
+    'mais-10': 'Mais de 10 anos',
   }
-  return experiencias[freelancer.value?.anosExperiencia]
-    || 'Experiência não informada'
+  return experiencias[freelancer.value?.anosExperiencia] || 'Experiência não informada'
 })
 
 function voltar() {
@@ -137,14 +119,13 @@ function solicitarServico() {
       id: freelancer.value.id,
       nome: freelancer.value.nome,
       profissao: freelancer.value.profissao,
-      fotoPerfil: freelancer.value.fotoPerfil
-    }
+      fotoPerfil: freelancer.value.fotoPerfil,
+    },
   })
 }
 </script>
 
 <style scoped>
-
 .perfil-page {
   min-height: 100vh;
   background: #f3f4f6;
@@ -157,7 +138,7 @@ function solicitarServico() {
   align-items: center;
   justify-content: space-between;
   padding: 0 6%;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }
 
 .brand {
@@ -205,8 +186,8 @@ function solicitarServico() {
   border-radius: 18px;
   padding: 40px;
   box-shadow:
-    0 2px 5px rgba(0,0,0,0.05),
-    0 10px 30px rgba(0,0,0,0.05);
+    0 2px 5px rgba(0, 0, 0, 0.05),
+    0 10px 30px rgba(0, 0, 0, 0.05);
 }
 
 .nao-encontrado {
@@ -357,7 +338,6 @@ function solicitarServico() {
 }
 
 @media (max-width: 600px) {
-
   .perfil-card {
     padding: 25px;
   }
@@ -370,7 +350,5 @@ function solicitarServico() {
   .informacoes-principais h1 {
     font-size: 25px;
   }
-
 }
-
 </style>
