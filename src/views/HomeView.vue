@@ -15,7 +15,7 @@
             v-model="query"
             placeholder="Buscar profissionais ou serviços..."
           />
-          <Button type="button">Pesquisar</Button>
+          <BaseButton type="button" @click="buscar">Pesquisar</BaseButton>
         </div>
 
         <div class="stats">
@@ -42,17 +42,56 @@
       </div>
     </section>
 
-    <Categorias />
+    <Categorias :limit="3" :is-home="true" />
 
+    <section class="featured">
+  <h2>Profissionais em Destaque</h2>
+  <p>Conheça alguns dos nossos melhores profissionais</p>
+
+  <div class="grid">
+    <ProfessionalCard
+      v-for="p in professionals"
+      :key="p.id"
+      :professional="p"
+      @ver-perfil="handleVerPerfil"
+    />
+  </div>
+</section>
   </main>
 </template>
 
 <script setup>
-  import { ref } from 'vue'
-  import Categorias from '@/components/Categorias.vue';
-  import Button from '@/components/Button.vue';
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import Categorias from '@/components/Categorias.vue'
+import ProfessionalCard from '@/components/ProfessionalCard.vue'
+import { useNotificacoes } from '@/composables/useNotificacoes'
 
-  const query = ref('')
+const query = ref('')
+const router = useRouter()
+const { adicionar } = useNotificacoes()
+
+const professionals = [
+  { id: 1, name: 'Carlos Silva', role: 'Desenvolvedor Full Stack', rating: 4.9, reviews: 127, price: 150, avatar: '/img/carlos.jpg' },
+  { id: 2, name: 'Ana Costa', role: 'Designer Gráfica', rating: 5, reviews: 89, price: 120, avatar: '/img/ana.jpg' },
+  { id: 3, name: 'Roberto Santos', role: 'Eletricista', rating: 4.8, reviews: 203, price: 80, avatar: '/img/roberto.jpg' },
+  { id: 4, name: 'Mariana Lima', role: 'Professora de Inglês', rating: 4.9, reviews: 156, price: 60, avatar: '/img/mariana.jpg' },
+]
+
+function handleVerPerfil(prof) {
+  router.push(`/perfil/${prof.id}`)
+}
+
+function buscar() {
+  const termo = query.value.trim()
+
+  if (!termo) {
+    adicionar('Digite o serviço ou profissional que deseja encontrar.', 'aviso')
+    return
+  }
+
+  router.push({ path: '/buscar', query: { q: termo } })
+}
 </script>
 
 <style scoped>
@@ -127,8 +166,29 @@
 .stat span {
   color: #6b7280;
 }
+.featured {
+  padding: 60px 8% 80px;
+  text-align: center;
+  background: #f9fafb;
+}
 
+.featured h2 {
+  font-size: 28px;
+  color: #111827;
+  margin-bottom: 8px;
+}
 
+.featured p {
+  color: #6b7280;
+  margin-bottom: 40px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 280px));
+  gap: 24px;
+  justify-content: center;
+}
 @media(max-width:768px){
 
 .hero h1{
